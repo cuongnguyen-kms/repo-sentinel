@@ -29,6 +29,9 @@ import { readCodeReviewJson } from "../services/code-review-json-parser.js";
 import { computeFingerprints } from "../services/finding-fingerprint-service.js";
 import { writeOpenCommentsJson } from "../services/open-comments-writer-service.js";
 import { applyOpenCommentResolutions } from "../services/open-comments-resolution-service.js";
+import { postSingleComment } from "../services/github-comment-service.js";
+import { fetchExistingPrCommentPaths } from "../services/github-reply-sync-service.js";
+import type { CodeReviewFinding } from "@repo-sentinel/types";
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { createNotification, NotificationType } from "../services/notification-persistence-service.js";
@@ -57,6 +60,137 @@ function emitLog(
   const msg = `${line}\r\n`;
   appendToOutputBuffer(roomId, msg);
   io.to(roomId).emit("review:output", msg);
+}
+
+/** Format a finding into a GitHub comment body (matches frontend's finding-comment format). */
+function formatFindingBody(finding: CodeReviewFinding): string {
+  const severity = finding.severity.toUpperCase();
+  let body = `**[${severity}]** ${finding.title}\n\n${finding.comment}`;
+  if (finding.suggestion) {
+    const alreadyFenced = /^\s*```/.test(finding.suggestion);
+    body += alreadyFenced
+      ? `\n\n**Suggestion:**\n${finding.suggestion}`
+      : `\n\n**Suggestion:**\n\`\`\`\n${finding.suggestion}\n\`\`\``;
+  }
+  return body;
+}
+
+/**
+ * Auto-post findings to GitHub as individual review comments, gated by
+ * `ai.review.autoPostToGithub` and filtered by `ai.review.autoPostSeverities`.
+ * Best-effort — must not fail the review job.
+ */
+async function autoPostFindings(
+  fastify: FastifyInstance,
+  prId: string,
+  reviewId: string,
+  roomId: string,
+  codeReviewResult: { findings: CodeReviewFinding[] } | null,
+  log: { info: (obj: object, msg: string) => void; warn: (obj: object, msg: string) => void }
+): Promise<void> {
+  const [autoPostSetting, severitySetting] = await fastify.prisma.$transaction([
+    fastify.prisma.appSetting.findUnique({ where: { key: "ai.review.autoPostToGithub" } }),
+    fastify.prisma.appSetting.findUnique({ where: { key: "ai.review.autoPostSeverities" } }),
+  ]);
+  const enabled = autoPostSetting?.value === "1";
+  const allowedSeverities = (severitySetting?.value ?? "critical,high,medium,low,info")
+    .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+
+  log.info({ enabled, allowedSeverities, findingsCount: codeReviewResult?.findings.length ?? 0 }, "[auto-post] check");
+  emitLog(fastify.io, roomId, `[AUTO-POST] auto-post = ${enabled ? "ON" : "OFF"}, severities = [${allowedSeverities.join(", ")}]`);
+
+  if (!enabled) {
+    emitLog(fastify.io, roomId, `[AUTO-POST] Disabled — skipping`);
+    return;
+  }
+
+  if (!codeReviewResult || codeReviewResult.findings.length === 0) {
+    emitLog(fastify.io, roomId, `[AUTO-POST] No findings to post`);
+    return;
+  }
+
+  // Ground-truth dedup: fetch existing review comments directly from GitHub API.
+  // If a comment already exists at path:line or with the same title, skip it —
+  // avoids duplicates across re-reviews regardless of fingerprint/DB drift.
+  const ghExisting = await fetchExistingPrCommentPaths(fastify.prisma, prId, log);
+  emitLog(fastify.io, roomId, `[AUTO-POST] ${ghExisting.pathLines.size} existing path:line, ${ghExisting.titles.size} existing titles on GitHub`);
+
+  const allPostable = codeReviewResult.findings
+    .filter((f) => f.file && f.line && f.line > 0 && allowedSeverities.includes(f.severity.toLowerCase()));
+
+  const postableFindings = allPostable
+    .filter((f) => {
+      const path = f.file.replace(/^[ab]\//, "");
+      if (ghExisting.pathLines.has(`${path}:${f.line}`)) return false;
+      if (f.endLine && ghExisting.pathLines.has(`${path}:${f.endLine}`)) return false;
+      const normalizedTitle = f.title.trim().toLowerCase().replace(/\s+/g, " ");
+      if (ghExisting.titles.has(normalizedTitle)) return false;
+      return true;
+    })
+    .map((f) => ({
+      findingId: f.id,
+      path: f.file.replace(/^[ab]\//, ""),
+      line: f.line,
+      endLine: f.endLine,
+      body: formatFindingBody(f),
+    }));
+
+  const skippedBySeverity = codeReviewResult.findings.filter(
+    (f) => f.file && f.line && f.line > 0 && !allowedSeverities.includes(f.severity.toLowerCase())
+  ).length;
+  const skippedByDuplicate = allPostable.length - postableFindings.length;
+  emitLog(
+    fastify.io,
+    roomId,
+    `[AUTO-POST] ${postableFindings.length}/${codeReviewResult.findings.length} findings to post` +
+      `${skippedBySeverity > 0 ? ` (${skippedBySeverity} skipped by severity)` : ""}` +
+      `${skippedByDuplicate > 0 ? ` (${skippedByDuplicate} already posted)` : ""}`
+  );
+
+  if (postableFindings.length === 0) {
+    emitLog(fastify.io, roomId, `[AUTO-POST] No postable findings (missing file/line)`);
+    return;
+  }
+
+  // Post findings individually — the batch GitHub review API is all-or-nothing:
+  // if any single finding references a line outside the diff the entire batch is
+  // rejected. Individual posting is more resilient; findings outside the diff
+  // gracefully fall back to file-level comments.
+  emitLog(fastify.io, roomId, `[AUTO-POST] Posting ${postableFindings.length} findings to GitHub…`);
+  let posted = 0;
+  let failed = 0;
+  for (const finding of postableFindings) {
+    try {
+      await postSingleComment(fastify.prisma, prId, {
+        findingId: finding.findingId,
+        path: finding.path,
+        line: finding.line,
+        body: finding.body,
+        reviewId,
+      });
+      posted++;
+    } catch (singleErr: unknown) {
+      failed++;
+      const singleMsg = singleErr instanceof Error ? singleErr.message : String(singleErr);
+      log.warn({ findingId: finding.findingId, err: singleMsg }, "[auto-post] line comment failed, trying file-level");
+      try {
+        await postSingleComment(fastify.prisma, prId, {
+          findingId: finding.findingId,
+          path: finding.path,
+          line: finding.line,
+          body: finding.body,
+          subjectType: "file",
+          reviewId,
+        });
+        posted++;
+        failed--; // recovered
+      } catch {
+        // truly failed — already counted
+      }
+    }
+  }
+  emitLog(fastify.io, roomId, `[AUTO-POST] Done — ${posted} posted${failed > 0 ? `, ${failed} failed` : ""}`);
+  log.info({ posted, failed, total: postableFindings.length, reviewId }, "[auto-post] done");
 }
 
 /** Main job body for the ai-review BullMQ worker. */
@@ -296,6 +430,13 @@ export async function runAiReviewJob(
       { reviewedAt: commitSha, currentHead: freshPr.headCommitSha },
       "review already outdated — new commits arrived during review"
     );
+  }
+
+  // 9b. Auto-post findings to GitHub if enabled (best-effort — never fails the run)
+  try {
+    await autoPostFindings(fastify, prId, reviewId, roomId, codeReviewResult, log);
+  } catch (err) {
+    log.warn({ err }, "[auto-post] non-blocking failure");
   }
 
   // 10. Broadcast completion + cleanup buffer

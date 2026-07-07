@@ -207,3 +207,72 @@ async function fetchPrReviewComments(
 
   return allComments;
 }
+
+/** Dedup data extracted from existing GitHub review comments. */
+export interface ExistingPrComments {
+  /** "path:line" keys from inline comments */
+  pathLines: Set<string>;
+  /** Normalized title strings extracted from comment bodies (for title-based dedup) */
+  titles: Set<string>;
+}
+
+/**
+ * Fetch all existing review comments from GitHub for a PR and extract
+ * dedup keys. This is the ground-truth dedup source for auto-posting —
+ * prevents duplicate comments even when fingerprints or DB records are
+ * inconsistent.
+ *
+ * Handles both inline comments (path:line) and file-level comments
+ * (no line on GitHub — extracts line from body `> **Line X**` pattern,
+ * and also extracts the finding title for title-based matching).
+ */
+export async function fetchExistingPrCommentPaths(
+  prisma: PrismaClient,
+  prId: string,
+  log?: { warn: (obj: object, msg: string) => void }
+): Promise<ExistingPrComments> {
+  const result: ExistingPrComments = { pathLines: new Set(), titles: new Set() };
+  try {
+    const pr = await prisma.pullRequest.findUnique({
+      where: { id: prId },
+      include: { repo: { include: { connection: true } } },
+    });
+    if (!pr?.repo?.connection) return result;
+
+    const token = decrypt(pr.repo.connection.token);
+    const comments = await fetchPrReviewComments(pr.repo.connection.hostname, token, pr.repo.owner, pr.repo.name, pr.ghePrId);
+
+    for (const c of comments) {
+      // Only top-level comments (not replies)
+      if (c["in_reply_to_id"]) continue;
+      const path = String(c["path"] ?? "");
+      const body = String(c["body"] ?? "");
+
+      // Inline comments: GitHub provides line number
+      const line = c["line"] ?? c["original_line"];
+      if (path && line) {
+        result.pathLines.add(`${path}:${line}`);
+      }
+
+      // File-level comments: extract line from body pattern "> **Line X**"
+      if (path && !line) {
+        const lineMatch = body.match(/>\s*\*\*Line\s+(\d+)\*\*/);
+        if (lineMatch?.[1]) {
+          result.pathLines.add(`${path}:${lineMatch[1]}`);
+        }
+      }
+
+      // Extract finding title from body for title-based dedup.
+      // Our posted comments have format: "**[SEVERITY]** title"
+      const titleMatch = body.match(/###\s*\w+:\s*(.+)/i)
+        ?? body.match(/\*\*\[\w+\]\*\*\s*(.+)/i)
+        ?? body.match(/^(?:>\s*\*\*Line\s+\d+\*\*\s*\n\n)?(.+)/);
+      if (titleMatch?.[1]) {
+        result.titles.add(titleMatch[1].trim().toLowerCase().replace(/\s+/g, " "));
+      }
+    }
+  } catch (err) {
+    log?.warn({ err, prId }, "[fetch-pr-comments] failed to fetch GitHub comments");
+  }
+  return result;
+}
