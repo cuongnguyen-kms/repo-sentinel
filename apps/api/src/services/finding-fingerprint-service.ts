@@ -37,3 +37,8 @@ export function computeFingerprints(findings: CodeReviewFinding[]): void {
     f.fingerprint = count > 1 ? `${base}-${count}` : base;
   }
 }
+
+/** Return fingerprint when available, fall back to sequential ID for old reviews. */
+export function getMatchKey(finding: CodeReviewFinding): string {
+  return finding.fingerprint ?? finding.id;
+}

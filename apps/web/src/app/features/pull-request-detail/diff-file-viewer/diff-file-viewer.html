@@ -16,8 +16,37 @@
       </div>
       @for (finding of line.findings; track finding.id) {
         <div class="finding-card" [class]="'severity-' + finding.severity">
-          <div class="finding-title">[{{ finding.severity | uppercase }}] {{ finding.title }}</div>
+          <div class="finding-title-row">
+            <mat-checkbox
+              [checked]="isSelected(finding.id)"
+              [disabled]="actionBusy()"
+              (change)="onToggleSelect(finding.id)"
+            />
+            <div class="finding-title">[{{ finding.severity | uppercase }}] {{ finding.title }}</div>
+          </div>
           <div class="finding-comment">{{ finding.comment }}</div>
+
+          <div class="finding-actions">
+            @if (postedFor(finding.id); as posted) {
+              @if (posted.resolutionStatus === 'RESOLVED') {
+                <span class="status-chip status-resolved">Resolved</span>
+              } @else if (posted.resolutionStatus === 'WONT_FIX') {
+                <span class="status-chip status-wontfix">Won't Fix</span>
+              }
+              @if (posted.githubHtmlUrl) {
+                <a [href]="posted.githubHtmlUrl" target="_blank" rel="noopener" class="gh-link">View on GitHub</a>
+              }
+            }
+            <button mat-stroked-button [disabled]="isPosted(finding.id) || actionBusy()" (click)="onPost(finding)">
+              Post to GitHub
+            </button>
+            <button mat-stroked-button [disabled]="actionBusy()" (click)="onResolve(finding.id, 'MANUAL')">
+              Resolve
+            </button>
+            <button mat-stroked-button [disabled]="actionBusy()" (click)="onResolve(finding.id, 'WONT_FIX')">
+              Won't Fix
+            </button>
+          </div>
         </div>
       }
     }

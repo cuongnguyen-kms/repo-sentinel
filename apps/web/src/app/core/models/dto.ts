@@ -190,6 +190,114 @@ export interface AiReviewDto {
 export type AiReviewSummaryDto = Omit<AiReviewDto, 'command' | 'output' | 'report' | 'codeReviewJson' | 'diffContent' | 'terminalLog'>;
 
 // ---------------------------------------------------------------------------
+// Finding comments, resolution, and review comparison
+// ---------------------------------------------------------------------------
+
+export type ResolutionStatus = 'OPEN' | 'RESOLVED' | 'WONT_FIX';
+
+export type ResolutionReason =
+  | 'CODE_FIX'
+  | 'LINE_NOT_IN_DIFF'
+  | 'NO_LONGER_FLAGGED'
+  | 'MANUAL'
+  | 'SUPERSEDED';
+
+export interface FindingReplyDto {
+  id: string;
+  postedCommentId: string;
+  githubCommentId: string;
+  githubHtmlUrl: string;
+  author: string;
+  body: string;
+  isDismissal: boolean;
+  matchedKeyword: string | null;
+  createdAtGithub: string;
+  syncedAt: string;
+}
+
+export interface PostedFindingCommentDto {
+  id: string;
+  reviewId: string;
+  findingId: string;
+  githubCommentId: string | null;
+  githubHtmlUrl: string;
+  postedAt: string;
+  deletedOnGithub: boolean;
+  resolutionStatus: ResolutionStatus | null;
+  resolutionReason: ResolutionReason | null;
+  resolvedAt: string | null;
+  resolvedByCommitSha: string | null;
+  carriedFromReviewId: string | null;
+  githubThreadResolved: boolean;
+  githubThreadResolvedAt: string | null;
+  dismissedAt: string | null;
+  dismissedBy: string | null;
+  dismissalKeyword: string | null;
+  replyCount: number;
+  lastReplyAt: string | null;
+  lastReplyAuthor: string | null;
+  lastReplyBody: string | null;
+  repliesSyncedAt: string | null;
+}
+
+export interface ResolvedFindingSummary {
+  findingId: string;
+  title: string;
+  file: string;
+  line: number;
+  severity: FindingSeverity;
+  reason: ResolutionReason;
+  resolvedByCommitSha?: string | null;
+  githubHtmlUrl?: string | null;
+  sourceReviewId?: string;
+  githubThreadResolved?: boolean;
+}
+
+export interface CarriedOverFindingSummary {
+  findingId: string;
+  title: string;
+  file: string;
+  line: number;
+  severity: FindingSeverity;
+}
+
+export interface OpenCommentSummary {
+  findingId: string;
+  title: string;
+  file: string;
+  line: number;
+  severity: FindingSeverity;
+  githubHtmlUrl?: string | null;
+  sourceReviewId?: string;
+  carriedFromReviewId?: string | null;
+  carriedToReviewId?: string | null;
+  carriedToFindingId?: string | null;
+  githubThreadResolved?: boolean;
+}
+
+export interface ReviewComparisonSummary {
+  previousReviewId: string | null;
+  resolved: ResolvedFindingSummary[];
+  resolvedCount: number;
+  newFindingIds: string[];
+  newCount: number;
+  carriedOverIds: string[];
+  carriedOver: CarriedOverFindingSummary[];
+  carriedOverCount: number;
+  openCommentsResolved?: number;
+  openCommentsResolvedDetails?: ResolvedFindingSummary[];
+  openCommentsStillOpen?: number;
+  openCommentsStillOpenDetails?: OpenCommentSummary[];
+}
+
+export interface ResolveGithubThreadsResult {
+  resolved: number;
+  failed: number;
+  skipped: number;
+  errors: Array<{ findingId: string; error: string }>;
+}
+
+// ---------------------------------------------------------------------------
 // Notifications
 // ---------------------------------------------------------------------------
 

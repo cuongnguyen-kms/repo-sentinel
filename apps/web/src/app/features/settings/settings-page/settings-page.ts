@@ -47,6 +47,8 @@ export class SettingsPage {
   readonly autoReviewAuthors = signal('');
   readonly autoRerunReview = signal(false);
   readonly autoRerunReviewStatuses = signal('OPEN');
+  readonly autoPostToGithub = signal(false);
+  readonly autoPostSeverities = signal('critical,high,medium,low,info');
 
   constructor() {
     void this.load();
@@ -65,6 +67,8 @@ export class SettingsPage {
       this.autoReviewAuthors.set(settings['ai.review.autoReviewAuthors'] ?? '');
       this.autoRerunReview.set(settings['ai.review.autoRerunReview'] === '1');
       this.autoRerunReviewStatuses.set(settings['ai.review.autoRerunReviewStatuses'] ?? 'OPEN');
+      this.autoPostToGithub.set(settings['ai.review.autoPostToGithub'] === '1');
+      this.autoPostSeverities.set(settings['ai.review.autoPostSeverities'] ?? 'critical,high,medium,low,info');
     } finally {
       this.loading.set(false);
     }
@@ -85,6 +89,8 @@ export class SettingsPage {
         'ai.review.autoReviewAuthors': this.autoReviewAuthors(),
         'ai.review.autoRerunReview': this.autoRerunReview() ? '1' : '0',
         'ai.review.autoRerunReviewStatuses': this.autoRerunReviewStatuses(),
+        'ai.review.autoPostToGithub': this.autoPostToGithub() ? '1' : '0',
+        'ai.review.autoPostSeverities': this.autoPostSeverities(),
       };
       for (const key of Object.keys(values)) {
         if (values[key] === '') delete values[key];

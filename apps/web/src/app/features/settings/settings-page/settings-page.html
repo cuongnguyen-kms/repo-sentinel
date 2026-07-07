@@ -51,6 +51,16 @@
         <input matInput [ngModel]="autoRerunReviewStatuses()" (ngModelChange)="autoRerunReviewStatuses.set($event)" [disabled]="!canEdit" />
       </mat-form-field>
 
+      <mat-slide-toggle [checked]="autoPostToGithub()" (change)="autoPostToGithub.set($event.checked)" [disabled]="!canEdit">
+        Auto-post findings to GitHub
+      </mat-slide-toggle>
+      <p class="hint">After a review completes, automatically post matching findings as GitHub PR comments.</p>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Auto-post severities (CSV)</mat-label>
+        <input matInput [ngModel]="autoPostSeverities()" (ngModelChange)="autoPostSeverities.set($event)" [disabled]="!canEdit || !autoPostToGithub()" />
+      </mat-form-field>
+
       @if (canEdit) {
         <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
           @if (saving()) {

@@ -16,7 +16,16 @@
 @if (diffFiles().length > 0) {
   <div class="diff-files">
     @for (file of diffFiles(); track $index) {
-      <app-diff-file-viewer [file]="file" [findings]="findingsForFile(file.to ?? file.from ?? '')" />
+      <app-diff-file-viewer
+        [file]="file"
+        [findings]="findingsForFile(file.to ?? file.from ?? '')"
+        [postedComments]="postedByFindingId()"
+        [selectedFindingIds]="selectedFindingIds()"
+        [actionBusy]="actionBusy()"
+        (post)="onPost($event)"
+        (resolve)="onResolve($event)"
+        (toggleSelect)="onToggleSelect($event)"
+      />
     }
   </div>
 } @else if (review().report) {

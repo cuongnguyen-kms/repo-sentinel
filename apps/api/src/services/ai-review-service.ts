@@ -11,6 +11,7 @@ import type { Server as SocketServer } from "socket.io";
 import { GheClient } from "@repo-sentinel/ghe-client";
 import { getSettingInt } from "./command-template-service.js";
 import { decrypt } from "./encryption-service.js";
+import { resolveOutdatedFindings } from "./finding-resolution-service.js";
 import { aiReviewQueue } from "../queues/ai-review-queue.js";
 import { killProcess, clearOutputBuffer } from "./claude-cli-service.js";
 import { ServiceError } from "../utils/service-error.js";
@@ -35,8 +36,8 @@ export async function triggerReview(
   prisma: PrismaClient,
   prId: string,
   io: SocketServer,
-  /** Reserved for future diagnostics (e.g. auto-resolve warnings) — currently unused in the MVP trigger flow. */
-  _log?: { warn: (obj: object, msg: string) => void },
+  /** Used to log best-effort auto-resolution warnings without blocking the trigger. */
+  log?: { warn: (obj: object, msg: string) => void },
   /** Skip the 5-min cooldown guard — used by auto-rerun when new commits make previous review outdated. */
   opts?: { skipCooldown?: boolean }
 ): Promise<{ id: string; status: string }> {
@@ -89,6 +90,24 @@ export async function triggerReview(
     } else {
       throw new Error("Cannot trigger review: PR has no head commit SHA");
     }
+  }
+
+  // Best-effort: auto-resolve findings from the previous review whose lines were
+  // touched by new commits. Never blocks the trigger — failures are just logged.
+  try {
+    const previousReview = await prisma.aiReview.findFirst({
+      where: { pullRequestId: prId, status: "COMPLETED" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, commitSha: true },
+    });
+    if (previousReview && previousReview.commitSha !== "unknown" && previousReview.commitSha !== commitSha) {
+      const token = decrypt(pr.repo.connection.token);
+      const gheClient = new GheClient(pr.repo.connection.hostname, token);
+      const comparison = await gheClient.compareCommits(pr.repo.owner, pr.repo.name, previousReview.commitSha, commitSha);
+      await resolveOutdatedFindings(prisma, previousReview.id, commitSha, comparison.files);
+    }
+  } catch (err) {
+    log?.warn({ err, prId }, "[trigger-review] auto-resolution of outdated findings failed — continuing");
   }
 
   // Atomically guard against concurrent triggers: re-check status + create review + update PR

@@ -22,6 +22,7 @@ import {
 } from "../schemas/review-schemas.js";
 import { triggerReview, cancelReview, deleteReview } from "../services/ai-review-service.js";
 import { getOutputBuffer } from "../services/claude-cli-service.js";
+import { computeReviewComparison } from "../services/review-comparison-service.js";
 import { handleZodError, enrichReviewDto, ServiceError, type AiReviewWithCount } from "./review-route-helpers.js";
 
 export async function registerReviewRoutes(
@@ -184,6 +185,24 @@ export async function registerReviewRoutes(
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Failed to fetch review";
+        reply.status(500).send({ success: false, error: message });
+      }
+    }
+  );
+
+  // GET /api/reviews/:id/comparison — run-over-run comparison summary
+  app.get(
+    "/api/reviews/:id/comparison",
+    { preHandler: [requireAuth, requirePermission(Resource.Reviews, Action.Read)] },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const parsed = reviewIdParamSchema.safeParse(request.params);
+      if (!parsed.success) { handleZodError(parsed.error, reply); return; }
+
+      try {
+        const data = await computeReviewComparison(app.prisma, parsed.data.id);
+        reply.send({ success: true, data });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to compute review comparison";
         reply.status(500).send({ success: false, error: message });
       }
     }

@@ -29,6 +29,9 @@ const ROLE_DEFS: Record<string, RoleDef> = {
       `${Resource.Reviews}:${Action.Create}`, `${Resource.Reviews}:${Action.Read}`, `${Resource.Reviews}:${Action.Update}`,
       `${Resource.PullRequests}:${Action.Read}`, `${Resource.Repos}:${Action.Read}`, `${Resource.Dashboard}:${Action.Read}`,
       `${Resource.Notifications}:${Action.Read}`, `${Resource.Notifications}:${Action.Update}`,
+      `${Resource.Findings}:${Action.Create}`, `${Resource.Findings}:${Action.Read}`,
+      `${Resource.Findings}:${Action.Update}`, `${Resource.Findings}:${Action.Delete}`,
+      `${Resource.PrComments}:${Action.Read}`,
     ],
   },
   Viewer: {
@@ -38,6 +41,7 @@ const ROLE_DEFS: Record<string, RoleDef> = {
       `${Resource.PullRequests}:${Action.Read}`, `${Resource.Repos}:${Action.Read}`, `${Resource.Reviews}:${Action.Read}`,
       `${Resource.Dashboard}:${Action.Read}`,
       `${Resource.Notifications}:${Action.Read}`, `${Resource.Notifications}:${Action.Update}`,
+      `${Resource.Findings}:${Action.Read}`, `${Resource.PrComments}:${Action.Read}`,
     ],
   },
 };

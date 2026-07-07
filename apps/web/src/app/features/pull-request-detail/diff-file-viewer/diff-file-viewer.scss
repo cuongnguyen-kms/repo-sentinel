@@ -53,6 +53,12 @@
   border-left-color: light-dark(#2953a6, #a9c6ff);
 }
 
+.finding-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .finding-title {
   font-weight: 600;
   margin-bottom: 4px;
@@ -60,4 +66,34 @@
 
 .finding-comment {
   color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 8px;
+}
+
+.finding-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-chip {
+  padding: 2px 8px;
+  border-radius: var(--app-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-resolved {
+  background: light-dark(#e2f6e8, #123420);
+  color: light-dark(#1a7a34, #7ee3a0);
+}
+
+.status-wontfix {
+  background: light-dark(#f0f0f0, #333);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.gh-link {
+  font-size: 0.8125rem;
+  color: var(--mat-sys-primary);
 }

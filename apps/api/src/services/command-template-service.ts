@@ -99,6 +99,22 @@ Calculate the score deterministically — do NOT rely on intuition:
 - \`stats\`: count of findings per severity level (critical, high, medium, low, info)
 - The file MUST be written via the Write tool before you finish — do not just print the JSON as text
 
+## Open Comments Resolution (if applicable)
+If a file named \`manager-hub-open-comments.json\` exists in the repo root, it contains previously-posted review findings. You MUST process it:
+
+1. Read \`./manager-hub-open-comments.json\`
+2. For each entry:
+   - **If \`"status": "WONT_FIX"\`** — this issue has been intentionally dismissed by the user. Do NOT evaluate it, do NOT set any \`resolution\`, and do NOT create a new finding for this issue even if you detect the same problem in the current code. Leave the entry exactly as-is and skip to the next one.
+   - **If \`"status": "OPEN"\`** — check the referenced \`file\` and \`line\` against the CURRENT code:
+     - If the code issue described in \`comment\` has been fixed → set \`"resolution": "RESOLVED"\` and \`"resolutionReason": "CODE_FIX"\`
+     - If the file/line is no longer part of the PR diff (removed or not in changed files) → set \`"resolution": "RESOLVED"\` and \`"resolutionReason": "LINE_NOT_IN_DIFF"\`
+     - If the finding is no longer relevant due to code restructuring → set \`"resolution": "RESOLVED"\` and \`"resolutionReason": "NO_LONGER_FLAGGED"\`
+     - If the issue still exists in the code → set \`"resolution": "STILL_OPEN"\`, \`"resolutionReason": null\`, and \`"updatedLine": <current line number where the issue now appears>\`. The line number may have shifted due to additions/deletions above it — check the actual current file to find the correct line.
+3. Write the updated array back to \`./manager-hub-open-comments.json\` using the Write tool
+4. Do NOT create new findings for still-open OPEN issues — they are already tracked. Only include NEW issues in your code-review-result.json findings.
+
+If \`manager-hub-open-comments.json\` does not exist, skip this step entirely.
+
 ## How to Get the PR Diff
 You are in the cloned repo with the PR branch checked out. Run this command to get the diff:
 \`\`\`
