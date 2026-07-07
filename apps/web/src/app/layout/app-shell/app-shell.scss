@@ -1,0 +1,15 @@
+.shell {
+  height: 100vh;
+  background: var(--mat-sys-surface);
+}
+
+.sidenav {
+  width: 248px;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.content {
+  padding: 24px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}

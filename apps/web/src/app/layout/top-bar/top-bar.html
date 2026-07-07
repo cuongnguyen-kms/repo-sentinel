@@ -1,0 +1,27 @@
+<mat-toolbar class="top-bar">
+  <button mat-icon-button (click)="toggleSidenav.emit()" aria-label="Toggle sidebar">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <button
+    mat-icon-button
+    (click)="toggleTheme()"
+    [matTooltip]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+    aria-label="Toggle theme"
+  >
+    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+  <app-notification-bell />
+  @if (user(); as u) {
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+      <mat-icon>account_circle</mat-icon>
+      {{ u.name }}
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="signOut()">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
+  }
+</mat-toolbar>

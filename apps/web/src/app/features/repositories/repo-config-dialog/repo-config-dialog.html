@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{ repo.fullName }}</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Polling interval (seconds)</mat-label>
+    <input matInput type="number" min="60" max="1800" [ngModel]="pollingInterval()" (ngModelChange)="pollingInterval.set($event)" />
+  </mat-form-field>
+
+  <mat-slide-toggle [checked]="isActive()" (change)="isActive.set($event.checked)">Active</mat-slide-toggle>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+    @if (saving()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Save
+    }
+  </button>
+</mat-dialog-actions>

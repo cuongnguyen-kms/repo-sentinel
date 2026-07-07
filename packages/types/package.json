@@ -1,0 +1,16 @@
+{
+  "name": "@repo-sentinel/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@repo-sentinel/config": "*",
+    "typescript": "^5.7"
+  }
+}

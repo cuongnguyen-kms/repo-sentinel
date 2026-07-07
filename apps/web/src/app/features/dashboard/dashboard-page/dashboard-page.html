@@ -1,0 +1,20 @@
+<h1>Dashboard</h1>
+<p class="subtitle">Live overview of your watched repositories and reviews.</p>
+
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else {
+  <div class="cards">
+    @for (card of cards(); track card.label) {
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="icon-avatar" [class]="'accent-' + card.accent">
+            <mat-icon>{{ card.icon }}</mat-icon>
+          </div>
+          <div class="value">{{ card.value }}</div>
+          <div class="label">{{ card.label }}</div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+}

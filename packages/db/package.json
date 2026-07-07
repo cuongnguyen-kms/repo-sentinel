@@ -1,0 +1,23 @@
+{
+  "name": "@repo-sentinel/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1"
+  },
+  "devDependencies": {
+    "@repo-sentinel/config": "*",
+    "@types/node": "^22",
+    "dotenv-cli": "^11.0.0",
+    "prisma": "^6.4.1"
+  }
+}

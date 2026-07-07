@@ -1,0 +1,48 @@
+# dependencies
+/node_modules
+apps/*/node_modules
+packages/*/node_modules
+
+# testing
+/coverage
+
+# build artifacts
+dist/
+apps/*/dist
+packages/*/dist
+build/
+
+# misc
+.DS_Store
+*.pem
+*.key
+
+# IDE / AI tooling
+.idea
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# env files
+.env*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+# Turborepo
+.turbo
+
+# Prisma generated client
+packages/db/node_modules/.prisma
+packages/db/prisma/*.db
+
+# Angular
+apps/web/.angular

@@ -1,0 +1,8 @@
+<div class="terminal-header">
+  <span class="phase">{{ phase() }}</span>
+  <button mat-button color="warn" (click)="cancel()" [disabled]="cancelling()">
+    <mat-icon>stop</mat-icon>
+    Cancel
+  </button>
+</div>
+<pre #logEl class="terminal-log">{{ logText() }}</pre>

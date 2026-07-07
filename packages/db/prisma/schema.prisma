@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model GheConnection {
+  id        String   @id @default(cuid())
+  hostname  String
+  username  String
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  repos     WatchedRepo[]
+}
+
+model WatchedRepo {
+  id                   String        @id @default(cuid())
+  connectionId         String
+  connection           GheConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  owner                String
+  name                 String
+  fullName             String
+  pollingInterval      Int           @default(300)
+  lastPolledAt         DateTime?
+  lastPollStatus       String?       // "ok" | "error" | "skipped"
+  etag                 String?
+  isActive             Boolean       @default(true)
+  promptTemplate       String?       @db.Text  // repo-specific user prompt (null = use global)
+  systemPromptTemplate String?       @db.Text  // repo-specific system prompt (null = use global)
+  createdAt            DateTime      @default(now())
+  pullRequests         PullRequest[]
+
+  @@unique([connectionId, fullName])
+}
+
+model PullRequest {
+  id             String       @id @default(cuid())
+  repoId         String
+  repo           WatchedRepo  @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  ghePrId        Int
+  ghePrNodeId    String?
+  title          String
+  body           String?
+  authorLogin    String
+  authorAvatar   String?
+  state          PrState      @default(OPEN)
+  headRef        String
+  baseRef        String
+  htmlUrl        String
+  diffUrl        String
+  createdAtGhe   DateTime
+  updatedAtGhe   DateTime
+  mergedAt       DateTime?
+  closedAt       DateTime?
+  additions      Int          @default(0)
+  deletions      Int          @default(0)
+  changedFiles   Int          @default(0)
+  headCommitSha  String?
+  draft          Boolean      @default(false)
+  reviewStatus   ReviewStatus @default(PENDING)
+  aiReviews      AiReview[]
+  firstSeenAt    DateTime     @default(now())
+  notifiedAt     DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([repoId, ghePrId])
+  @@index([repoId, reviewStatus])
+}
+
+model AiReview {
+  id                   String                  @id @default(cuid())
+  pullRequestId        String?
+  pullRequest          PullRequest?            @relation(fields: [pullRequestId], references: [id], onDelete: SetNull)
+  commitSha            String                  @default("unknown")
+  status               AiReviewStatus          @default(QUEUED)
+  command              String
+  output               String?                 @db.Text
+  report               String?                 @db.Text
+  reviewPhase          String?
+  summary              String?
+  score                Float?
+  codeReviewJson       String?                 @db.Text
+  findingsCount        Int?
+  diffContent          String?                 @db.Text
+  terminalLog          String?                 @db.Text  // full terminal output (cloning, reviewing, streaming)
+  startedAt            DateTime?
+  completedAt          DateTime?
+  errorMessage         String?
+  createdAt            DateTime                @default(now())
+  postedComments       PostedFindingComment[]
+
+  @@index([pullRequestId])
+  @@index([status])
+}
+
+/** Tracks AI review findings that were posted to GitHub as PR comments (Phase 2+ feature — schema kept for forward-compat). */
+model PostedFindingComment {
+  id                  String    @id @default(cuid())
+  reviewId            String
+  review              AiReview  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  findingId           String
+  githubCommentId     String?   // null for batch-submitted findings; stored as string to avoid INT4 overflow (GitHub IDs exceed 2^31)
+  githubHtmlUrl       String
+  postedAt            DateTime  @default(now())
+  deletedOnGithub     Boolean   @default(false)
+  resolutionStatus    String?   @default("OPEN")   // OPEN | RESOLVED | WONT_FIX
+  resolutionReason    String?   // CODE_FIX | LINE_NOT_IN_DIFF | NO_LONGER_FLAGGED | MANUAL | SUPERSEDED
+  resolvedAt          DateTime?
+  resolvedByCommitSha String?
+  carriedFromReviewId String?
+
+  @@unique([reviewId, findingId])
+}
+
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String             @id @default(cuid())
+  type      NotificationType
+  status    NotificationStatus @default(NEW)
+  title     String
+  message   String?
+  metadata  String?            @db.Text   // JSON: { prId, repoId, reviewId, ... }
+  createdAt DateTime           @default(now())
+  readAt    DateTime?
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ========== better-auth core models ==========
+
+model User {
+  id               String                @id
+  name             String
+  email            String                @unique
+  emailVerified    Boolean               @default(false)
+  image            String?
+  role             String                @default("user")
+  banned           Boolean?
+  banReason        String?
+  banExpires       DateTime?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  sessions         Session[]
+  accounts         Account[]
+  groupMemberships UserGroupMembership[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                    String    @id
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ========== RBAC models ==========
+
+model UserGroup {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roles       UserGroupRole[]
+  members     UserGroupMembership[]
+}
+
+model Permission {
+  id        String   @id @default(cuid())
+  resource  String
+  action    String
+  createdAt DateTime @default(now())
+  roles     RolePermission[]
+
+  @@unique([resource, action])
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  permissions RolePermission[]
+  groups      UserGroupRole[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model UserGroupRole {
+  id      String    @id @default(cuid())
+  groupId String
+  group   UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  roleId  String
+  role    Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, roleId])
+}
+
+model UserGroupMembership {
+  id      String    @id @default(cuid())
+  userId  String
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId String
+  group   UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+}
+
+enum PrState {
+  OPEN
+  CLOSED
+  MERGED
+}
+
+enum ReviewStatus {
+  PENDING
+  QUEUED
+  IN_PROGRESS
+  REVIEWED
+  UPDATED
+  FAILED
+}
+
+enum AiReviewStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum NotificationType {
+  PR_NEW
+  PR_MERGED
+  PR_CLOSED
+  REVIEW_OUTDATED
+  REVIEW_COMPLETED
+  REVIEW_FAILED
+  REVIEW_CANCELLED
+}
+
+enum NotificationStatus {
+  NEW
+  READ
+}

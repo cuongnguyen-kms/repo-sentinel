@@ -1,0 +1,11 @@
+.full-width {
+  width: 100%;
+}
+
+.empty {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error {
+  color: light-dark(#a3261d, #ff9f93);
+}

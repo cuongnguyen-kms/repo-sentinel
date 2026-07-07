@@ -1,0 +1,19 @@
+.subtitle {
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 20px;
+}
+
+.settings-card {
+  max-width: 560px;
+  border-radius: var(--app-radius-md);
+}
+
+.full-width {
+  width: 100%;
+  margin: 8px 0;
+}
+
+mat-slide-toggle {
+  display: block;
+  margin: 12px 0;
+}

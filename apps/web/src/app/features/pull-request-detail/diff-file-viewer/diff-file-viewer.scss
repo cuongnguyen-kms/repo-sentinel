@@ -1,0 +1,63 @@
+.diff-lines {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8125rem;
+}
+
+.diff-line {
+  display: flex;
+  white-space: pre;
+}
+
+.line-number {
+  width: 48px;
+  flex: none;
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.7;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.line-add {
+  background: light-dark(#e2f6e8, #123420);
+}
+
+.line-del {
+  background: light-dark(#fce8e8, #3a1414);
+}
+
+.finding-count {
+  color: light-dark(#a3261d, #ff9f93);
+  font-weight: 600;
+}
+
+.finding-card {
+  margin: 4px 0 4px 56px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--mat-sys-outline);
+  border-radius: 0 var(--app-radius-sm) var(--app-radius-sm) 0;
+  background: var(--mat-sys-surface-container-low);
+  font-family: Roboto, sans-serif;
+}
+
+.severity-critical,
+.severity-high {
+  border-left-color: light-dark(#a3261d, #ff9f93);
+}
+
+.severity-medium {
+  border-left-color: light-dark(#a3720a, #f0c952);
+}
+
+.severity-low,
+.severity-info {
+  border-left-color: light-dark(#2953a6, #a9c6ff);
+}
+
+.finding-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.finding-comment {
+  color: var(--mat-sys-on-surface-variant);
+}

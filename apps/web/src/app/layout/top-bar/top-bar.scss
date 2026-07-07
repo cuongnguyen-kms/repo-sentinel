@@ -1,0 +1,18 @@
+.top-bar {
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

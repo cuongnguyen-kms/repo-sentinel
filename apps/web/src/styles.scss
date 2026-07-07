@@ -1,0 +1,118 @@
+// Material 3 theme. `theme-type: color-scheme` emits tokens using the CSS `light-dark()`
+// function, so switching between light/dark at runtime is just a matter of setting the
+// `color-scheme` CSS property on `html` (see ThemeService) — no duplicate theme blocks needed.
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: color-scheme,
+        primary: mat.$violet-palette,
+        tertiary: mat.$magenta-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  // Defaults to the user's system preference; ThemeService overrides this explicitly
+  // once the user picks light/dark, or on initial load from a saved preference.
+  color-scheme: light dark;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--mat-sys-headline-small-font);
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+h1 {
+  font: var(--mat-sys-headline-medium);
+  margin: 0 0 4px;
+}
+
+h2 {
+  font: var(--mat-sys-title-large);
+  margin: 24px 0 12px;
+}
+
+h3 {
+  font: var(--mat-sys-title-medium);
+  margin: 0 0 8px;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+// Consistent rounded-corner language across custom (non-Material) surfaces.
+:root {
+  --app-radius-sm: 8px;
+  --app-radius-md: 12px;
+  --app-radius-lg: 16px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-outline-variant);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// Shared semantic status colors — used by status chips/badges across pages (repo status,
+// PR review status, AI review status, finding severity). Defined once via light-dark() so
+// every consumer automatically adapts to the active color scheme.
+.chip-success {
+  background: light-dark(#d7f2df, #16341f);
+  color: light-dark(#1a6b34, #8bd9a0);
+}
+
+.chip-warn {
+  background: light-dark(#fdedc8, #3d2f00);
+  color: light-dark(#7a5d00, #f0c952);
+}
+
+.chip-error {
+  background: light-dark(#fbdedb, #401410);
+  color: light-dark(#a3261d, #ff9f93);
+}
+
+.chip-info {
+  background: light-dark(#dbe7fd, #142a4a);
+  color: light-dark(#2953a6, #a9c6ff);
+}
+
+.chip-neutral {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.surface-card {
+  border-radius: var(--app-radius-md);
+  border: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-low);
+}

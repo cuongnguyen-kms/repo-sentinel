@@ -1,0 +1,50 @@
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--mat-sys-surface-container-low);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+}
+
+.brand-icon {
+  flex: none;
+  border-radius: var(--app-radius-md);
+  display: block;
+}
+
+.brand-name {
+  font: var(--mat-sys-title-medium);
+  font-weight: 600;
+}
+
+.nav-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  border-radius: var(--app-radius-lg);
+  --mdc-list-list-item-container-shape: var(--app-radius-lg);
+}
+
+.nav-item.active {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+
+  ::ng-deep .mdc-list-item__primary-text {
+    color: var(--mat-sys-on-secondary-container);
+    font-weight: 600;
+  }
+
+  ::ng-deep .mat-icon {
+    color: var(--mat-sys-on-secondary-container);
+  }
+}

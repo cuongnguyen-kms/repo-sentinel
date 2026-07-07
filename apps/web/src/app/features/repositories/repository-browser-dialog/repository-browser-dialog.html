@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Browse Repositories</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Connection</mat-label>
+    <mat-select [ngModel]="selectedConnectionId()" (ngModelChange)="onConnectionChange($event)">
+      @for (conn of connections(); track conn.id) {
+        <mat-option [value]="conn.id">{{ conn.hostname }} ({{ conn.username }})</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Search</mat-label>
+    <input matInput [ngModel]="search()" (ngModelChange)="search.set($event)" (keyup.enter)="loadRepos()" />
+  </mat-form-field>
+
+  @if (loading()) {
+    <mat-spinner diameter="28"></mat-spinner>
+  } @else if (repos().length === 0) {
+    <p class="empty">No repositories found.</p>
+  } @else {
+    <mat-selection-list>
+      @for (repo of repos(); track repo.fullName) {
+        <mat-list-item>
+          <mat-checkbox [checked]="selected().has(repo.fullName)" (change)="toggle(repo.fullName)">
+            {{ repo.fullName }}
+          </mat-checkbox>
+        </mat-list-item>
+      }
+    </mat-selection-list>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="watchSelected()" [disabled]="watching() || selected().size === 0">
+    @if (watching()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Watch {{ selected().size || '' }}
+    }
+  </button>
+</mat-dialog-actions>

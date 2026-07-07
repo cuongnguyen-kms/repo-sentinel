@@ -1,0 +1,56 @@
+<div class="header-row">
+  <div>
+    <h1>Connections</h1>
+    <p class="subtitle">GitHub Enterprise connections used to watch and review repositories.</p>
+  </div>
+  @if (canCreate) {
+    <button mat-flat-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      Add Connection
+    </button>
+  }
+</div>
+
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else if (connections().length === 0) {
+  <div class="empty-state">
+    <mat-icon>link_off</mat-icon>
+    <p>No connections yet.</p>
+  </div>
+} @else {
+  <div class="list">
+    @for (conn of connections(); track conn.id) {
+      <mat-card class="conn-card">
+        <mat-card-content>
+          <div class="conn-row">
+            <div class="conn-icon">
+              <mat-icon>dns</mat-icon>
+            </div>
+            <div class="conn-info">
+              <div class="conn-hostname">{{ conn.hostname }}</div>
+              <div class="conn-username">{{ conn.username }}</div>
+            </div>
+            @if (testResults()[conn.id]) {
+              <span class="chip" [class]="testResults()[conn.id]!.startsWith('✓') ? 'chip-success' : 'chip-error'">
+                {{ testResults()[conn.id] }}
+              </span>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="test(conn.id)" [disabled]="testing() === conn.id">
+            @if (testing() === conn.id) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Test
+            }
+          </button>
+          @if (canDelete) {
+            <button mat-button color="warn" (click)="remove(conn.id)">Delete</button>
+          }
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+}

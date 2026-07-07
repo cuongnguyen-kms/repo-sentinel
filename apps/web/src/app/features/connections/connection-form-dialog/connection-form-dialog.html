@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Add GitHub Connection</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Hostname</mat-label>
+    <input matInput placeholder="github.com" [ngModel]="hostname()" (ngModelChange)="hostname.set($event)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Username</mat-label>
+    <input matInput [ngModel]="username()" (ngModelChange)="username.set($event)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Personal Access Token</mat-label>
+    <input matInput type="password" [ngModel]="token()" (ngModelChange)="token.set($event)" autocomplete="new-password" />
+  </mat-form-field>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="submit()" [disabled]="saving()">
+    @if (saving()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Create
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,21 @@
+{
+  "name": "repo-sentinel",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "db:migrate": "turbo db:migrate --filter=@repo-sentinel/db",
+    "db:generate": "turbo db:generate --filter=@repo-sentinel/db"
+  },
+  "devDependencies": {
+    "turbo": "^2",
+    "typescript": "^5.7"
+  },
+  "packageManager": "npm@10.9.2"
+}

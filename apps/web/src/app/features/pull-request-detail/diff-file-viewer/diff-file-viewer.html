@@ -1,0 +1,25 @@
+<mat-expansion-panel [expanded]="expanded()" (opened)="expanded.set(true)" (closed)="expanded.set(false)">
+  <mat-expansion-panel-header>
+    <mat-panel-title>{{ filePath() }}</mat-panel-title>
+    <mat-panel-description>
+      @if (findingCount() > 0) {
+        <span class="finding-count">{{ findingCount() }} finding(s)</span>
+      }
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <div class="diff-lines">
+    @for (line of lines(); track $index) {
+      <div class="diff-line" [class]="'line-' + line.type">
+        <span class="line-number">{{ line.lineNumber ?? '' }}</span>
+        <span class="line-content">{{ line.content }}</span>
+      </div>
+      @for (finding of line.findings; track finding.id) {
+        <div class="finding-card" [class]="'severity-' + finding.severity">
+          <div class="finding-title">[{{ finding.severity | uppercase }}] {{ finding.title }}</div>
+          <div class="finding-comment">{{ finding.comment }}</div>
+        </div>
+      }
+    }
+  </div>
+</mat-expansion-panel>

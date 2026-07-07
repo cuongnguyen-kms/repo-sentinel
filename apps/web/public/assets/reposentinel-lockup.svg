@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="140" viewBox="0 0 560 140" fill="none">
+  <g transform="translate(6,26)">
+    <polyline points="46,32 18,60 46,88" fill="none" stroke="#0E1621" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></polyline>
+    <polyline points="74,32 102,60 74,88" fill="none" stroke="#0E1621" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></polyline>
+    <circle cx="60" cy="60" r="16" fill="#C7562F"></circle>
+    <circle cx="60" cy="60" r="6" fill="#0E1621"></circle>
+  </g>
+  <text x="140" y="90" font-family="&#39;Space Grotesk&#39;,&#39;Helvetica Neue&#39;,Arial,sans-serif" font-weight="600" font-size="66" letter-spacing="-2.5"><tspan fill="#B4AEA2">Repo</tspan><tspan fill="#0E1621">Sentinel</tspan></text>
+</svg>

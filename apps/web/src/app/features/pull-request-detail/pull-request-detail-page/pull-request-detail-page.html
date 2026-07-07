@@ -1,0 +1,49 @@
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else if (pr(); as prVal) {
+  <div class="pr-header">
+    <div>
+      <h1>#{{ prVal.ghePrId }} {{ prVal.title }}</h1>
+      <p class="meta">
+        {{ prVal.authorLogin }} · {{ prVal.headRef }} → {{ prVal.baseRef }} ·
+        <a [href]="prVal.htmlUrl" target="_blank" rel="noopener">View on GitHub</a>
+      </p>
+    </div>
+    <div class="actions">
+      @if (latestReview(); as review) {
+        <app-ai-review-status-badge [status]="review.status" />
+      }
+      @if (canTrigger) {
+        <app-ai-review-trigger-button
+          [prId]="prVal.id"
+          [isActive]="isActive()"
+          [label]="latestReview() ? 'Re-run Review' : 'Run AI Review'"
+          (triggered)="onTriggered($event)"
+        />
+      }
+    </div>
+  </div>
+
+  @if (isActive() && latestReview(); as review) {
+    <mat-card class="terminal-card">
+      <app-ai-review-terminal-panel [reviewId]="review.id" [prId]="prVal.id" (completed)="onReviewCompleted()" />
+    </mat-card>
+  } @else if (latestReview(); as review) {
+    @if (review.status === 'COMPLETED') {
+      <app-ai-review-display [review]="review" />
+    } @else if (review.status === 'FAILED') {
+      <mat-card>
+        <mat-card-content>
+          <p class="error">Review failed: {{ review.errorMessage }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  } @else {
+    <p class="empty">No review yet. Trigger one to get started.</p>
+  }
+
+  @if (history().length > 0) {
+    <h2>Review History</h2>
+    <app-review-history-list [reviews]="history()" />
+  }
+}

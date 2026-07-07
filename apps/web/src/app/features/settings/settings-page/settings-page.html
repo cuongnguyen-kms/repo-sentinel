@@ -1,0 +1,65 @@
+<h1>Settings</h1>
+<p class="subtitle">Configure AI review behavior.</p>
+
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else {
+  <mat-card class="settings-card">
+    <mat-card-content>
+      <h3>AI Review</h3>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Idle timeout (seconds)</mat-label>
+        <input matInput type="number" [ngModel]="timeout()" (ngModelChange)="timeout.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Max files per PR</mat-label>
+        <input matInput type="number" [ngModel]="maxFiles()" (ngModelChange)="maxFiles.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Max diff size (bytes)</mat-label>
+        <input matInput type="number" [ngModel]="maxDiffSize()" (ngModelChange)="maxDiffSize.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Model</mat-label>
+        <input matInput [ngModel]="model()" (ngModelChange)="model.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-slide-toggle [checked]="autoReview()" (change)="autoReview.set($event.checked)" [disabled]="!canEdit">
+        Auto-review new PRs
+      </mat-slide-toggle>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Auto-review statuses (CSV)</mat-label>
+        <input matInput [ngModel]="autoReviewStatuses()" (ngModelChange)="autoReviewStatuses.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Auto-review author whitelist (CSV, empty = all)</mat-label>
+        <input matInput [ngModel]="autoReviewAuthors()" (ngModelChange)="autoReviewAuthors.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      <mat-slide-toggle [checked]="autoRerunReview()" (change)="autoRerunReview.set($event.checked)" [disabled]="!canEdit">
+        Auto re-run on new commits
+      </mat-slide-toggle>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Auto-rerun statuses (CSV)</mat-label>
+        <input matInput [ngModel]="autoRerunReviewStatuses()" (ngModelChange)="autoRerunReviewStatuses.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
+      @if (canEdit) {
+        <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+          @if (saving()) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            Save
+          }
+        </button>
+      }
+    </mat-card-content>
+  </mat-card>
+}

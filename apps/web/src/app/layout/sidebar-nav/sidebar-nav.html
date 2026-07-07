@@ -1,0 +1,21 @@
+<div class="sidebar">
+  <div class="brand">
+    <img src="assets/reposentinel-icon.svg" alt="RepoSentinel" class="brand-icon" width="36" height="36" />
+    <span class="brand-name">RepoSentinel</span>
+  </div>
+
+  <mat-nav-list class="nav-list">
+    @for (item of items(); track item.path) {
+      <a
+        mat-list-item
+        [routerLink]="item.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+    }
+  </mat-nav-list>
+</div>

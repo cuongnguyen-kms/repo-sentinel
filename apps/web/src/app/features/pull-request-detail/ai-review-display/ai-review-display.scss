@@ -1,0 +1,58 @@
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.score {
+  font-size: 2rem;
+  font-weight: 700;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex: none;
+}
+
+.score-good {
+  background: light-dark(#d7f2df, #16341f);
+  color: light-dark(#1a6b34, #8bd9a0);
+}
+
+.score-warn {
+  background: light-dark(#fdedc8, #3d2f00);
+  color: light-dark(#7a5d00, #f0c952);
+}
+
+.score-bad {
+  background: light-dark(#fbdedb, #401410);
+  color: light-dark(#a3261d, #ff9f93);
+}
+
+.score-neutral {
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-on-surface-variant);
+  flex-wrap: wrap;
+}
+
+.diff-files {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report {
+  white-space: pre-wrap;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8125rem;
+}

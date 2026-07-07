@@ -1,0 +1,35 @@
+<div class="login-page">
+  <mat-card class="login-card">
+    <mat-card-content>
+      <div class="brand">
+        <img src="assets/reposentinel-icon.svg" alt="RepoSentinel" class="brand-icon" width="56" height="56" />
+        <h1>RepoSentinel</h1>
+        <p class="subtitle">Sign in to continue</p>
+      </div>
+
+      <form (ngSubmit)="submit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" name="email" [ngModel]="email()" (ngModelChange)="email.set($event)" required autocomplete="username" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" name="password" [ngModel]="password()" (ngModelChange)="password.set($event)" required autocomplete="current-password" />
+        </mat-form-field>
+
+        @if (error()) {
+          <p class="error">{{ error() }}</p>
+        }
+
+        <button mat-flat-button color="primary" type="submit" class="full-width submit-btn" [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Sign in
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

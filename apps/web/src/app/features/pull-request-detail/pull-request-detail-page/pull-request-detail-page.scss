@@ -1,0 +1,43 @@
+.pr-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.meta {
+  color: var(--mat-sys-on-surface-variant);
+
+  a {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+
+.terminal-card {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border-radius: var(--app-radius-md);
+}
+
+.error {
+  color: light-dark(#a3261d, #ff9f93);
+}
+
+.empty {
+  color: var(--mat-sys-on-surface-variant);
+}
