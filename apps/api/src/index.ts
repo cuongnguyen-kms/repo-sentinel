@@ -18,6 +18,8 @@ import { registerReposRoutes } from "./routes/repos-routes.js";
 import { registerPullRequestRoutes } from "./routes/pull-requests-routes.js";
 import { registerNotificationRoutes } from "./routes/notification-routes.js";
 import { registerReviewRoutes } from "./routes/review-routes.js";
+import { registerReviewCommentRoutes } from "./routes/review-comment-routes.js";
+import { registerReviewResolutionRoutes } from "./routes/review-resolution-routes.js";
 import { registerSettingsRoutes } from "./routes/settings-routes.js";
 import { startPollingWorker } from "./queues/repo-polling-queue.js";
 import { startScanReposScheduler } from "./queues/scan-repos-scheduler.js";
@@ -48,6 +50,8 @@ async function main(): Promise<void> {
   await app.register(registerPullRequestRoutes);
   await app.register(registerNotificationRoutes);
   await app.register(registerReviewRoutes);
+  await app.register(registerReviewCommentRoutes);
+  await app.register(registerReviewResolutionRoutes);
   await app.register(registerSettingsRoutes);
 
   // Seed before accepting requests so DB is ready when first request arrives

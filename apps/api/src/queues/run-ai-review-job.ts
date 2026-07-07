@@ -27,6 +27,8 @@ import { ensureRepoReady } from "../services/git-checkout-service.js";
 import { parseReviewOutput } from "../services/ai-review-service.js";
 import { readCodeReviewJson } from "../services/code-review-json-parser.js";
 import { computeFingerprints } from "../services/finding-fingerprint-service.js";
+import { writeOpenCommentsJson } from "../services/open-comments-writer-service.js";
+import { applyOpenCommentResolutions } from "../services/open-comments-resolution-service.js";
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { createNotification, NotificationType } from "../services/notification-persistence-service.js";
@@ -108,6 +110,9 @@ export async function runAiReviewJob(
 
   // 3a. Delete stale files from any previous run so Claude starts fresh
   await unlink(join(repoPath, "code-review-result.json")).catch(() => {});
+
+  // 3b. Write previous open findings for Claude to evaluate during this run
+  const { snapshot: openCommentsSnapshot } = await writeOpenCommentsJson(fastify.prisma, prId, repoPath, log);
 
   // 4. Switch to REVIEWING phase
   emitPhase(fastify.io, fastify.prisma, reviewId, "REVIEWING", log);
@@ -229,6 +234,23 @@ export async function runAiReviewJob(
 
   const codeReviewJson = codeReviewResult ? JSON.stringify(codeReviewResult) : null;
 
+  // 8c. Apply Claude's open-comment resolution results (best-effort — never fails the run)
+  const resolutionResult = codeReviewResult
+    ? await applyOpenCommentResolutions(
+        fastify.prisma,
+        repoPath,
+        commitSha,
+        { reviewId, findings: codeReviewResult.findings },
+        log
+      )
+    : null;
+  if (resolutionResult) {
+    log.info(
+      { resolved: resolutionResult.resolved, stillOpen: resolutionResult.stillOpen, carriedOver: resolutionResult.carriedOver },
+      "[open-comments] resolution applied"
+    );
+  }
+
   // 9. Persist completed review to DB
   await fastify.prisma.aiReview.update({
     where: { id: reviewId },
@@ -244,6 +266,7 @@ export async function runAiReviewJob(
       diffContent: fullDiff || diff,
       reviewPhase: "COMPLETE",
       completedAt: new Date(),
+      openCommentsSnapshot,
     },
   });
   await fastify.prisma.pullRequest.update({

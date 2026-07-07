@@ -20,6 +20,7 @@ const DEFAULT_SETTINGS = [
   { key: "ai.review.autoRerunReview", value: "0" },
   { key: "ai.review.autoRerunReviewStatuses", value: "OPEN" },
   { key: "polling.defaultInterval", value: "300" },
+  { key: "ai.review.dismissKeywords", value: "not fix,not a fix,invalid,wont fix,won't fix,false positive" },
 ] as const;
 
 /**

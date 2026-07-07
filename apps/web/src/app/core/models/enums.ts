@@ -46,9 +46,11 @@ export enum NotificationStatus {
 export enum Resource {
   Connections = 'connections',
   Dashboard = 'dashboard',
+  Findings = 'findings',
   Groups = 'groups',
   Notifications = 'notifications',
   Permissions = 'permissions',
+  PrComments = 'pr-comments',
   PullRequests = 'pull-requests',
   Repos = 'repos',
   Reviews = 'reviews',

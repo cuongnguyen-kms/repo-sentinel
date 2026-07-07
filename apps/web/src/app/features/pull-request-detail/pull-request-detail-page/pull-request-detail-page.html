@@ -30,7 +30,37 @@
     </mat-card>
   } @else if (latestReview(); as review) {
     @if (review.status === 'COMPLETED') {
-      <app-ai-review-display [review]="review" />
+      @if (comparison(); as cmp) {
+        <div class="comparison-summary">
+          <span class="chip chip-neutral">New: {{ cmp.newCount }}</span>
+          <span class="chip chip-neutral">Carried over: {{ cmp.carriedOverCount }}</span>
+          <span class="chip chip-success">Resolved: {{ cmp.resolvedCount }}</span>
+          <span class="chip chip-success">Open comments resolved: {{ cmp.openCommentsResolved ?? 0 }}</span>
+          <span class="chip chip-warn">Still open: {{ cmp.openCommentsStillOpen ?? 0 }}</span>
+        </div>
+      }
+
+      <div class="review-actions">
+        @if (canPostFindings) {
+          <button mat-stroked-button [disabled]="selectedFindingIds().size === 0 || actionBusy()" (click)="onSubmitSelected()">
+            Submit Selected ({{ selectedFindingIds().size }})
+          </button>
+        }
+        @if (canUpdateFindings) {
+          <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncThreadStatus()">Sync Thread Status</button>
+        }
+        <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncReplies()">Sync Replies</button>
+      </div>
+
+      <app-ai-review-display
+        [review]="review"
+        [postedComments]="postedComments()"
+        [selectedFindingIds]="selectedFindingIds()"
+        [actionBusy]="actionBusy()"
+        (post)="onPostFinding($event)"
+        (resolve)="onResolveFinding($event)"
+        (toggleSelect)="onToggleSelect($event)"
+      />
     } @else if (review.status === 'FAILED') {
       <mat-card>
         <mat-card-content>

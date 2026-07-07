@@ -93,28 +93,56 @@ model AiReview {
   errorMessage         String?
   createdAt            DateTime                @default(now())
   postedComments       PostedFindingComment[]
+  openCommentsSnapshot String?                 @db.Text
 
   @@index([pullRequestId])
   @@index([status])
 }
 
-/** Tracks AI review findings that were posted to GitHub as PR comments (Phase 2+ feature — schema kept for forward-compat). */
+/** Tracks AI review findings that were posted to GitHub as PR comments. */
 model PostedFindingComment {
-  id                  String    @id @default(cuid())
-  reviewId            String
-  review              AiReview  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  findingId           String
-  githubCommentId     String?   // null for batch-submitted findings; stored as string to avoid INT4 overflow (GitHub IDs exceed 2^31)
-  githubHtmlUrl       String
-  postedAt            DateTime  @default(now())
-  deletedOnGithub     Boolean   @default(false)
-  resolutionStatus    String?   @default("OPEN")   // OPEN | RESOLVED | WONT_FIX
-  resolutionReason    String?   // CODE_FIX | LINE_NOT_IN_DIFF | NO_LONGER_FLAGGED | MANUAL | SUPERSEDED
-  resolvedAt          DateTime?
-  resolvedByCommitSha String?
-  carriedFromReviewId String?
+  id                     String         @id @default(cuid())
+  reviewId               String
+  review                 AiReview       @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  findingId              String
+  githubCommentId        String?   // null for batch-submitted findings; stored as string to avoid INT4 overflow (GitHub IDs exceed 2^31)
+  githubHtmlUrl          String
+  postedAt               DateTime       @default(now())
+  deletedOnGithub        Boolean        @default(false)
+  resolutionStatus       String?        @default("OPEN")   // OPEN | RESOLVED | WONT_FIX
+  resolutionReason       String?   // CODE_FIX | LINE_NOT_IN_DIFF | NO_LONGER_FLAGGED | MANUAL | SUPERSEDED
+  resolvedAt             DateTime?
+  resolvedByCommitSha    String?
+  carriedFromReviewId    String?
+  githubThreadResolved   Boolean        @default(false)
+  githubThreadResolvedAt DateTime?
+  dismissedAt            DateTime?
+  dismissedBy            String?
+  dismissalKeyword       String?
+  replyCount             Int            @default(0)
+  lastReplyAt            DateTime?
+  lastReplyAuthor        String?
+  lastReplyBody          String?        @db.Text
+  repliesSyncedAt        DateTime?
+  replies                FindingReply[]
 
   @@unique([reviewId, findingId])
+}
+
+model FindingReply {
+  id              String               @id @default(cuid())
+  postedCommentId String
+  postedComment   PostedFindingComment @relation(fields: [postedCommentId], references: [id], onDelete: Cascade)
+  githubCommentId String               @unique
+  githubHtmlUrl   String
+  author          String
+  body            String               @db.Text
+  isDismissal     Boolean              @default(false)
+  matchedKeyword  String?
+  createdAtGithub DateTime
+  syncedAt        DateTime             @default(now())
+
+  @@index([postedCommentId])
 }
 
 model AppSetting {

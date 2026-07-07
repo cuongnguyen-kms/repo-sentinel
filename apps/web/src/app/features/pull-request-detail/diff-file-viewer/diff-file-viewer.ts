@@ -1,9 +1,11 @@
 import { UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import type { File as DiffFile } from 'parse-diff';
-import type { CodeReviewFinding } from '../../../core/models/dto';
+import type { CodeReviewFinding, PostedFindingCommentDto } from '../../../core/models/dto';
 
 interface RenderedLine {
   type: 'add' | 'del' | 'normal';
@@ -12,10 +14,20 @@ interface RenderedLine {
   findings: CodeReviewFinding[];
 }
 
+export interface PostFindingEvent {
+  finding: CodeReviewFinding;
+  filePath: string;
+}
+
+export interface ResolveFindingEvent {
+  findingId: string;
+  reason: 'MANUAL' | 'WONT_FIX';
+}
+
 @Component({
   selector: 'app-diff-file-viewer',
   standalone: true,
-  imports: [MatExpansionModule, MatIconModule, UpperCasePipe],
+  imports: [MatButtonModule, MatCheckboxModule, MatExpansionModule, MatIconModule, UpperCasePipe],
   templateUrl: './diff-file-viewer.html',
   styleUrl: './diff-file-viewer.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +35,13 @@ interface RenderedLine {
 export class DiffFileViewer {
   readonly file = input.required<DiffFile>();
   readonly findings = input<CodeReviewFinding[]>([]);
+  readonly postedComments = input<Map<string, PostedFindingCommentDto>>(new Map());
+  readonly selectedFindingIds = input<Set<string>>(new Set());
+  readonly actionBusy = input(false);
+
+  readonly post = output<PostFindingEvent>();
+  readonly resolve = output<ResolveFindingEvent>();
+  readonly toggleSelect = output<string>();
 
   readonly expanded = signal(false);
 
@@ -66,5 +85,30 @@ export class DiffFileViewer {
 
   toggle(): void {
     this.expanded.update((v) => !v);
+  }
+
+  postedFor(findingId: string): PostedFindingCommentDto | undefined {
+    return this.postedComments().get(findingId);
+  }
+
+  isPosted(findingId: string): boolean {
+    const posted = this.postedFor(findingId);
+    return !!posted && !posted.deletedOnGithub;
+  }
+
+  isSelected(findingId: string): boolean {
+    return this.selectedFindingIds().has(findingId);
+  }
+
+  onPost(finding: CodeReviewFinding): void {
+    this.post.emit({ finding, filePath: this.filePath() });
+  }
+
+  onResolve(findingId: string, reason: 'MANUAL' | 'WONT_FIX'): void {
+    this.resolve.emit({ findingId, reason });
+  }
+
+  onToggleSelect(findingId: string): void {
+    this.toggleSelect.emit(findingId);
   }
 }

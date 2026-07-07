@@ -41,3 +41,17 @@ h1 {
 .empty {
   color: var(--mat-sys-on-surface-variant);
 }
+
+.comparison-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
