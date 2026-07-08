@@ -9,6 +9,15 @@ import { AiReviewStatusBadge } from '../ai-review-status-badge/ai-review-status-
   standalone: true,
   imports: [DatePipe, MatListModule, AiReviewStatusBadge],
   templateUrl: './review-history-list.html',
+  styles: [
+    `
+      .review-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewHistoryList {

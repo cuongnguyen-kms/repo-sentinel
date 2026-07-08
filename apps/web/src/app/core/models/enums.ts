@@ -44,6 +44,7 @@ export enum NotificationStatus {
 
 /** RBAC resource identifiers — must match Permission table resource column. MVP subset only. */
 export enum Resource {
+  Atlassian = 'atlassian',
   Connections = 'connections',
   Dashboard = 'dashboard',
   Findings = 'findings',

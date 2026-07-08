@@ -15,10 +15,12 @@ import {
   listPullRequestsQuerySchema,
   prIdParamSchema,
 } from "../schemas/pull-request-schemas.js";
+import { setJiraTicketBodySchema } from "../schemas/jira-schemas.js";
 import {
   listPullRequests,
   getPullRequestDetail,
   getDashboardStats,
+  setJiraTicketOverride,
 } from "../services/pull-request-service.js";
 
 function handleZodError(err: ZodError, reply: FastifyReply): void {
@@ -86,6 +88,31 @@ export async function registerPullRequestRoutes(
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Failed to fetch pull request";
+        reply.status(500).send({ success: false, error: message });
+      }
+    }
+  );
+
+  // PATCH /api/pull-requests/:id/jira-ticket
+  app.patch(
+    "/api/pull-requests/:id/jira-ticket",
+    { preHandler: [requireAuth, requirePermission(Resource.PullRequests, Action.Update)] },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const paramParsed = prIdParamSchema.safeParse(request.params);
+      if (!paramParsed.success) {
+        handleZodError(paramParsed.error, reply);
+        return;
+      }
+      const bodyParsed = setJiraTicketBodySchema.safeParse(request.body);
+      if (!bodyParsed.success) {
+        handleZodError(bodyParsed.error, reply);
+        return;
+      }
+      try {
+        await setJiraTicketOverride(app.prisma, paramParsed.data.id, bodyParsed.data.ticketKey);
+        reply.send({ success: true, data: { ticketKey: bodyParsed.data.ticketKey } });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Failed to update linked ticket";
         reply.status(500).send({ success: false, error: message });
       }
     }

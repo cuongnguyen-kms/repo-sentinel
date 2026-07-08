@@ -31,8 +31,11 @@ import { writeOpenCommentsJson } from "../services/open-comments-writer-service.
 import { applyOpenCommentResolutions } from "../services/open-comments-resolution-service.js";
 import { postSingleComment } from "../services/github-comment-service.js";
 import { fetchExistingPrCommentPaths } from "../services/github-reply-sync-service.js";
+import { resolveTicketKeysForPr } from "../services/jira-ticket-service.js";
+import { getCachedChecklistsForKeys } from "../services/jira-checklist-service.js";
+import { getSetting } from "../services/settings-service.js";
 import type { CodeReviewFinding } from "@repo-sentinel/types";
-import { unlink } from "node:fs/promises";
+import { unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createNotification, NotificationType } from "../services/notification-persistence-service.js";
 import { emitNotificationCreated, emitPrReviewOutdated } from "../services/notification-service.js";
@@ -247,6 +250,41 @@ export async function runAiReviewJob(
 
   // 3b. Write previous open findings for Claude to evaluate during this run
   const { snapshot: openCommentsSnapshot } = await writeOpenCommentsJson(fastify.prisma, prId, repoPath, log);
+
+  // 3c. Best-effort: inject any cached JIRA checklist(s) for this PR's linked ticket(s)
+  try {
+    const jiraEnabled = await getSetting("ai.review.jiraEnabled", "0");
+    if (jiraEnabled === "1") {
+      const ticketKeys = await resolveTicketKeysForPr(fastify.prisma, {
+        jiraTicketKeyOverride: pr.jiraTicketKeyOverride,
+        title: pr.title,
+        body: pr.body,
+        headRef: pr.headRef,
+      });
+      if (ticketKeys.length === 0) {
+        emitLog(fastify.io, roomId, `[REVIEWING] No JIRA ticket found`);
+      } else {
+        const checklists = await getCachedChecklistsForKeys(fastify.prisma, ticketKeys);
+        if (checklists.length > 0) {
+          const combined = checklists.map((c) => `## ${c.ticketKey}\n\n${c.content}`).join("\n\n---\n\n");
+          await writeFile(join(repoPath, "jira-checklist.md"), combined, "utf-8");
+          emitLog(
+            fastify.io,
+            roomId,
+            `[REVIEWING] JIRA checklist(s) injected (${checklists.length}): ${checklists.map((c) => c.ticketKey).join(", ")}`
+          );
+        } else {
+          emitLog(
+            fastify.io,
+            roomId,
+            `[REVIEWING] JIRA ticket(s) found (${ticketKeys.join(", ")}) but no checklist generated — generate one from the JIRA page`
+          );
+        }
+      }
+    }
+  } catch (err) {
+    log.warn({ err }, "[jira] non-blocking failure while injecting checklist");
+  }
 
   // 4. Switch to REVIEWING phase
   emitPhase(fastify.io, fastify.prisma, reviewId, "REVIEWING", log);

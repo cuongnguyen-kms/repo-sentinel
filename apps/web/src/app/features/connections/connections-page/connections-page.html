@@ -54,3 +54,50 @@
     }
   </div>
 }
+
+<h2>Atlassian Connection</h2>
+@if (!loading()) {
+  <div class="list">
+    <mat-card class="conn-card">
+      <mat-card-content>
+        <div class="conn-row">
+          <div class="conn-icon">
+            <mat-icon>work</mat-icon>
+          </div>
+          <div class="conn-info">
+            @if (atlassianConnection(); as conn) {
+              <div class="conn-hostname">{{ conn.hostname }}</div>
+              <div class="conn-username">{{ conn.email }}</div>
+            } @else {
+              <div class="conn-hostname">Not connected</div>
+            }
+          </div>
+          @if (atlassianTestResult()) {
+            <span class="chip" [class]="atlassianTestResult()!.startsWith('✓') ? 'chip-success' : 'chip-error'">
+              {{ atlassianTestResult() }}
+            </span>
+          }
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        @if (atlassianConnection()) {
+          @if (canCreateAtlassian) {
+            <button mat-button (click)="openAtlassianDialog()">Edit</button>
+          }
+          <button mat-button (click)="testAtlassian()" [disabled]="atlassianTesting()">
+            @if (atlassianTesting()) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              Test
+            }
+          </button>
+          @if (canDeleteAtlassian) {
+            <button mat-button color="warn" (click)="removeAtlassian()">Delete</button>
+          }
+        } @else if (canCreateAtlassian) {
+          <button mat-button color="primary" (click)="openAtlassianDialog()">Add Connection</button>
+        }
+      </mat-card-actions>
+    </mat-card>
+  </div>
+}

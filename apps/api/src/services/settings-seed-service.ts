@@ -23,6 +23,8 @@ const DEFAULT_SETTINGS = [
   { key: "ai.review.dismissKeywords", value: "not fix,not a fix,invalid,wont fix,won't fix,false positive" },
   { key: "ai.review.autoPostToGithub", value: "0" },
   { key: "ai.review.autoPostSeverities", value: "critical,high,medium,low,info" },
+  { key: "ai.review.jiraEnabled", value: "0" },
+  { key: "ai.review.jiraTicketPattern", value: "[A-Z][A-Z0-9]+-\\d+" },
 ] as const;
 
 /**

@@ -32,6 +32,9 @@ const ROLE_DEFS: Record<string, RoleDef> = {
       `${Resource.Findings}:${Action.Create}`, `${Resource.Findings}:${Action.Read}`,
       `${Resource.Findings}:${Action.Update}`, `${Resource.Findings}:${Action.Delete}`,
       `${Resource.PrComments}:${Action.Read}`,
+      `${Resource.Atlassian}:${Action.Create}`, `${Resource.Atlassian}:${Action.Read}`,
+      `${Resource.Atlassian}:${Action.Update}`, `${Resource.Atlassian}:${Action.Delete}`,
+      `${Resource.PullRequests}:${Action.Update}`,
     ],
   },
   Viewer: {
@@ -42,6 +45,7 @@ const ROLE_DEFS: Record<string, RoleDef> = {
       `${Resource.Dashboard}:${Action.Read}`,
       `${Resource.Notifications}:${Action.Read}`, `${Resource.Notifications}:${Action.Update}`,
       `${Resource.Findings}:${Action.Read}`, `${Resource.PrComments}:${Action.Read}`,
+      `${Resource.Atlassian}:${Action.Read}`,
     ],
   },
 };

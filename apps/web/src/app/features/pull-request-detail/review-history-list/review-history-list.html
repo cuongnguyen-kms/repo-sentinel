@@ -1,8 +1,10 @@
 <mat-nav-list>
   @for (review of reviews(); track review.id) {
-    <mat-list-item>
-      <app-ai-review-status-badge [status]="review.status" matListItemIcon />
-      <span matListItemTitle>Score: {{ review.score ?? '—' }}</span>
+    <mat-list-item lines="2">
+      <span matListItemTitle class="review-title">
+        <app-ai-review-status-badge [status]="review.status" />
+        Score: {{ review.score ?? '—' }}
+      </span>
       <span matListItemLine>{{ review.createdAt | date: 'medium' }} — {{ review.commitSha.substring(0, 8) }}</span>
     </mat-list-item>
   }

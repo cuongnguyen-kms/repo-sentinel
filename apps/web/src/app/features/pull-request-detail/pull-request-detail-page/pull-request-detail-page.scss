@@ -27,6 +27,22 @@ h1 {
   flex: none;
 }
 
+.jira-ticket-card {
+  margin-bottom: 16px;
+}
+
+.jira-ticket-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.jira-ticket-input {
+  flex: 0 1 200px;
+  margin-bottom: -1.25em;
+}
+
 .terminal-card {
   padding: 0;
   overflow: hidden;

@@ -14,6 +14,8 @@ import { registerSocketIoPlugin } from "./plugins/socket-io-plugin.js";
 import { registerHealthRoutes } from "./routes/health-routes.js";
 import { registerAuthPermissionRoutes } from "./routes/auth-permission-routes.js";
 import { registerConnectionRoutes } from "./routes/connection-routes.js";
+import { registerAtlassianConnectionRoutes } from "./routes/atlassian-connection-routes.js";
+import { registerJiraRoutes } from "./routes/jira-routes.js";
 import { registerReposRoutes } from "./routes/repos-routes.js";
 import { registerPullRequestRoutes } from "./routes/pull-requests-routes.js";
 import { registerNotificationRoutes } from "./routes/notification-routes.js";
@@ -46,6 +48,8 @@ async function main(): Promise<void> {
   await app.register(registerHealthRoutes);
   await app.register(registerAuthPermissionRoutes);
   await app.register(registerConnectionRoutes);
+  await app.register(registerAtlassianConnectionRoutes);
+  await app.register(registerJiraRoutes);
   await app.register(registerReposRoutes);
   await app.register(registerPullRequestRoutes);
   await app.register(registerNotificationRoutes);

@@ -4,8 +4,15 @@
 
 import type { AiReviewStatus } from "./enums.js";
 
-/** Severity levels for code review findings (MVP subset — JIRA/wiki-specific severities dropped). */
-export type FindingSeverity = "critical" | "high" | "medium" | "low" | "info";
+/** Severity levels for code review findings. The last two are JIRA-checklist-driven — see `jira-checklist.md` prompt integration. */
+export type FindingSeverity =
+  | "critical"
+  | "high"
+  | "medium"
+  | "low"
+  | "info"
+  | "mismatch_requirement"
+  | "checklist_required";
 
 /** Single code review finding from AI analysis */
 export interface CodeReviewFinding {
@@ -33,6 +40,8 @@ export interface CodeReviewResult {
     medium: number;
     low: number;
     info: number;
+    mismatch_requirement: number;
+    checklist_required: number;
   };
 }
 

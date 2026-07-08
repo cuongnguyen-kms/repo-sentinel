@@ -18,6 +18,7 @@ const NAV_ITEMS: NavItem[] = [
   { path: '/connections', label: 'Connections', icon: 'link', resource: Resource.Connections },
   { path: '/repositories', label: 'Repositories', icon: 'source', resource: Resource.Repos },
   { path: '/pull-requests', label: 'Pull Requests', icon: 'merge', resource: Resource.PullRequests },
+  { path: '/jira', label: 'JIRA', icon: 'assignment', resource: Resource.Atlassian },
   { path: '/settings', label: 'Settings', icon: 'settings', resource: Resource.Settings },
 ];
 

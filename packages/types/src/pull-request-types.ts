@@ -30,6 +30,7 @@ export interface PullRequestDto {
   headCommitSha: string | null;
   draft: boolean;
   reviewStatus: ReviewStatus;
+  jiraTicketKeyOverride: string | null;
   /** Repo summary — included when API returns PR list or detail */
   repo?: { owner: string; name: string; fullName: string };
   /** All reviews for this PR (1:N) — included on PR detail */

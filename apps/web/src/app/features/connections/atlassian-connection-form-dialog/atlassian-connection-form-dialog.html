@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Atlassian Connection</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Hostname</mat-label>
+    <input matInput placeholder="mycompany.atlassian.net" [ngModel]="hostname()" (ngModelChange)="hostname.set($event)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>API Token</mat-label>
+    <input matInput type="password" [ngModel]="apiToken()" (ngModelChange)="apiToken.set($event)" autocomplete="new-password" />
+  </mat-form-field>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="submit()" [disabled]="saving()">
+    @if (saving()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Save
+    }
+  </button>
+</mat-dialog-actions>

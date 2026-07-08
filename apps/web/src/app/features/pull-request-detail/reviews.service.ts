@@ -140,4 +140,11 @@ export class ReviewsService {
     );
     return res.data;
   }
+
+  async setJiraTicket(prId: string, ticketKey: string | null): Promise<{ ticketKey: string | null }> {
+    const res = await firstValueFrom(
+      this.http.patch<ApiResponse<{ ticketKey: string | null }>>(`/api/pull-requests/${prId}/jira-ticket`, { ticketKey })
+    );
+    return res.data;
+  }
 }

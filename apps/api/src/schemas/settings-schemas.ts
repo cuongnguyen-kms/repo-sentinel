@@ -31,6 +31,13 @@ export function validateSettingValue(key: string, value: string): string | undef
     const n = parseInt(value, 10);
     if (isNaN(n) || n < 60 || n > 3600) return "polling.defaultInterval must be between 60 and 3600";
   }
+  if (key === "ai.review.jiraTicketPattern") {
+    try {
+      new RegExp(value);
+    } catch {
+      return "ai.review.jiraTicketPattern must be a valid regular expression";
+    }
+  }
   return undefined;
 }
 

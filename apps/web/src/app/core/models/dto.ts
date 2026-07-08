@@ -52,6 +52,41 @@ export interface ConnectionTestResult {
 }
 
 // ---------------------------------------------------------------------------
+// Atlassian / JIRA
+// ---------------------------------------------------------------------------
+
+export interface AtlassianConnectionDto {
+  id: string;
+  hostname: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AtlassianConnectionTestResult {
+  success: boolean;
+  message: string;
+  displayName?: string;
+}
+
+export interface JiraTicketDto {
+  key: string;
+  summary: string;
+  description: string;
+  status: string;
+  url: string;
+  updated: string;
+}
+
+export interface JiraChecklistDto {
+  ticketKey: string;
+  content: string;
+  generatedAt: string;
+  updatedAt: string;
+  stale: boolean;
+}
+
+// ---------------------------------------------------------------------------
 // Repos
 // ---------------------------------------------------------------------------
 
@@ -115,6 +150,7 @@ export interface PullRequestDto {
   headCommitSha: string | null;
   draft: boolean;
   reviewStatus: ReviewStatus;
+  jiraTicketKeyOverride: string | null;
   repo?: { owner: string; name: string; fullName: string };
   latestReview?: { id: string; score: number | null; status: AiReviewStatus; commitSha: string } | null;
   firstSeenAt: string;
@@ -134,7 +170,14 @@ export interface DashboardStats {
 // Reviews
 // ---------------------------------------------------------------------------
 
-export type FindingSeverity = 'critical' | 'high' | 'medium' | 'low' | 'info';
+export type FindingSeverity =
+  | 'critical'
+  | 'high'
+  | 'medium'
+  | 'low'
+  | 'info'
+  | 'mismatch_requirement'
+  | 'checklist_required';
 
 export interface CodeReviewFinding {
   id: string;
@@ -153,7 +196,7 @@ export interface CodeReviewResult {
   score: number;
   summary: string;
   findings: CodeReviewFinding[];
-  stats: { critical: number; high: number; medium: number; low: number; info: number };
+  stats: { critical: number; high: number; medium: number; low: number; info: number; mismatch_requirement: number; checklist_required: number };
 }
 
 export interface FindingsBreakdown {
