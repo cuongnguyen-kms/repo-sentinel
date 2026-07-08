@@ -443,6 +443,18 @@ export async function getPullRequestDetail(
   return pr ?? null;
 }
 
+/** Set or clear the manual JIRA ticket-link override for a PR. */
+export async function setJiraTicketOverride(
+  prisma: PrismaClient,
+  prId: string,
+  ticketKey: string | null
+): Promise<void> {
+  await prisma.pullRequest.update({
+    where: { id: prId },
+    data: { jiraTicketKeyOverride: ticketKey ? ticketKey.toUpperCase() : null },
+  });
+}
+
 /**
  * Aggregate stats for the dashboard summary cards.
  */

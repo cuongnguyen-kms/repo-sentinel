@@ -24,6 +24,34 @@
     </div>
   </div>
 
+  <mat-card class="jira-ticket-card">
+    <mat-card-content>
+      <div class="jira-ticket-row">
+        <mat-icon>assignment</mat-icon>
+        @if (editingJiraTicket()) {
+          <mat-form-field appearance="outline" class="jira-ticket-input">
+            <mat-label>Ticket key</mat-label>
+            <input matInput placeholder="PROJ-123" [ngModel]="jiraTicketDraft()" (ngModelChange)="jiraTicketDraft.set($event)" />
+          </mat-form-field>
+          <button mat-button (click)="onSaveJiraTicket()" [disabled]="actionBusy()">Save</button>
+          <button mat-button (click)="cancelEditJiraTicket()" [disabled]="actionBusy()">Cancel</button>
+        } @else {
+          @if (prVal.jiraTicketKeyOverride) {
+            <span>Linked JIRA ticket: <a [routerLink]="['/jira']" [queryParams]="{ key: prVal.jiraTicketKeyOverride }">{{ prVal.jiraTicketKeyOverride }}</a></span>
+          } @else {
+            <span class="meta">No manual JIRA link — auto-detected from title/branch (or none found) at review time.</span>
+          }
+          @if (canUpdateJiraTicket) {
+            <button mat-button (click)="startEditJiraTicket()">Change ticket</button>
+            @if (prVal.jiraTicketKeyOverride) {
+              <button mat-button (click)="onClearJiraTicket()" [disabled]="actionBusy()">Clear</button>
+            }
+          }
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   @if (isActive() && latestReview(); as review) {
     <mat-card class="terminal-card">
       <app-ai-review-terminal-panel [reviewId]="review.id" [prId]="prVal.id" (completed)="onReviewCompleted()" />

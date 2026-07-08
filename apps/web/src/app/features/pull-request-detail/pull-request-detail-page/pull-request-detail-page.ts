@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Action, Resource } from '../../../core/models/enums';
@@ -30,9 +33,13 @@ const POLL_INTERVAL_MS = 5000;
   selector: 'app-pull-request-detail-page',
   standalone: true,
   imports: [
+    FormsModule,
+    RouterLink,
     MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatProgressSpinnerModule,
     AiReviewStatusBadge,
     AiReviewTriggerButton,
@@ -55,6 +62,7 @@ export class PullRequestDetailPage {
   readonly canDelete = this.permissions.can(Resource.Reviews, Action.Delete);
   readonly canPostFindings = this.permissions.can(Resource.Findings, Action.Create);
   readonly canUpdateFindings = this.permissions.can(Resource.Findings, Action.Update);
+  readonly canUpdateJiraTicket = this.permissions.can(Resource.PullRequests, Action.Update);
 
   readonly loading = signal(true);
   readonly pr = signal<PullRequestDto | null>(null);
@@ -65,6 +73,9 @@ export class PullRequestDetailPage {
   readonly comparison = signal<ReviewComparisonSummary | null>(null);
   readonly selectedFindingIds = signal<Set<string>>(new Set());
   readonly actionBusy = signal(false);
+
+  readonly editingJiraTicket = signal(false);
+  readonly jiraTicketDraft = signal('');
 
   readonly isActive = computed(() => {
     const status = this.latestReview()?.status;
@@ -234,6 +245,44 @@ export class PullRequestDetailPage {
       await this.refreshReviewMetadata(review);
     } catch (err) {
       this.snackBar.open(extractErrorMessage(err, 'Failed to sync replies'), 'Dismiss', { duration: 5000 });
+    } finally {
+      this.actionBusy.set(false);
+    }
+  }
+
+  startEditJiraTicket(): void {
+    this.jiraTicketDraft.set(this.pr()?.jiraTicketKeyOverride ?? '');
+    this.editingJiraTicket.set(true);
+  }
+
+  cancelEditJiraTicket(): void {
+    this.editingJiraTicket.set(false);
+  }
+
+  async onSaveJiraTicket(): Promise<void> {
+    const draft = this.jiraTicketDraft().trim();
+    this.actionBusy.set(true);
+    try {
+      await this.reviewsService.setJiraTicket(this.prId, draft || null);
+      const pr = await this.pullRequestsService.detail(this.prId);
+      this.pr.set(pr);
+      this.editingJiraTicket.set(false);
+    } catch (err) {
+      this.snackBar.open(extractErrorMessage(err, 'Failed to update linked ticket'), 'Dismiss', { duration: 5000 });
+    } finally {
+      this.actionBusy.set(false);
+    }
+  }
+
+  async onClearJiraTicket(): Promise<void> {
+    this.actionBusy.set(true);
+    try {
+      await this.reviewsService.setJiraTicket(this.prId, null);
+      const pr = await this.pullRequestsService.detail(this.prId);
+      this.pr.set(pr);
+      this.editingJiraTicket.set(false);
+    } catch (err) {
+      this.snackBar.open(extractErrorMessage(err, 'Failed to clear linked ticket'), 'Dismiss', { duration: 5000 });
     } finally {
       this.actionBusy.set(false);
     }

@@ -11,7 +11,10 @@ import type { CodeReviewResult, CodeReviewFinding, FindingSeverity } from "@repo
 const JSON_FILENAME = "code-review-result.json";
 const MAX_JSON_SIZE_BYTES = 512_000; // 500KB safety limit
 
-const VALID_SEVERITIES: Set<string> = new Set(["critical", "high", "medium", "low", "info"]);
+const VALID_SEVERITIES: Set<string> = new Set([
+  "critical", "high", "medium", "low", "info",
+  "mismatch_requirement", "checklist_required",
+]);
 
 /**
  * Validate a single finding object has required fields with correct types.
@@ -49,7 +52,7 @@ function normalizeResult(raw: Record<string, unknown>): CodeReviewResult | null 
   }));
 
   // Recompute stats from actual findings for accuracy
-  const stats = { critical: 0, high: 0, medium: 0, low: 0, info: 0 };
+  const stats = { critical: 0, high: 0, medium: 0, low: 0, info: 0, mismatch_requirement: 0, checklist_required: 0 };
   for (const f of findings) {
     const sev = f.severity as keyof typeof stats;
     if (sev in stats) stats[sev]++;

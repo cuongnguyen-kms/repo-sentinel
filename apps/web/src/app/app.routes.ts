@@ -49,6 +49,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'jira',
+        canActivate: [permissionGuard],
+        data: { resource: Resource.Atlassian, action: Action.Read },
+        loadComponent: () => import('./features/jira/jira-page/jira-page').then((m) => m.JiraPage),
+      },
+      {
         path: 'settings',
         canActivate: [permissionGuard],
         data: { resource: Resource.Settings, action: Action.Read },

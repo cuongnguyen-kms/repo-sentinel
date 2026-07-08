@@ -61,6 +61,18 @@
         <input matInput [ngModel]="autoPostSeverities()" (ngModelChange)="autoPostSeverities.set($event)" [disabled]="!canEdit || !autoPostToGithub()" />
       </mat-form-field>
 
+      <h3>JIRA</h3>
+
+      <mat-slide-toggle [checked]="jiraEnabled()" (change)="jiraEnabled.set($event.checked)" [disabled]="!canEdit">
+        Enable JIRA checklist integration
+      </mat-slide-toggle>
+      <p class="hint">When enabled, reviews inject any cached checklist for a PR's linked JIRA ticket and can flag unmet requirements.</p>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ticket key pattern (regex)</mat-label>
+        <input matInput [ngModel]="jiraTicketPattern()" (ngModelChange)="jiraTicketPattern.set($event)" [disabled]="!canEdit" />
+      </mat-form-field>
+
       @if (canEdit) {
         <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
           @if (saving()) {

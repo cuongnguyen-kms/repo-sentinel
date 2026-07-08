@@ -30,6 +30,8 @@ export const DEFAULT_TEMPLATE = `You are a senior code reviewer. Review this pul
 - **medium**: code smell, unclear logic, missing edge case, poor error message, brittle test
 - **low**: naming, style, minor readability, non-idiomatic pattern
 - **info**: suggestion, observation, non-blocking note
+- **mismatch_requirement**: code contradicts a requirement stated in a linked JIRA ticket's checklist
+- **checklist_required**: a checklist item from a linked JIRA ticket is not addressed by this PR at all
 
 ## Do NOT Flag
 - Formatting or whitespace unless it causes bugs
@@ -72,7 +74,7 @@ After writing your markdown report, use the Write tool to create the file \`./co
       "codeContext": "the actual line(s) of code with the issue"
     }
   ],
-  "stats": { "critical": 0, "high": 1, "medium": 2, "low": 1, "info": 0 }
+  "stats": { "critical": 0, "high": 1, "medium": 2, "low": 1, "info": 0, "mismatch_requirement": 0, "checklist_required": 0 }
 }
 \`\`\`
 
@@ -89,7 +91,7 @@ Calculate the score deterministically — do NOT rely on intuition:
 
 ## Rules for the JSON file:
 - \`id\`: unique within this review (F1, F2, etc.)
-- \`severity\`: one of "critical", "high", "medium", "low", "info"
+- \`severity\`: one of "critical", "high", "medium", "low", "info", "mismatch_requirement", "checklist_required"
 - \`file\`: path relative to repo root (same as shown in the diff)
 - \`line\`: line number in the NEW file version — derive from the \`+\` line offset within each \`@@ -old +new @@\` hunk
 - \`endLine\`: optional, for multi-line findings
@@ -114,6 +116,9 @@ If a file named \`manager-hub-open-comments.json\` exists in the repo root, it c
 4. Do NOT create new findings for still-open OPEN issues — they are already tracked. Only include NEW issues in your code-review-result.json findings.
 
 If \`manager-hub-open-comments.json\` does not exist, skip this step entirely.
+
+## JIRA Requirement Checklist (if applicable)
+If a file named \`jira-checklist.md\` exists in the repo root, it contains checklist items extracted from a JIRA ticket linked to this PR (detected from the PR title/branch, or manually linked). For each item, verify the current code satisfies it. If the code contradicts an item, create a finding with severity \`mismatch_requirement\` referencing the specific file/line. If an item is simply not addressed anywhere in the diff, create a finding with severity \`checklist_required\`. If an item is satisfied, do not flag it. If the file doesn't exist, skip this section entirely.
 
 ## How to Get the PR Diff
 You are in the cloned repo with the PR branch checked out. Run this command to get the diff:

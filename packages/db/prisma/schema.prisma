@@ -38,38 +38,55 @@ model WatchedRepo {
 }
 
 model PullRequest {
-  id             String       @id @default(cuid())
-  repoId         String
-  repo           WatchedRepo  @relation(fields: [repoId], references: [id], onDelete: Cascade)
-  ghePrId        Int
-  ghePrNodeId    String?
-  title          String
-  body           String?
-  authorLogin    String
-  authorAvatar   String?
-  state          PrState      @default(OPEN)
-  headRef        String
-  baseRef        String
-  htmlUrl        String
-  diffUrl        String
-  createdAtGhe   DateTime
-  updatedAtGhe   DateTime
-  mergedAt       DateTime?
-  closedAt       DateTime?
-  additions      Int          @default(0)
-  deletions      Int          @default(0)
-  changedFiles   Int          @default(0)
-  headCommitSha  String?
-  draft          Boolean      @default(false)
-  reviewStatus   ReviewStatus @default(PENDING)
-  aiReviews      AiReview[]
-  firstSeenAt    DateTime     @default(now())
-  notifiedAt     DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id                    String       @id @default(cuid())
+  repoId                String
+  repo                  WatchedRepo  @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  ghePrId               Int
+  ghePrNodeId           String?
+  title                 String
+  body                  String?
+  authorLogin           String
+  authorAvatar          String?
+  state                 PrState      @default(OPEN)
+  headRef               String
+  baseRef               String
+  htmlUrl               String
+  diffUrl               String
+  createdAtGhe          DateTime
+  updatedAtGhe          DateTime
+  mergedAt              DateTime?
+  closedAt              DateTime?
+  additions             Int          @default(0)
+  deletions             Int          @default(0)
+  changedFiles          Int          @default(0)
+  headCommitSha         String?
+  draft                 Boolean      @default(false)
+  reviewStatus          ReviewStatus @default(PENDING)
+  jiraTicketKeyOverride String?
+  aiReviews             AiReview[]
+  firstSeenAt           DateTime     @default(now())
+  notifiedAt            DateTime?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
 
   @@unique([repoId, ghePrId])
   @@index([repoId, reviewStatus])
+}
+
+model AtlassianConnection {
+  id        String   @id @default(cuid())
+  hostname  String   @unique
+  email     String
+  apiToken  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JiraChecklist {
+  ticketKey   String   @id
+  content     String   @db.Text
+  generatedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model AiReview {

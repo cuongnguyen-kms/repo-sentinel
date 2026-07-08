@@ -1,0 +1,58 @@
+<h1>JIRA</h1>
+<p class="subtitle">Search JIRA tickets by JQL, project key, or exact key, and manage their AI-generated requirement checklists.</p>
+
+<div class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>JQL</mat-label>
+    <input matInput [ngModel]="jql()" (ngModelChange)="jql.set($event)" (keyup.enter)="search()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Project key</mat-label>
+    <input matInput [ngModel]="projectKey()" (ngModelChange)="projectKey.set($event)" (keyup.enter)="search()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Ticket key</mat-label>
+    <input matInput [ngModel]="key()" (ngModelChange)="key.set($event)" (keyup.enter)="search()" />
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" (click)="search()" [disabled]="loading()">
+    @if (loading()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Search
+    }
+  </button>
+</div>
+
+@if (searched() && !loading()) {
+  @if (tickets().length === 0) {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>No tickets found.</p>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="tickets()" class="jira-table">
+      <ng-container matColumnDef="key">
+        <th mat-header-cell *matHeaderCellDef>Key</th>
+        <td mat-cell *matCellDef="let ticket">{{ ticket.key }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="summary">
+        <th mat-header-cell *matHeaderCellDef>Summary</th>
+        <td mat-cell *matCellDef="let ticket">{{ ticket.summary }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let ticket">
+          <span class="chip chip-info">{{ ticket.status }}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns" (click)="openTicket(row)" class="clickable-row"></tr>
+    </table>
+  }
+}
