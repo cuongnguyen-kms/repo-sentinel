@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Permissions for "{{ role.name }}"</h2>
+<mat-dialog-content>
+  @if (isAdminRole()) {
+    <p class="banner">The Admin role's permissions cannot be modified — it must always resolve to full access.</p>
+  }
+
+  @if (loading()) {
+    <mat-spinner diameter="28"></mat-spinner>
+  } @else {
+    <table class="matrix" [class.disabled]="isAdminRole()">
+      <thead>
+        <tr>
+          <th></th>
+          @for (action of actions; track action) {
+            <th>{{ action }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.resource) {
+          <tr>
+            <td class="resource-name">{{ row.resource }}</td>
+            @for (cell of row.cells; track cell.action) {
+              <td>
+                @if (cell.permissionId) {
+                  <mat-checkbox
+                    [checked]="selectedIds().has(cell.permissionId)"
+                    [disabled]="isAdminRole()"
+                    (change)="toggle(cell.permissionId)"
+                  ></mat-checkbox>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving() || loading() || isAdminRole()">
+    @if (saving()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Save
+    }
+  </button>
+</mat-dialog-actions>

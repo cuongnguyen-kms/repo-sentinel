@@ -7,6 +7,8 @@ export interface AtlassianConnectionDto {
   id: string;
   hostname: string;
   email: string;
+  /** JIRA Agile board ID — optional, only needed for sprint reminders */
+  boardId: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -16,6 +18,8 @@ export interface CreateAtlassianConnectionInput {
   email: string;
   /** Raw API token — encrypted before storage, never returned in responses */
   apiToken: string;
+  /** JIRA Agile board ID — optional, only needed for sprint reminders */
+  boardId?: number | null;
 }
 
 export interface AtlassianConnectionTestResult {

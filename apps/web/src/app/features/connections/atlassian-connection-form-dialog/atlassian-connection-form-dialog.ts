@@ -29,6 +29,7 @@ export class AtlassianConnectionFormDialog {
   readonly hostname = signal('');
   readonly email = signal('');
   readonly apiToken = signal('');
+  readonly boardId = signal('');
   readonly saving = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -45,6 +46,7 @@ export class AtlassianConnectionFormDialog {
         hostname: this.hostname(),
         email: this.email(),
         apiToken: this.apiToken(),
+        boardId: this.boardId() ? Number(this.boardId()) : null,
       });
       this.dialogRef.close(saved);
     } catch (err) {

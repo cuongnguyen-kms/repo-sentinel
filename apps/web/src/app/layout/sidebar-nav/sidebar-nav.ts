@@ -19,7 +19,15 @@ const NAV_ITEMS: NavItem[] = [
   { path: '/repositories', label: 'Repositories', icon: 'source', resource: Resource.Repos },
   { path: '/pull-requests', label: 'Pull Requests', icon: 'merge', resource: Resource.PullRequests },
   { path: '/jira', label: 'JIRA', icon: 'assignment', resource: Resource.Atlassian },
+  { path: '/report', label: 'Report', icon: 'bar_chart', resource: Resource.PrComments },
   { path: '/settings', label: 'Settings', icon: 'settings', resource: Resource.Settings },
+];
+
+const ADMIN_NAV_ITEMS: NavItem[] = [
+  { path: '/admin/users', label: 'Users', icon: 'group', resource: Resource.Users },
+  { path: '/admin/groups', label: 'Groups', icon: 'groups', resource: Resource.Groups },
+  { path: '/admin/roles', label: 'Roles', icon: 'admin_panel_settings', resource: Resource.Roles },
+  { path: '/admin/permissions', label: 'Permissions', icon: 'key', resource: Resource.Permissions },
 ];
 
 @Component({
@@ -39,4 +47,6 @@ export class SidebarNav {
   );
 
   readonly isAdmin = this.auth.isAdmin;
+
+  readonly adminItems = computed(() => (this.isAdmin() ? ADMIN_NAV_ITEMS : []));
 }

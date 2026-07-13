@@ -7,6 +7,7 @@ export interface ReplaceAtlassianConnectionInput {
   hostname: string;
   email: string;
   apiToken: string;
+  boardId?: number | null;
 }
 
 @Injectable({ providedIn: 'root' })

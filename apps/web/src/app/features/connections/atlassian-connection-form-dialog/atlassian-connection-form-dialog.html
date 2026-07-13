@@ -15,6 +15,12 @@
     <input matInput type="password" [ngModel]="apiToken()" (ngModelChange)="apiToken.set($event)" autocomplete="new-password" />
   </mat-form-field>
 
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Board ID (optional)</mat-label>
+    <input matInput type="number" placeholder="e.g. 880" [ngModel]="boardId()" (ngModelChange)="boardId.set($event)" />
+    <mat-hint>JIRA Agile board ID — only needed for sprint reminders</mat-hint>
+  </mat-form-field>
+
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }

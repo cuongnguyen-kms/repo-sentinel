@@ -1,0 +1,116 @@
+<h1>Sprint Report</h1>
+<p class="subtitle">AI review comment coverage for merged pull requests, grouped by sprint.</p>
+
+<div class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Sprint</mat-label>
+    <mat-select [ngModel]="selectedSprint()" (ngModelChange)="onSprintChange($event)" [compareWith]="compareSprints">
+      @for (sprint of sprints(); track sprint.label) {
+        <mat-option [value]="sprint">{{ sprint.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else if (!report() || report()!.prs.length === 0) {
+  <div class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <p>No merged pull requests in this sprint.</p>
+  </div>
+} @else {
+  <div class="summary-cards">
+    <div class="summary-card">
+      <span class="value">{{ report()!.summary.totalMergedPrs }}</span>
+      <span class="label">Merged PRs</span>
+    </div>
+    <div class="summary-card">
+      <span class="value">{{ report()!.summary.total }}</span>
+      <span class="label">Total comments</span>
+    </div>
+    <div class="summary-card">
+      <span class="value value-error">{{ report()!.summary.open }}</span>
+      <span class="label">Open</span>
+    </div>
+    <div class="summary-card">
+      <span class="value value-success">{{ report()!.summary.fixedCode }}</span>
+      <span class="label">Fixed</span>
+    </div>
+    <div class="summary-card">
+      <span class="value value-warn">{{ report()!.summary.noReply }}</span>
+      <span class="label">No reply</span>
+    </div>
+  </div>
+
+  <mat-accordion multi="false">
+    @for (row of report()!.prs; track trackByPrId($index, row)) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <a [href]="row.prUrl" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+              #{{ row.prNumber }} {{ row.prTitle }}
+            </a>
+          </mat-panel-title>
+          <mat-panel-description>
+            <span class="repo-name">{{ row.repoFullName }}</span>
+            <span class="author">{{ row.authorLogin }}</span>
+            <span class="merged-at">{{ row.mergedAt | date: 'short' }}</span>
+            <span class="status-chip" [class]="row.counts.open > 0 ? 'chip-error' : 'chip-success'">
+              {{ row.counts.open }} open / {{ row.counts.total }} total
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        @if (row.comments.length === 0) {
+          <p class="no-comments">No posted findings on this PR.</p>
+        } @else {
+          <table mat-table [dataSource]="row.comments" class="comments-table">
+            <ng-container matColumnDef="finding">
+              <th mat-header-cell *matHeaderCellDef>Finding</th>
+              <td mat-cell *matCellDef="let c">
+                <div class="finding-title">{{ c.findingTitle }}</div>
+                <div class="finding-loc">{{ c.findingFile }}:{{ c.findingLine }}</div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef>Category</th>
+              <td mat-cell *matCellDef="let c">
+                <span class="status-chip" [class]="categoryChipClass(c.category)">{{ categoryLabel(c.category) }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let c">{{ c.resolutionStatus }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="replies">
+              <th mat-header-cell *matHeaderCellDef>Last reply</th>
+              <td mat-cell *matCellDef="let c">
+                @if (c.lastReplyBody) {
+                  <span class="reply-body">{{ c.lastReplyBody }}</span>
+                } @else {
+                  <span class="no-reply">—</span>
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="link">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let c">
+                @if (c.githubHtmlUrl) {
+                  <a [href]="c.githubHtmlUrl" target="_blank" rel="noopener"><mat-icon>open_in_new</mat-icon></a>
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="commentColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: commentColumns"></tr>
+          </table>
+        }
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

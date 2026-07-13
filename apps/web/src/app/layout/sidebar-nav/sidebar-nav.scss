@@ -30,6 +30,14 @@
   gap: 2px;
 }
 
+.nav-section-label {
+  padding: 12px 20px 4px;
+  font: var(--mat-sys-label-small);
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .nav-item {
   border-radius: var(--app-radius-lg);
   --mdc-list-list-item-container-shape: var(--app-radius-lg);

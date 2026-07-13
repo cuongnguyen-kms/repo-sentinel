@@ -1,0 +1,39 @@
+.banner {
+  background: light-dark(#fdedc8, #3d2f00);
+  color: light-dark(#7a5d00, #f0c952);
+  padding: 8px 12px;
+  border-radius: var(--app-radius-md, 8px);
+  margin-bottom: 12px;
+  font-size: 0.9em;
+}
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    text-align: center;
+    padding: 6px 10px;
+  }
+
+  th {
+    text-transform: capitalize;
+    color: var(--mat-sys-on-surface-variant);
+    font-weight: 500;
+  }
+
+  .resource-name {
+    text-align: left;
+    text-transform: capitalize;
+  }
+
+  &.disabled {
+    opacity: 0.7;
+  }
+}
+
+.error {
+  color: var(--mat-sys-error);
+  margin-top: 8px;
+}

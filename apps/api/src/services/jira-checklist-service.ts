@@ -11,6 +11,7 @@ import { spawn } from "node:child_process";
 import { getDecryptedConnection } from "./atlassian-connection-service.js";
 import { fetchJiraTicket } from "./jira-ticket-service.js";
 import { getSetting } from "./settings-service.js";
+import { interpolateTemplate } from "./command-template-service.js";
 
 function toDto(row: { ticketKey: string; content: string; generatedAt: Date; updatedAt: Date }, stale: boolean): JiraChecklistDto {
   return {
@@ -22,23 +23,15 @@ function toDto(row: { ticketKey: string; content: string; generatedAt: Date; upd
   };
 }
 
-function buildPrompt(ticket: { key: string; summary: string; description: string }): string {
-  return `You are a QA analyst. Generate a requirement checklist from this JIRA ticket for code review purposes.
-
-## JIRA Ticket: ${ticket.key}
-
-### Summary
-${ticket.summary}
-
-### Description
-${ticket.description}
-
-## Instructions
-1. Extract ALL acceptance criteria, requirements, and expected behaviors from the ticket
-2. Each checklist item should be a specific, verifiable requirement
-3. Include field names, status codes, error formats mentioned in the ticket
-4. Output ONLY the checklist content (no frontmatter), using markdown checkbox format: - [ ] Requirement description
-Focus on requirements that can be verified against code in a PR.`;
+/** Builds the checklist-generation prompt from the configurable "ai.review.checklistPromptTemplate" setting. */
+async function buildPrompt(ticket: { key: string; summary: string; description: string }): Promise<string> {
+  const template = await getSetting("ai.review.checklistPromptTemplate", "");
+  if (!template) throw new Error("Checklist prompt template not configured (ai.review.checklistPromptTemplate)");
+  return interpolateTemplate(template, {
+    ticket_key: ticket.key,
+    ticket_summary: ticket.summary,
+    ticket_description: ticket.description,
+  });
 }
 
 /**
@@ -80,7 +73,7 @@ export async function generateChecklist(
   const model = await getSetting("ai.review.model", "sonnet");
 
   log?.info({ ticketKey: key }, "[jira-checklist] generating");
-  const content = await runClaudeCliOnce(cliPath, model, buildPrompt(ticket));
+  const content = await runClaudeCliOnce(cliPath, model, await buildPrompt(ticket));
 
   const row = await prisma.jiraChecklist.upsert({
     where: { ticketKey: key },

@@ -1,0 +1,79 @@
+<div class="header-row">
+  <div>
+    <h1>Roles</h1>
+    <p class="subtitle">Define permission sets and assign them to groups.</p>
+  </div>
+  @if (canCreate) {
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Create Role
+    </button>
+  }
+</div>
+
+@if (loading()) {
+  <mat-spinner diameter="32"></mat-spinner>
+} @else if (roles().length === 0) {
+  <div class="empty-state">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <p>No roles yet.</p>
+  </div>
+} @else {
+  <table mat-table [dataSource]="roles()" class="roles-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let role">
+        {{ role.name }}
+        @if (role.isSystem) {
+          <span class="chip chip-neutral">system</span>
+        }
+        @if (role.description) {
+          <div class="description">{{ role.description }}</div>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="permissionCount">
+      <th mat-header-cell *matHeaderCellDef>Permissions</th>
+      <td mat-cell *matCellDef="let role">{{ role.permissionCount }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="groupCount">
+      <th mat-header-cell *matHeaderCellDef>Groups</th>
+      <td mat-cell *matCellDef="let role">{{ role.groupCount }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let role">
+        @if (canUpdate) {
+          <button
+            mat-icon-button
+            (click)="openEditDialog(role)"
+            [disabled]="role.isSystem || busyId() === role.id"
+            [matTooltip]="role.isSystem ? 'System roles cannot be renamed' : 'Edit'"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openPermissionsDialog(role)" [disabled]="busyId() === role.id" matTooltip="Manage permissions">
+            <mat-icon>key</mat-icon>
+          </button>
+        }
+        @if (canDelete) {
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="remove(role)"
+            [disabled]="role.isSystem || busyId() === role.id"
+            [matTooltip]="role.isSystem ? 'System roles cannot be deleted' : 'Delete'"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+  </table>
+}

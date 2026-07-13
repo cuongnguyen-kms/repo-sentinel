@@ -10,6 +10,7 @@ export const replaceAtlassianConnectionSchema = z.object({
   hostname: z.string().min(1).regex(ATLASSIAN_HOSTNAME_REGEX, "Hostname must be a *.atlassian.net domain"),
   email: z.string().email("Must be a valid email address"),
   apiToken: z.string().min(1, "API token is required"),
+  boardId: z.coerce.number().int().positive().nullish(),
 });
 export type ReplaceAtlassianConnectionInput = z.infer<typeof replaceAtlassianConnectionSchema>;
 

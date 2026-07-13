@@ -12,11 +12,12 @@ import { encrypt, decrypt } from "./encryption-service.js";
 import { validateAtlassianHostname } from "../utils/hostname-validation.js";
 import { fetchCurrentUser } from "./atlassian-api-client-service.js";
 
-function toDto(row: { id: string; hostname: string; email: string; createdAt: Date; updatedAt: Date }): AtlassianConnectionDto {
+function toDto(row: { id: string; hostname: string; email: string; boardId: number | null; createdAt: Date; updatedAt: Date }): AtlassianConnectionDto {
   return {
     id: row.id,
     hostname: row.hostname,
     email: row.email,
+    boardId: row.boardId,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -44,14 +45,15 @@ export async function replaceConnection(
   }
 
   const encryptedToken = encrypt(input.apiToken);
+  const boardId = input.boardId ?? null;
   const existing = await prisma.atlassianConnection.findFirst();
   const row = existing
     ? await prisma.atlassianConnection.update({
         where: { id: existing.id },
-        data: { hostname: input.hostname, email: input.email, apiToken: encryptedToken },
+        data: { hostname: input.hostname, email: input.email, apiToken: encryptedToken, boardId },
       })
     : await prisma.atlassianConnection.create({
-        data: { hostname: input.hostname, email: input.email, apiToken: encryptedToken },
+        data: { hostname: input.hostname, email: input.email, apiToken: encryptedToken, boardId },
       });
   return toDto(row);
 }
@@ -86,7 +88,7 @@ export async function testConnection(prisma: PrismaClient): Promise<AtlassianCon
 /** Internal only — decrypted token, used by jira-ticket-service / jira-checklist-service / run-ai-review-job. */
 export async function getDecryptedConnection(
   prisma: PrismaClient
-): Promise<{ id: string; hostname: string; email: string; apiToken: string } | null> {
+): Promise<{ id: string; hostname: string; email: string; apiToken: string; boardId: number | null } | null> {
   const row = await prisma.atlassianConnection.findFirst();
   if (!row) return null;
 
@@ -95,5 +97,6 @@ export async function getDecryptedConnection(
     hostname: row.hostname,
     email: row.email,
     apiToken: decrypt(row.apiToken),
+    boardId: row.boardId,
   };
 }

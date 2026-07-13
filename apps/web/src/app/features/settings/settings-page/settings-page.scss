@@ -4,8 +4,13 @@
 }
 
 .settings-card {
-  max-width: 560px;
+  max-width: 900px;
   border-radius: var(--app-radius-md);
+  padding: 0;
+}
+
+.tab-content {
+  padding: 20px 20px 4px;
 }
 
 .full-width {
@@ -22,4 +27,25 @@ mat-slide-toggle {
   color: var(--mat-sys-on-surface-variant);
   font-size: 0.8125rem;
   margin: -8px 0 8px;
+
+  code {
+    background: var(--mat-sys-surface-container-high);
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 0.75rem;
+  }
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1 1 140px;
+  }
+}
+
+.save-bar {
+  padding: 4px 20px 20px;
 }

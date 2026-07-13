@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Roles for "{{ group.name }}"</h2>
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-spinner diameter="28"></mat-spinner>
+  } @else if (allRoles().length === 0) {
+    <p class="empty">No roles exist yet.</p>
+  } @else {
+    <mat-selection-list>
+      @for (role of allRoles(); track role.id) {
+        <mat-list-item>
+          <mat-checkbox [checked]="selectedRoleIds().has(role.id)" (change)="toggle(role.id)">
+            {{ role.name }}
+          </mat-checkbox>
+        </mat-list-item>
+      }
+    </mat-selection-list>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving() || loading()">
+    @if (saving()) {
+      <mat-spinner diameter="18"></mat-spinner>
+    } @else {
+      Save
+    }
+  </button>
+</mat-dialog-actions>

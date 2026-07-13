@@ -59,6 +59,7 @@ export interface AtlassianConnectionDto {
   id: string;
   hostname: string;
   email: string;
+  boardId: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -338,6 +339,127 @@ export interface ResolveGithubThreadsResult {
   failed: number;
   skipped: number;
   errors: Array<{ findingId: string; error: string }>;
+}
+
+// ---------------------------------------------------------------------------
+// Admin RBAC
+// ---------------------------------------------------------------------------
+
+export interface AdminUserDto {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  banned: boolean;
+  banReason: string | null;
+  banExpires: string | null;
+  createdAt: string;
+  groups: Array<{ id: string; name: string }>;
+}
+
+export interface CreateAdminUserInput {
+  name: string;
+  email: string;
+  password: string;
+  groupIds?: string[];
+}
+
+export interface UpdateAdminUserInput {
+  name?: string;
+  email?: string;
+  banned?: boolean;
+  banReason?: string;
+  /** Seconds from now — matches better-auth's banUser API, NOT an absolute date. */
+  banExpiresInSeconds?: number;
+}
+
+export interface AdminGroupDto {
+  id: string;
+  name: string;
+  description: string | null;
+  isSystem: boolean;
+  memberCount: number;
+  roles: Array<{ id: string; name: string }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminRoleDto {
+  id: string;
+  name: string;
+  description: string | null;
+  isSystem: boolean;
+  permissionCount: number;
+  groupCount: number;
+  permissionIds: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PermissionDto {
+  id: string;
+  resource: string;
+  action: string;
+}
+
+// ---------------------------------------------------------------------------
+// Sprint report
+// ---------------------------------------------------------------------------
+
+export interface SprintDto {
+  label: string;
+  start: string;
+  end: string;
+}
+
+export interface MergedPrCommentCounts {
+  open: number;
+  fixedCode: number;
+  noLongerFlagged: number;
+  invalidComment: number;
+  notFixNow: number;
+  byDesign: number;
+  acceptedRisk: number;
+  noReply: number;
+  otherResolved: number;
+  otherDismissed: number;
+  total: number;
+}
+
+export interface MergedPrReportSummary extends MergedPrCommentCounts {
+  totalMergedPrs: number;
+}
+
+export interface MergedPrCommentDto {
+  id: string;
+  findingTitle: string;
+  findingSeverity: string;
+  findingFile: string;
+  findingLine: number;
+  resolutionStatus: string;
+  resolutionReason: string | null;
+  category: string;
+  replyCount: number;
+  lastReplyBody: string | null;
+  dismissalKeyword: string | null;
+  githubHtmlUrl: string;
+}
+
+export interface MergedPrReportRow {
+  prId: string;
+  prNumber: number;
+  prTitle: string;
+  prUrl: string;
+  authorLogin: string;
+  repoFullName: string;
+  mergedAt: string | null;
+  counts: MergedPrCommentCounts;
+  comments: MergedPrCommentDto[];
+}
+
+export interface MergedPrCommentsReport {
+  summary: MergedPrReportSummary;
+  prs: MergedPrReportRow[];
 }
 
 // ---------------------------------------------------------------------------

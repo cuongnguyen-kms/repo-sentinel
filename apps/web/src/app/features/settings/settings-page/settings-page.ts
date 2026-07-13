@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../core/utils/http-error';
@@ -23,6 +24,7 @@ import { SettingsService } from '../settings.service';
     MatInputModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    MatTabsModule,
   ],
   templateUrl: './settings-page.html',
   styleUrl: './settings-page.scss',
@@ -51,6 +53,19 @@ export class SettingsPage {
   readonly autoPostSeverities = signal('critical,high,medium,low,info');
   readonly jiraEnabled = signal(false);
   readonly jiraTicketPattern = signal('[A-Z][A-Z0-9]+-\\d+');
+  readonly checklistPromptTemplate = signal('');
+
+  readonly googleChatEnabled = signal(false);
+  readonly googleChatWebhook = signal('');
+  readonly googleChatTemplate = signal('');
+  readonly googleChatMergedPrTemplate = signal('');
+  readonly googleChatReminderTemplate = signal('');
+  readonly sprintReminderEnabled = signal(false);
+  readonly reminderDaysRemaining = signal('3');
+  readonly reminderTimeHour = signal('13');
+  readonly reminderTimeMinute = signal('30');
+  readonly sprintStartDate = signal('2026-01-05');
+  readonly sprintLengthDays = signal('14');
 
   constructor() {
     void this.load();
@@ -73,6 +88,18 @@ export class SettingsPage {
       this.autoPostSeverities.set(settings['ai.review.autoPostSeverities'] ?? 'critical,high,medium,low,info');
       this.jiraEnabled.set(settings['ai.review.jiraEnabled'] === '1');
       this.jiraTicketPattern.set(settings['ai.review.jiraTicketPattern'] ?? '[A-Z][A-Z0-9]+-\\d+');
+      this.checklistPromptTemplate.set(settings['ai.review.checklistPromptTemplate'] ?? '');
+      this.googleChatEnabled.set(settings['ai.review.googleChatEnabled'] === '1');
+      this.googleChatWebhook.set(settings['ai.review.googleChatWebhook'] ?? '');
+      this.googleChatTemplate.set(settings['ai.review.googleChatTemplate'] ?? '');
+      this.googleChatMergedPrTemplate.set(settings['ai.review.googleChatMergedPrTemplate'] ?? '');
+      this.googleChatReminderTemplate.set(settings['ai.review.googleChatReminderTemplate'] ?? '');
+      this.sprintReminderEnabled.set(settings['ai.review.sprintReminderEnabled'] === '1');
+      this.reminderDaysRemaining.set(settings['ai.review.reminderDaysRemaining'] ?? '3');
+      this.reminderTimeHour.set(settings['ai.review.reminderTimeHour'] ?? '13');
+      this.reminderTimeMinute.set(settings['ai.review.reminderTimeMinute'] ?? '30');
+      this.sprintStartDate.set(settings['report.sprintStartDate'] ?? '2026-01-05');
+      this.sprintLengthDays.set(settings['report.sprintLengthDays'] ?? '14');
     } finally {
       this.loading.set(false);
     }
@@ -97,6 +124,18 @@ export class SettingsPage {
         'ai.review.autoPostSeverities': this.autoPostSeverities(),
         'ai.review.jiraEnabled': this.jiraEnabled() ? '1' : '0',
         'ai.review.jiraTicketPattern': this.jiraTicketPattern(),
+        'ai.review.checklistPromptTemplate': this.checklistPromptTemplate(),
+        'ai.review.googleChatEnabled': this.googleChatEnabled() ? '1' : '0',
+        'ai.review.googleChatWebhook': this.googleChatWebhook(),
+        'ai.review.googleChatTemplate': this.googleChatTemplate(),
+        'ai.review.googleChatMergedPrTemplate': this.googleChatMergedPrTemplate(),
+        'ai.review.googleChatReminderTemplate': this.googleChatReminderTemplate(),
+        'ai.review.sprintReminderEnabled': this.sprintReminderEnabled() ? '1' : '0',
+        'ai.review.reminderDaysRemaining': this.reminderDaysRemaining(),
+        'ai.review.reminderTimeHour': this.reminderTimeHour(),
+        'ai.review.reminderTimeMinute': this.reminderTimeMinute(),
+        'report.sprintStartDate': this.sprintStartDate(),
+        'report.sprintLengthDays': this.sprintLengthDays(),
       };
       for (const key of Object.keys(values)) {
         if (values[key] === '') delete values[key];

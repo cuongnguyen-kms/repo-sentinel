@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { permissionGuard } from './core/guards/permission.guard';
 import { Action, Resource } from './core/models/enums';
@@ -55,10 +56,55 @@ export const routes: Routes = [
         loadComponent: () => import('./features/jira/jira-page/jira-page').then((m) => m.JiraPage),
       },
       {
+        path: 'report',
+        canActivate: [permissionGuard],
+        data: { resource: Resource.PrComments, action: Action.Read },
+        loadComponent: () => import('./features/report/report-page/report-page').then((m) => m.ReportPage),
+      },
+      {
         path: 'settings',
         canActivate: [permissionGuard],
         data: { resource: Resource.Settings, action: Action.Read },
         loadComponent: () => import('./features/settings/settings-page/settings-page').then((m) => m.SettingsPage),
+      },
+      {
+        path: 'admin',
+        canActivate: [adminGuard],
+        children: [
+          { path: '', redirectTo: 'users', pathMatch: 'full' },
+          {
+            path: 'users',
+            canActivate: [permissionGuard],
+            data: { resource: Resource.Users, action: Action.Read },
+            loadComponent: () =>
+              import('./features/admin/admin-users/admin-users-page/admin-users-page').then((m) => m.AdminUsersPage),
+          },
+          {
+            path: 'groups',
+            canActivate: [permissionGuard],
+            data: { resource: Resource.Groups, action: Action.Read },
+            loadComponent: () =>
+              import('./features/admin/admin-groups/admin-groups-page/admin-groups-page').then(
+                (m) => m.AdminGroupsPage
+              ),
+          },
+          {
+            path: 'roles',
+            canActivate: [permissionGuard],
+            data: { resource: Resource.Roles, action: Action.Read },
+            loadComponent: () =>
+              import('./features/admin/admin-roles/admin-roles-page/admin-roles-page').then((m) => m.AdminRolesPage),
+          },
+          {
+            path: 'permissions',
+            canActivate: [permissionGuard],
+            data: { resource: Resource.Permissions, action: Action.Read },
+            loadComponent: () =>
+              import('./features/admin/admin-permissions/admin-permissions-page/admin-permissions-page').then(
+                (m) => m.AdminPermissionsPage
+              ),
+          },
+        ],
       },
     ],
   },

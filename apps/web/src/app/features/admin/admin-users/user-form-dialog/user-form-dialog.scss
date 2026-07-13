@@ -1,0 +1,17 @@
+.full-width {
+  width: 100%;
+}
+
+.section-label {
+  margin: 16px 0 4px;
+  font-weight: 500;
+}
+
+.empty {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error {
+  color: var(--mat-sys-error);
+  margin-top: 8px;
+}

@@ -23,8 +23,14 @@ import { registerReviewRoutes } from "./routes/review-routes.js";
 import { registerReviewCommentRoutes } from "./routes/review-comment-routes.js";
 import { registerReviewResolutionRoutes } from "./routes/review-resolution-routes.js";
 import { registerSettingsRoutes } from "./routes/settings-routes.js";
+import { registerAdminUserRoutes } from "./routes/admin-user-routes.js";
+import { registerAdminGroupRoutes } from "./routes/admin-group-routes.js";
+import { registerAdminRoleRoutes } from "./routes/admin-role-routes.js";
+import { registerAdminPermissionRoutes } from "./routes/admin-permission-routes.js";
+import { registerReportRoutes } from "./routes/report-routes.js";
 import { startPollingWorker } from "./queues/repo-polling-queue.js";
 import { startScanReposScheduler } from "./queues/scan-repos-scheduler.js";
+import { startSprintReminderScheduler } from "./queues/sprint-reminder-scheduler.js";
 import { startAiReviewWorker, aiReviewQueue } from "./queues/ai-review-queue.js";
 import { seedDefaultSettings } from "./services/settings-seed-service.js";
 import { recoverStaleReviews } from "./services/ai-review-service.js";
@@ -57,6 +63,11 @@ async function main(): Promise<void> {
   await app.register(registerReviewCommentRoutes);
   await app.register(registerReviewResolutionRoutes);
   await app.register(registerSettingsRoutes);
+  await app.register(registerAdminUserRoutes);
+  await app.register(registerAdminGroupRoutes);
+  await app.register(registerAdminRoleRoutes);
+  await app.register(registerAdminPermissionRoutes);
+  await app.register(registerReportRoutes);
 
   // Seed before accepting requests so DB is ready when first request arrives
   await seedDefaultSettings();
@@ -74,8 +85,9 @@ async function main(): Promise<void> {
   startPollingWorker(app);
   startAiReviewWorker(app);
   await startScanReposScheduler(app);
+  await startSprintReminderScheduler(app);
 
-  app.log.info("[queues] polling worker, ai-review worker, and scan-repos scheduler started");
+  app.log.info("[queues] polling worker, ai-review worker, scan-repos scheduler, and sprint-reminder scheduler started");
 }
 
 main().catch((err: unknown) => {

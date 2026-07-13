@@ -34,7 +34,9 @@ import { fetchExistingPrCommentPaths } from "../services/github-reply-sync-servi
 import { resolveTicketKeysForPr } from "../services/jira-ticket-service.js";
 import { getCachedChecklistsForKeys } from "../services/jira-checklist-service.js";
 import { getSetting } from "../services/settings-service.js";
-import type { CodeReviewFinding } from "@repo-sentinel/types";
+import { sendGoogleChatNotification } from "../services/google-chat-service.js";
+import { computeReviewComparison } from "../services/review-comparison-service.js";
+import type { CodeReviewFinding, CodeReviewResult } from "@repo-sentinel/types";
 import { unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createNotification, NotificationType } from "../services/notification-persistence-service.js";
@@ -475,6 +477,31 @@ export async function runAiReviewJob(
     await autoPostFindings(fastify, prId, reviewId, roomId, codeReviewResult, log);
   } catch (err) {
     log.warn({ err }, "[auto-post] non-blocking failure");
+  }
+
+  // 9c. Notify Google Chat with the review summary (best-effort — never fails the run)
+  try {
+    const comparison = await computeReviewComparison(fastify.prisma, reviewId);
+    sendGoogleChatNotification(fastify.prisma, {
+      prId,
+      prNumber: pr.ghePrId,
+      prTitle: pr.title,
+      prUrl: pr.htmlUrl,
+      author: pr.authorLogin,
+      changedFiles: pr.changedFiles,
+      score,
+      stats: (codeReviewResult as CodeReviewResult | null)?.stats ?? {},
+      totalFindings: codeReviewResult?.findings.length ?? 0,
+      webBaseUrl: process.env["WEB_ORIGIN"] ?? "http://localhost:5175",
+      commentDelta: {
+        resolved: comparison.openCommentsResolved ?? comparison.resolvedCount,
+        stillOpen: comparison.openCommentsStillOpen ?? 0,
+        newFindings: comparison.newCount,
+        carriedOver: comparison.carriedOverCount,
+      },
+    }, log).catch(() => {});
+  } catch (err) {
+    log.warn({ err }, "[google-chat] non-blocking failure");
   }
 
   // 10. Broadcast completion + cleanup buffer

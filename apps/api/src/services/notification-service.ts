@@ -9,6 +9,7 @@ import type { Server as SocketServer } from "socket.io";
 import type { PrismaClient } from "@repo-sentinel/db";
 import { PrState, NotificationType } from "@repo-sentinel/types";
 import { createNotification } from "./notification-persistence-service.js";
+import { sendMergedPrReminder } from "./google-chat-service.js";
 
 /**
  * Emit a lightweight "notification:new" event so the frontend can invalidate
@@ -62,6 +63,12 @@ export function emitPrUpdated(
     })
       .then(() => emitNotificationCreated(io))
       .catch(() => {});
+
+    // Send Google Chat reminder if merged PR has open/unreplied comments
+    const prId = pr["id"] as string | undefined;
+    if (prId) {
+      sendMergedPrReminder(prisma, prId).catch(() => {});
+    }
   } else if (changes.newState === PrState.CLOSED) {
     createNotification(prisma, {
       type: NotificationType.PR_CLOSED,

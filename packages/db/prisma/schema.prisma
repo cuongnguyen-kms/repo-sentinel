@@ -78,6 +78,7 @@ model AtlassianConnection {
   hostname  String   @unique
   email     String
   apiToken  String
+  boardId   Int?     // JIRA Agile board ID — used by the sprint reminder scheduler to find the active sprint
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

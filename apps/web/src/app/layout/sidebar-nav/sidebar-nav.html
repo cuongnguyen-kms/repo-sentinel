@@ -18,4 +18,16 @@
       </a>
     }
   </mat-nav-list>
+
+  @if (adminItems().length > 0) {
+    <div class="nav-section-label">Admin</div>
+    <mat-nav-list class="nav-list">
+      @for (item of adminItems(); track item.path) {
+        <a mat-list-item [routerLink]="item.path" routerLinkActive="active" class="nav-item">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  }
 </div>
