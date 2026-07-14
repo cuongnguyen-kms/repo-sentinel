@@ -1,0 +1,43 @@
+<div class="editor-layout">
+  <div class="editor-main">
+    <textarea
+      #textareaEl
+      class="template-textarea"
+      spellcheck="false"
+      [rows]="rows()"
+      [ngModel]="value()"
+      (ngModelChange)="value.set($event)"
+      [disabled]="disabled()"
+    ></textarea>
+
+    <div class="editor-actions">
+      <button mat-stroked-button type="button" (click)="resetToDefault()" [disabled]="disabled()">Reset to Default</button>
+      <button mat-stroked-button type="button" (click)="togglePreview()">{{ showPreview() ? 'Hide Preview' : 'Preview' }}</button>
+    </div>
+
+    @if (showPreview()) {
+      <div class="preview-box">
+        <p class="preview-label">Preview (sample data)</p>
+        <pre>{{ previewText() }}</pre>
+      </div>
+    }
+  </div>
+
+  @if (variables().length > 0) {
+    <div class="variable-panel">
+      <p class="panel-label">Variables</p>
+      @for (v of variables(); track v.name) {
+        <button
+          type="button"
+          class="variable-item"
+          [title]="'Example: ' + v.example"
+          [disabled]="disabled()"
+          (click)="insertVariable(v.name)"
+        >
+          <span class="var-name">{{ v.name }}</span>
+          <span class="var-desc">{{ v.description }}</span>
+        </button>
+      }
+    </div>
+  }
+</div>

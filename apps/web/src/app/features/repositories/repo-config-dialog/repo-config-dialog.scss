@@ -3,6 +3,27 @@
   margin-bottom: 12px;
 }
 
+mat-slide-toggle {
+  display: block;
+  margin: 12px 0;
+}
+
+h3 {
+  margin: 20px 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.8125rem;
+  margin: 0 0 8px;
+}
+
+.editor-wrap {
+  margin: 4px 0 16px;
+}
+
 .error {
   color: light-dark(#a3261d, #ff9f93);
   font-size: 0.875rem;

@@ -1,0 +1,120 @@
+.editor-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.editor-main {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+
+.template-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  padding: 10px 12px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-md);
+  background: var(--mat-sys-surface-container-lowest);
+  color: var(--mat-sys-on-surface);
+  resize: vertical;
+  outline: none;
+
+  &:focus {
+    border-color: var(--mat-sys-primary);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.editor-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.preview-box {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-md);
+
+  pre {
+    margin: 0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+.preview-label {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.variable-panel {
+  flex: 0 0 220px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--app-radius-md);
+  background: var(--mat-sys-surface-container-low);
+  padding: 8px 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.panel-label {
+  margin: 0 0 4px;
+  padding: 0 12px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.variable-item {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--mat-sys-surface-container-high);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+.var-name {
+  display: block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+}
+
+.var-desc {
+  display: block;
+  margin-top: 1px;
+  font-size: 0.6875rem;
+  color: var(--mat-sys-on-surface-variant);
+}

@@ -12,6 +12,9 @@ export interface WatchRepoItemInput {
 export interface UpdateRepoInput {
   pollingInterval?: number;
   isActive?: boolean;
+  /** null clears the per-repo override, falling back to the global template */
+  promptTemplate?: string | null;
+  systemPromptTemplate?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })

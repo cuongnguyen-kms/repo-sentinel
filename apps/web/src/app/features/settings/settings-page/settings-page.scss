@@ -11,6 +11,16 @@
 
 .tab-content {
   padding: 20px 20px 4px;
+
+  h4 {
+    margin: 20px 0 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }
 
 .full-width {

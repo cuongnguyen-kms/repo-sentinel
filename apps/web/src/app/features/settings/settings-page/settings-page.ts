@@ -11,12 +11,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../core/utils/http-error';
+import { CommandTemplateEditor } from '../command-template-editor/command-template-editor';
+import { DEFAULT_SYSTEM_TEMPLATE, DEFAULT_USER_TEMPLATE, TEMPLATE_VARIABLES } from '../prompt-template-defaults';
 import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-settings-page',
   standalone: true,
   imports: [
+    CommandTemplateEditor,
     FormsModule,
     MatButtonModule,
     MatCardModule,
@@ -37,6 +40,10 @@ export class SettingsPage {
 
   readonly canEdit = this.permissions.can(Resource.Settings, Action.Update);
 
+  readonly templateVariables = TEMPLATE_VARIABLES;
+  readonly defaultUserTemplate = DEFAULT_USER_TEMPLATE;
+  readonly defaultSystemTemplate = DEFAULT_SYSTEM_TEMPLATE;
+
   readonly loading = signal(true);
   readonly saving = signal(false);
 
@@ -51,6 +58,8 @@ export class SettingsPage {
   readonly autoRerunReviewStatuses = signal('OPEN');
   readonly autoPostToGithub = signal(false);
   readonly autoPostSeverities = signal('critical,high,medium,low,info');
+  readonly promptTemplate = signal(DEFAULT_USER_TEMPLATE);
+  readonly systemPromptTemplate = signal(DEFAULT_SYSTEM_TEMPLATE);
   readonly jiraEnabled = signal(false);
   readonly jiraTicketPattern = signal('[A-Z][A-Z0-9]+-\\d+');
   readonly checklistPromptTemplate = signal('');
@@ -86,6 +95,8 @@ export class SettingsPage {
       this.autoRerunReviewStatuses.set(settings['ai.review.autoRerunReviewStatuses'] ?? 'OPEN');
       this.autoPostToGithub.set(settings['ai.review.autoPostToGithub'] === '1');
       this.autoPostSeverities.set(settings['ai.review.autoPostSeverities'] ?? 'critical,high,medium,low,info');
+      this.promptTemplate.set(settings['ai.review.promptTemplate'] || DEFAULT_USER_TEMPLATE);
+      this.systemPromptTemplate.set(settings['ai.review.systemPromptTemplate'] || DEFAULT_SYSTEM_TEMPLATE);
       this.jiraEnabled.set(settings['ai.review.jiraEnabled'] === '1');
       this.jiraTicketPattern.set(settings['ai.review.jiraTicketPattern'] ?? '[A-Z][A-Z0-9]+-\\d+');
       this.checklistPromptTemplate.set(settings['ai.review.checklistPromptTemplate'] ?? '');
@@ -122,6 +133,8 @@ export class SettingsPage {
         'ai.review.autoRerunReviewStatuses': this.autoRerunReviewStatuses(),
         'ai.review.autoPostToGithub': this.autoPostToGithub() ? '1' : '0',
         'ai.review.autoPostSeverities': this.autoPostSeverities(),
+        'ai.review.promptTemplate': this.promptTemplate(),
+        'ai.review.systemPromptTemplate': this.systemPromptTemplate(),
         'ai.review.jiraEnabled': this.jiraEnabled() ? '1' : '0',
         'ai.review.jiraTicketPattern': this.jiraTicketPattern(),
         'ai.review.checklistPromptTemplate': this.checklistPromptTemplate(),

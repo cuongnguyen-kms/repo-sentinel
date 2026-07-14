@@ -11,7 +11,7 @@ const DEFAULT_GOOGLE_CHAT_TEMPLATE = [
   "Reviewed #{{pr_number}}: {{pr_title}}",
   "Score: {{score}}/10",
   "File Changed: {{changed_files}}",
-  "Link: {{repowatch_url}}",
+  "Link: {{review_url}}",
   "----",
   "Mismatch: {{count_mismatch_requirement}} | CheckList: {{count_checklist_required}}",
   "Critical: {{count_critical}}",
@@ -28,7 +28,7 @@ const DEFAULT_GOOGLE_CHAT_TEMPLATE = [
 const DEFAULT_MERGED_PR_TEMPLATE = [
   "⚠️ *Merged PR Reminder*",
   "📋 <{{pr_url}}|PR #{{pr_number}}: {{pr_title}}>",
-  "👤 {{author}} | 🔗 <{{repowatch_url}}|AI Review>",
+  "👤 {{author}} | 🔗 <{{review_url}}|AI Review>",
   "🔴 {{open_comments}} Open comments | 🟡 {{resolved_no_reply}} Resolved (no reply)",
   "💬 Reply breakdown:",
   "{{reply_breakdown}}",

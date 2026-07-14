@@ -3,9 +3,9 @@
  * All functions are pure: accept credentials, return parsed JSON.
  * Rate-limit handling: 429 with Retry-After, max 3 retries, then throws RateLimitExhaustedError.
  *
- * Trimmed from the RepoWatch reference client: only what this MVP's connection
- * test, ticket fetch, and ticket search need. Board/user-search/worklog/changelog/
- * Confluence helpers are out of scope (deferred with the activity-tracking slice).
+ * Only what connection testing, ticket fetch, and ticket search need.
+ * Board/user-search/worklog/changelog/Confluence helpers are out of scope
+ * (deferred with the activity-tracking slice).
  */
 
 const MAX_RETRIES = 3;

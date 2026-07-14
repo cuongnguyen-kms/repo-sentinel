@@ -65,7 +65,7 @@ export class RepositoriesPage {
   }
 
   openConfigDialog(repo: WatchedRepoDto): void {
-    const ref = this.dialog.open(RepoConfigDialog, { width: '400px', data: repo });
+    const ref = this.dialog.open(RepoConfigDialog, { width: '760px', maxWidth: '95vw', data: repo });
     ref.afterClosed().subscribe((updated) => {
       if (updated) void this.load();
     });

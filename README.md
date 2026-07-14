@@ -1,6 +1,6 @@
 # RepoSentinel
 
-An Angular + Fastify replica of [RepoWatch](../repo-watch-main) — monitors GitHub Enterprise repositories, tracks pull requests, and runs AI-powered code reviews using the Claude Code CLI.
+An Angular + Fastify application that monitors GitHub Enterprise repositories, tracks pull requests, and runs AI-powered code reviews using the Claude Code CLI.
 
 **Status**: MVP — see [Scope](#scope) below.
 
@@ -95,13 +95,11 @@ In the UI: **Connections** → **Add Connection**. Enter your GHE hostname (`git
 
 ## Scope
 
-This is an intentional MVP slice, not a full port of the original RepoWatch:
+**Included**: auth/RBAC (with an admin management UI for users/groups/roles/permissions), GHE connections, watched repos + polling, pull request tracking, AI code review (trigger → clone → diff → Claude CLI → streamed terminal output with live token/cost metadata → structured findings + score), configurable review prompt templates (global and per-repo), GitHub comment posting/resolution, JIRA/Atlassian integration (ticket browsing, AI-generated requirement checklists), sprint reports and Google Chat reminders, review history, notifications.
 
-**Included**: auth/RBAC, GHE connections, watched repos + polling, pull request tracking, AI code review (trigger → clone → diff → Claude CLI → streamed terminal output → structured findings + score), review history, notifications, core AI-review settings.
+**Not yet included**: wiki design-doc injection, auto-fix jobs, machine-client OAuth2 (M2M auth), Chrome extension support, chat sessions.
 
-**Not included** (out of scope for this pass): JIRA/Atlassian sync, wiki design-doc injection, auto-fix jobs, machine-client OAuth2 (M2M auth), Chrome extension, GitHub comment posting/resolution, admin RBAC management UI, chat sessions, sprint reports, Google Chat notifications. The Prisma schema, RBAC resource enum, and settings keys were trimmed to match.
-
-See [ROADMAP.md](./ROADMAP.md) for what each of those areas needs (schema models to restore, backend files to port, frontend pages to build) and a suggested order to tackle them in.
+See [ROADMAP.md](./ROADMAP.md) for what each of those remaining areas needs.
 
 ## Scripts
 

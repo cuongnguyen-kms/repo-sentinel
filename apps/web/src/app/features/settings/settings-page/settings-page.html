@@ -63,6 +63,30 @@
         </div>
       </mat-tab>
 
+      <mat-tab label="Prompt Template">
+        <div class="tab-content">
+          <p class="hint">The prompt sent to the AI reviewer for every PR. Falls back to this default when unset.</p>
+          <h4>Review prompt</h4>
+          <app-command-template-editor
+            [(value)]="promptTemplate"
+            [defaultValue]="defaultUserTemplate"
+            [variables]="templateVariables"
+            [disabled]="!canEdit"
+            [rows]="14"
+          />
+
+          <h4>System prompt</h4>
+          <p class="hint">Appended after the review prompt — defines the structured JSON output contract, scoring formula, and open-comments/JIRA-checklist processing rules.</p>
+          <app-command-template-editor
+            [(value)]="systemPromptTemplate"
+            [defaultValue]="defaultSystemTemplate"
+            [variables]="templateVariables"
+            [disabled]="!canEdit"
+            [rows]="14"
+          />
+        </div>
+      </mat-tab>
+
       <mat-tab label="JIRA">
         <div class="tab-content">
           <mat-slide-toggle [checked]="jiraEnabled()" (change)="jiraEnabled.set($event.checked)" [disabled]="!canEdit">

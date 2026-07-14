@@ -7,6 +7,37 @@
 
   <mat-slide-toggle [checked]="isActive()" (change)="isActive.set($event.checked)">Active</mat-slide-toggle>
 
+  <h3>AI Review Prompt Overrides</h3>
+  <p class="hint">Overrides the global prompt template (Settings → Prompt Template) for this repo only.</p>
+
+  <mat-slide-toggle [checked]="useCustomPrompt()" (change)="useCustomPrompt.set($event.checked)">
+    Custom review prompt for this repo
+  </mat-slide-toggle>
+  @if (useCustomPrompt()) {
+    <div class="editor-wrap">
+      <app-command-template-editor
+        [(value)]="promptTemplate"
+        [defaultValue]="defaultUserTemplate"
+        [variables]="templateVariables"
+        [rows]="10"
+      />
+    </div>
+  }
+
+  <mat-slide-toggle [checked]="useCustomSystemPrompt()" (change)="useCustomSystemPrompt.set($event.checked)">
+    Custom system prompt for this repo
+  </mat-slide-toggle>
+  @if (useCustomSystemPrompt()) {
+    <div class="editor-wrap">
+      <app-command-template-editor
+        [(value)]="systemPromptTemplate"
+        [defaultValue]="defaultSystemTemplate"
+        [variables]="templateVariables"
+        [rows]="10"
+      />
+    </div>
+  }
+
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }

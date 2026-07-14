@@ -7,7 +7,12 @@
       "Bash(powershell -NoProfile -Command \"Get-Process node -ErrorAction SilentlyContinue | Select-Object Id, ProcessName, Path\")",
       "Bash(powershell -NoProfile -Command \"Get-CimInstance Win32_Process -Filter \\\\\"Name='node.exe'\\\\\" | Select-Object ProcessId, CommandLine | Format-List\")",
       "Bash(powershell -NoProfile -Command '34172,39396,3696,39016,17952,24864,21408,9532,9628 | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }; Start-Sleep -Seconds 1; Get-Process node -ErrorAction SilentlyContinue | Select-Object Id')",
-      "Bash(npx ng *)"
+      "Bash(npx ng *)",
+      "Bash(git status *)",
+      "Bash(sed -i 's/{{repowatch_url}}/{{review_url}}/g' apps/api/src/services/settings-seed-service.ts)",
+      "Bash(sed -i 's/repowatch_url:/review_url:/g' apps/api/src/services/google-chat-service.ts)",
+      "Bash(PGPASSWORD=secret psql -h localhost -U reposentinel -d reposentinel -c \"SELECT key, value FROM \\\\\"AppSetting\\\\\" WHERE value LIKE '%repowatch%';\")",
+      "Bash(git check-ignore *)"
     ]
   }
 }
