@@ -2,6 +2,11 @@
 
 An Angular + Fastify application that monitors GitHub Enterprise repositories, tracks pull requests, and runs AI-powered code reviews using the Claude Code CLI.
 
+<img width="1919" height="1032" alt="image" src="https://github.com/user-attachments/assets/8a42cc64-5fe5-4379-8c3b-ba212c6b356e" />
+
+<img width="1919" height="1031" alt="image" src="https://github.com/user-attachments/assets/4c45213a-c00b-4a22-b00d-0447403126c9" />
+
+
 **Status**: MVP — see [Scope](#scope) below.
 
 ## Tech Stack
