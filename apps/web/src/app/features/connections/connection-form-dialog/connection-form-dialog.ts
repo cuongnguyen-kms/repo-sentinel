@@ -5,6 +5,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ConnectionsService } from '../connections.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { ConnectionsService } from '../connections.service';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './connection-form-dialog.html',
   styleUrl: './connection-form-dialog.scss',
@@ -25,6 +27,7 @@ import { ConnectionsService } from '../connections.service';
 export class ConnectionFormDialog {
   private readonly connectionsService = inject(ConnectionsService);
   private readonly dialogRef = inject(MatDialogRef<ConnectionFormDialog>);
+  private readonly transloco = inject(TranslocoService);
 
   readonly hostname = signal('');
   readonly username = signal('');
@@ -48,7 +51,7 @@ export class ConnectionFormDialog {
       });
       this.dialogRef.close(created);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to create connection');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('connections.form.createError'));
     } finally {
       this.saving.set(false);
     }

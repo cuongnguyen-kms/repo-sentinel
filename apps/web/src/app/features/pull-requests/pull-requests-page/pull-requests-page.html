@@ -1,93 +1,95 @@
-<h1>Pull Requests</h1>
-<p class="subtitle">Tracked pull requests across all watched repositories.</p>
+<ng-container *transloco="let t">
+  <h1>{{ t('pullRequests.title') }}</h1>
+  <p class="subtitle">{{ t('pullRequests.subtitle') }}</p>
 
-<div class="filters">
-  <mat-form-field appearance="outline">
-    <mat-label>State</mat-label>
-    <mat-select [ngModel]="stateFilter()" (ngModelChange)="stateFilter.set($event); onFilterChange()">
-      <mat-option value="">All</mat-option>
-      <mat-option [value]="PrState.OPEN">Open</mat-option>
-      <mat-option value="DRAFT">Draft</mat-option>
-      <mat-option [value]="PrState.MERGED">Merged</mat-option>
-      <mat-option [value]="PrState.CLOSED">Closed</mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ t('pullRequests.filters.state.label') }}</mat-label>
+      <mat-select [ngModel]="stateFilter()" (ngModelChange)="stateFilter.set($event); onFilterChange()">
+        <mat-option value="">{{ t('pullRequests.filters.state.all') }}</mat-option>
+        <mat-option [value]="PrState.OPEN">{{ t('pullRequests.filters.state.open') }}</mat-option>
+        <mat-option value="DRAFT">{{ t('pullRequests.filters.state.draft') }}</mat-option>
+        <mat-option [value]="PrState.MERGED">{{ t('pullRequests.filters.state.merged') }}</mat-option>
+        <mat-option [value]="PrState.CLOSED">{{ t('pullRequests.filters.state.closed') }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Review status</mat-label>
-    <mat-select [ngModel]="reviewStatusFilter()" (ngModelChange)="reviewStatusFilter.set($event); onFilterChange()">
-      <mat-option value="">All</mat-option>
-      <mat-option [value]="ReviewStatus.PENDING">Pending</mat-option>
-      <mat-option [value]="ReviewStatus.QUEUED">Queued</mat-option>
-      <mat-option [value]="ReviewStatus.IN_PROGRESS">In progress</mat-option>
-      <mat-option [value]="ReviewStatus.REVIEWED">Reviewed</mat-option>
-      <mat-option [value]="ReviewStatus.UPDATED">Updated</mat-option>
-      <mat-option [value]="ReviewStatus.FAILED">Failed</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ t('pullRequests.filters.reviewStatus.label') }}</mat-label>
+      <mat-select [ngModel]="reviewStatusFilter()" (ngModelChange)="reviewStatusFilter.set($event); onFilterChange()">
+        <mat-option value="">{{ t('pullRequests.filters.reviewStatus.all') }}</mat-option>
+        <mat-option [value]="ReviewStatus.PENDING">{{ t('pullRequests.filters.reviewStatus.pending') }}</mat-option>
+        <mat-option [value]="ReviewStatus.QUEUED">{{ t('pullRequests.filters.reviewStatus.queued') }}</mat-option>
+        <mat-option [value]="ReviewStatus.IN_PROGRESS">{{ t('pullRequests.filters.reviewStatus.inProgress') }}</mat-option>
+        <mat-option [value]="ReviewStatus.REVIEWED">{{ t('pullRequests.filters.reviewStatus.reviewed') }}</mat-option>
+        <mat-option [value]="ReviewStatus.UPDATED">{{ t('pullRequests.filters.reviewStatus.updated') }}</mat-option>
+        <mat-option [value]="ReviewStatus.FAILED">{{ t('pullRequests.filters.reviewStatus.failed') }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Author</mat-label>
-    <input matInput [ngModel]="authorFilter()" (ngModelChange)="authorFilter.set($event)" (keyup.enter)="onFilterChange()" />
-  </mat-form-field>
-</div>
-
-@if (loading()) {
-  <mat-spinner diameter="32"></mat-spinner>
-} @else if (rows().length === 0) {
-  <div class="empty-state">
-    <mat-icon>inbox</mat-icon>
-    <p>No pull requests found.</p>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ t('pullRequests.filters.author.label') }}</mat-label>
+      <input matInput [ngModel]="authorFilter()" (ngModelChange)="authorFilter.set($event)" (keyup.enter)="onFilterChange()" />
+    </mat-form-field>
   </div>
-} @else {
-  <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSortChange($event)" class="pr-table">
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef>Title</th>
-      <td mat-cell *matCellDef="let pr">
-        <a [routerLink]="['/pull-requests', pr.id]">#{{ pr.ghePrId }} {{ pr.title }}</a>
-      </td>
-    </ng-container>
 
-    <ng-container matColumnDef="author">
-      <th mat-header-cell *matHeaderCellDef>Author</th>
-      <td mat-cell *matCellDef="let pr">{{ pr.authorLogin }}</td>
-    </ng-container>
+  @if (loading()) {
+    <mat-spinner diameter="32"></mat-spinner>
+  } @else if (rows().length === 0) {
+    <div class="empty-state">
+      <mat-icon>inbox</mat-icon>
+      <p>{{ t('pullRequests.empty') }}</p>
+    </div>
+  } @else {
+    <table mat-table [dataSource]="rows()" matSort (matSortChange)="onSortChange($event)" class="pr-table">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>{{ t('pullRequests.table.title') }}</th>
+        <td mat-cell *matCellDef="let pr">
+          <a [routerLink]="['/pull-requests', pr.id]">#{{ pr.ghePrId }} {{ pr.title }}</a>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef>State</th>
-      <td mat-cell *matCellDef="let pr">
-        <span class="status-chip" [class]="pr.draft ? 'chip-neutral' : pr.state === 'MERGED' ? 'chip-info' : pr.state === 'CLOSED' ? 'chip-neutral' : 'chip-success'">
-          {{ pr.draft ? 'DRAFT' : pr.state }}
-        </span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef>{{ t('pullRequests.table.author') }}</th>
+        <td mat-cell *matCellDef="let pr">{{ pr.authorLogin }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="reviewStatus">
-      <th mat-header-cell *matHeaderCellDef>Review</th>
-      <td mat-cell *matCellDef="let pr">
-        <app-ai-review-status-badge [status]="pr.reviewStatus" />
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>{{ t('pullRequests.table.state') }}</th>
+        <td mat-cell *matCellDef="let pr">
+          <span class="status-chip" [class]="pr.draft ? 'chip-neutral' : pr.state === 'MERGED' ? 'chip-info' : pr.state === 'CLOSED' ? 'chip-neutral' : 'chip-success'">
+            {{ pr.draft ? t('pullRequests.draftBadge') : pr.state }}
+          </span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="updatedAtGhe">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated</th>
-      <td mat-cell *matCellDef="let pr">{{ pr.updatedAtGhe | date: 'short' }}</td>
-    </ng-container>
+      <ng-container matColumnDef="reviewStatus">
+        <th mat-header-cell *matHeaderCellDef>{{ t('pullRequests.table.review') }}</th>
+        <td mat-cell *matCellDef="let pr">
+          <app-ai-review-status-badge [status]="pr.reviewStatus" />
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="score">
-      <th mat-header-cell *matHeaderCellDef>Score</th>
-      <td mat-cell *matCellDef="let pr">{{ pr.latestReview?.score ?? '—' }}</td>
-    </ng-container>
+      <ng-container matColumnDef="updatedAtGhe">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('pullRequests.table.updated') }}</th>
+        <td mat-cell *matCellDef="let pr">{{ pr.updatedAtGhe | date: 'short' }}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columns"></tr>
-    <tr mat-row *matRowDef="let row; columns: columns" [routerLink]="['/pull-requests', row.id]" class="clickable-row"></tr>
-  </table>
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>{{ t('pullRequests.table.score') }}</th>
+        <td mat-cell *matCellDef="let pr">{{ pr.latestReview?.score ?? '—' }}</td>
+      </ng-container>
 
-  <mat-paginator
-    [length]="total()"
-    [pageSize]="pageSize()"
-    [pageIndex]="page()"
-    [pageSizeOptions]="[10, 20, 50]"
-    (page)="onPageChange($event)"
-  ></mat-paginator>
-}
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns" [routerLink]="['/pull-requests', row.id]" class="clickable-row"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="total()"
+      [pageSize]="pageSize()"
+      [pageIndex]="page()"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPageChange($event)"
+    ></mat-paginator>
+  }
+</ng-container>

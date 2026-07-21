@@ -1,72 +1,80 @@
-<h1>Settings</h1>
-<p class="subtitle">Configure AI review behavior.</p>
+<ng-container *transloco="let t">
+  <h1>{{ t('settings.title') }}</h1>
+  <p class="subtitle">{{ t('settings.subtitle') }}</p>
+</ng-container>
 
 @if (loading()) {
   <mat-spinner diameter="32"></mat-spinner>
 } @else {
-  <mat-card class="settings-card">
+  <mat-card class="settings-card" *transloco="let t">
     <mat-tab-group animationDuration="0ms">
-      <mat-tab label="AI Review">
+      <mat-tab [label]="t('settings.tabs.aiReview')">
         <div class="tab-content">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Idle timeout (seconds)</mat-label>
+            <mat-label>{{ t('settings.aiReview.idleTimeout') }}</mat-label>
             <input matInput type="number" [ngModel]="timeout()" (ngModelChange)="timeout.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Max files per PR</mat-label>
+            <mat-label>{{ t('settings.aiReview.maxFiles') }}</mat-label>
             <input matInput type="number" [ngModel]="maxFiles()" (ngModelChange)="maxFiles.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Max diff size (bytes)</mat-label>
+            <mat-label>{{ t('settings.aiReview.maxDiffSize') }}</mat-label>
             <input matInput type="number" [ngModel]="maxDiffSize()" (ngModelChange)="maxDiffSize.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Model</mat-label>
+            <mat-label>{{ t('settings.aiReview.model') }}</mat-label>
             <input matInput [ngModel]="model()" (ngModelChange)="model.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ t('settings.aiReview.agentName') }}</mat-label>
+            <input matInput [ngModel]="agentName()" (ngModelChange)="agentName.set($event)" [disabled]="!canEdit" />
+          </mat-form-field>
+          <p class="hint" [innerHTML]="t('settings.aiReview.agentNameHint')"></p>
+
           <mat-slide-toggle [checked]="autoReview()" (change)="autoReview.set($event.checked)" [disabled]="!canEdit">
-            Auto-review new PRs
+            {{ t('settings.aiReview.autoReview') }}
           </mat-slide-toggle>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Auto-review statuses (CSV)</mat-label>
+            <mat-label>{{ t('settings.aiReview.autoReviewStatuses') }}</mat-label>
             <input matInput [ngModel]="autoReviewStatuses()" (ngModelChange)="autoReviewStatuses.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Auto-review author whitelist (CSV, empty = all)</mat-label>
+            <mat-label>{{ t('settings.aiReview.autoReviewAuthors') }}</mat-label>
             <input matInput [ngModel]="autoReviewAuthors()" (ngModelChange)="autoReviewAuthors.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-slide-toggle [checked]="autoRerunReview()" (change)="autoRerunReview.set($event.checked)" [disabled]="!canEdit">
-            Auto re-run on new commits
+            {{ t('settings.aiReview.autoRerunReview') }}
           </mat-slide-toggle>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Auto-rerun statuses (CSV)</mat-label>
+            <mat-label>{{ t('settings.aiReview.autoRerunReviewStatuses') }}</mat-label>
             <input matInput [ngModel]="autoRerunReviewStatuses()" (ngModelChange)="autoRerunReviewStatuses.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
 
           <mat-slide-toggle [checked]="autoPostToGithub()" (change)="autoPostToGithub.set($event.checked)" [disabled]="!canEdit">
-            Auto-post findings to GitHub
+            {{ t('settings.aiReview.autoPostToGithub') }}
           </mat-slide-toggle>
-          <p class="hint">After a review completes, automatically post matching findings as GitHub PR comments.</p>
+          <p class="hint">{{ t('settings.aiReview.autoPostToGithubHint') }}</p>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Auto-post severities (CSV)</mat-label>
+            <mat-label>{{ t('settings.aiReview.autoPostSeverities') }}</mat-label>
             <input matInput [ngModel]="autoPostSeverities()" (ngModelChange)="autoPostSeverities.set($event)" [disabled]="!canEdit || !autoPostToGithub()" />
           </mat-form-field>
         </div>
       </mat-tab>
 
-      <mat-tab label="Prompt Template">
+      <mat-tab [label]="t('settings.tabs.promptTemplate')">
         <div class="tab-content">
-          <p class="hint">The prompt sent to the AI reviewer for every PR. Falls back to this default when unset.</p>
-          <h4>Review prompt</h4>
+          <p class="hint">{{ t('settings.promptTemplate.hint') }}</p>
+          <h4>{{ t('settings.promptTemplate.reviewPromptLabel') }}</h4>
           <app-command-template-editor
             [(value)]="promptTemplate"
             [defaultValue]="defaultUserTemplate"
@@ -75,8 +83,8 @@
             [rows]="14"
           />
 
-          <h4>System prompt</h4>
-          <p class="hint">Appended after the review prompt — defines the structured JSON output contract, scoring formula, and open-comments/JIRA-checklist processing rules.</p>
+          <h4>{{ t('settings.promptTemplate.systemPromptLabel') }}</h4>
+          <p class="hint">{{ t('settings.promptTemplate.systemPromptHint') }}</p>
           <app-command-template-editor
             [(value)]="systemPromptTemplate"
             [defaultValue]="defaultSystemTemplate"
@@ -87,97 +95,97 @@
         </div>
       </mat-tab>
 
-      <mat-tab label="JIRA">
+      <mat-tab [label]="t('settings.tabs.jira')">
         <div class="tab-content">
           <mat-slide-toggle [checked]="jiraEnabled()" (change)="jiraEnabled.set($event.checked)" [disabled]="!canEdit">
-            Enable JIRA checklist integration
+            {{ t('settings.jira.enable') }}
           </mat-slide-toggle>
-          <p class="hint">When enabled, reviews inject any cached checklist for a PR's linked JIRA ticket and can flag unmet requirements.</p>
+          <p class="hint">{{ t('settings.jira.enableHint') }}</p>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Ticket key pattern (regex)</mat-label>
+            <mat-label>{{ t('settings.jira.ticketPattern') }}</mat-label>
             <input matInput [ngModel]="jiraTicketPattern()" (ngModelChange)="jiraTicketPattern.set($event)" [disabled]="!canEdit" />
           </mat-form-field>
         </div>
       </mat-tab>
 
-      <mat-tab label="Checklist">
+      <mat-tab [label]="t('settings.tabs.checklist')">
         <div class="tab-content">
           <p class="hint">
-            Prompt used to generate a ticket's requirement checklist (JIRA page → Generate). Available variables:
+            {{ t('settings.checklist.promptHint') }}
             <code>{{ '{{ticket_key}}' }}</code>, <code>{{ '{{ticket_summary}}' }}</code>, <code>{{ '{{ticket_description}}' }}</code>.
           </p>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Checklist generation prompt template</mat-label>
+            <mat-label>{{ t('settings.checklist.promptTemplateLabel') }}</mat-label>
             <textarea matInput rows="14" [ngModel]="checklistPromptTemplate()" (ngModelChange)="checklistPromptTemplate.set($event)" [disabled]="!canEdit"></textarea>
           </mat-form-field>
         </div>
       </mat-tab>
 
-      <mat-tab label="Google Chat & Reminders">
+      <mat-tab [label]="t('settings.tabs.googleChat')">
         <div class="tab-content">
           <mat-slide-toggle [checked]="googleChatEnabled()" (change)="googleChatEnabled.set($event.checked)" [disabled]="!canEdit">
-            Enable Google Chat notifications
+            {{ t('settings.googleChat.enable') }}
           </mat-slide-toggle>
-          <p class="hint">Sends a review summary to a Google Chat webhook after each AI review, and reminders for merged PRs with open comments.</p>
+          <p class="hint">{{ t('settings.googleChat.enableHint') }}</p>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Webhook URL</mat-label>
+            <mat-label>{{ t('settings.googleChat.webhookUrl') }}</mat-label>
             <input matInput [ngModel]="googleChatWebhook()" (ngModelChange)="googleChatWebhook.set($event)" [disabled]="!canEdit || !googleChatEnabled()" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Review summary message template</mat-label>
+            <mat-label>{{ t('settings.googleChat.reviewSummaryTemplate') }}</mat-label>
             <textarea matInput rows="4" [ngModel]="googleChatTemplate()" (ngModelChange)="googleChatTemplate.set($event)" [disabled]="!canEdit || !googleChatEnabled()"></textarea>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Merged PR reminder message template</mat-label>
+            <mat-label>{{ t('settings.googleChat.mergedPrReminderTemplate') }}</mat-label>
             <textarea matInput rows="4" [ngModel]="googleChatMergedPrTemplate()" (ngModelChange)="googleChatMergedPrTemplate.set($event)" [disabled]="!canEdit || !googleChatEnabled()"></textarea>
           </mat-form-field>
 
           <mat-slide-toggle [checked]="sprintReminderEnabled()" (change)="sprintReminderEnabled.set($event.checked)" [disabled]="!canEdit || !googleChatEnabled()">
-            Enable sprint reminder
+            {{ t('settings.googleChat.sprintReminderEnable') }}
           </mat-slide-toggle>
-          <p class="hint">Daily check during the last N days of the active JIRA sprint (board ID set on the Atlassian connection) — reminds about tickets missing the "ai_assisted" label.</p>
+          <p class="hint">{{ t('settings.googleChat.sprintReminderHint') }}</p>
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Sprint reminder message template</mat-label>
+            <mat-label>{{ t('settings.googleChat.sprintReminderTemplate') }}</mat-label>
             <textarea matInput rows="4" [ngModel]="googleChatReminderTemplate()" (ngModelChange)="googleChatReminderTemplate.set($event)" [disabled]="!canEdit || !googleChatEnabled() || !sprintReminderEnabled()"></textarea>
           </mat-form-field>
 
           <div class="field-row">
             <mat-form-field appearance="outline">
-              <mat-label>Days remaining trigger</mat-label>
+              <mat-label>{{ t('settings.googleChat.daysRemainingTrigger') }}</mat-label>
               <input matInput type="number" [ngModel]="reminderDaysRemaining()" (ngModelChange)="reminderDaysRemaining.set($event)" [disabled]="!canEdit || !sprintReminderEnabled()" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Reminder hour (0-23)</mat-label>
+              <mat-label>{{ t('settings.googleChat.reminderHour') }}</mat-label>
               <input matInput type="number" [ngModel]="reminderTimeHour()" (ngModelChange)="reminderTimeHour.set($event)" [disabled]="!canEdit || !sprintReminderEnabled()" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Reminder minute (0-59)</mat-label>
+              <mat-label>{{ t('settings.googleChat.reminderMinute') }}</mat-label>
               <input matInput type="number" [ngModel]="reminderTimeMinute()" (ngModelChange)="reminderTimeMinute.set($event)" [disabled]="!canEdit || !sprintReminderEnabled()" />
             </mat-form-field>
           </div>
         </div>
       </mat-tab>
 
-      <mat-tab label="Sprint Report">
+      <mat-tab [label]="t('settings.tabs.sprintReport')">
         <div class="tab-content">
-          <p class="hint">Defines the sprint boundaries used by the Report page and the sprint reminder.</p>
+          <p class="hint">{{ t('settings.sprintReport.hint') }}</p>
 
           <div class="field-row">
             <mat-form-field appearance="outline">
-              <mat-label>Sprint start date (first sprint, YYYY-MM-DD)</mat-label>
+              <mat-label>{{ t('settings.sprintReport.startDate') }}</mat-label>
               <input matInput [ngModel]="sprintStartDate()" (ngModelChange)="sprintStartDate.set($event)" [disabled]="!canEdit" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Sprint length (days)</mat-label>
+              <mat-label>{{ t('settings.sprintReport.lengthDays') }}</mat-label>
               <input matInput type="number" [ngModel]="sprintLengthDays()" (ngModelChange)="sprintLengthDays.set($event)" [disabled]="!canEdit" />
             </mat-form-field>
           </div>
@@ -191,7 +199,7 @@
           @if (saving()) {
             <mat-spinner diameter="18"></mat-spinner>
           } @else {
-            Save
+            {{ t('common.save') }}
           }
         </button>
       </div>

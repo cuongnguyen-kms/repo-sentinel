@@ -1,0 +1,468 @@
+{
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "close": "Đóng",
+    "loading": "Đang tải…",
+    "create": "Tạo",
+    "add": "Thêm",
+    "remove": "Gỡ bỏ",
+    "confirm": "Xác nhận",
+    "search": "Tìm kiếm",
+    "actions": "Hành động",
+    "name": "Tên",
+    "description": "Mô tả",
+    "status": "Trạng thái",
+    "yes": "Có",
+    "no": "Không"
+  },
+  "topBar": {
+    "toggleTheme": {
+      "toLight": "Chuyển sang chế độ sáng",
+      "toDark": "Chuyển sang chế độ tối"
+    },
+    "toggleSidebar": "Bật/tắt thanh bên",
+    "language": "Ngôn ngữ",
+    "signOut": "Đăng xuất"
+  },
+  "sidebar": {
+    "dashboard": "Tổng quan",
+    "connections": "Kết nối",
+    "repositories": "Kho mã nguồn",
+    "pullRequests": "Pull Request",
+    "jira": "JIRA",
+    "report": "Báo cáo",
+    "settings": "Cài đặt",
+    "admin": "Quản trị",
+    "users": "Người dùng",
+    "groups": "Nhóm",
+    "roles": "Vai trò",
+    "permissions": "Quyền hạn"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "markAllRead": "Đánh dấu đã đọc tất cả",
+    "none": "Không có thông báo"
+  },
+  "auth": {
+    "signInToContinue": "Đăng nhập để tiếp tục",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "signIn": "Đăng nhập",
+    "signInFailed": "Đăng nhập thất bại"
+  },
+  "connections": {
+    "list": {
+      "title": "Kết nối",
+      "subtitle": "Các kết nối GitHub Enterprise dùng để theo dõi và đánh giá repository.",
+      "addConnection": "Thêm kết nối",
+      "empty": "Chưa có kết nối nào.",
+      "test": "Kiểm tra",
+      "atlassianSection": "Kết nối Atlassian",
+      "notConnected": "Chưa kết nối",
+      "dismiss": "Đóng"
+    },
+    "form": {
+      "title": "Thêm kết nối GitHub",
+      "hostname": "Tên máy chủ",
+      "hostnamePlaceholder": "github.com",
+      "username": "Tên đăng nhập",
+      "token": "Personal Access Token",
+      "createError": "Tạo kết nối thất bại"
+    },
+    "atlassianForm": {
+      "title": "Kết nối Atlassian",
+      "hostname": "Tên máy chủ",
+      "hostnamePlaceholder": "mycompany.atlassian.net",
+      "email": "Email",
+      "apiToken": "API Token",
+      "boardId": "Mã bảng (không bắt buộc)",
+      "boardIdPlaceholder": "ví dụ: 880",
+      "boardIdHint": "Mã bảng JIRA Agile — chỉ cần khi dùng nhắc nhở sprint",
+      "saveError": "Lưu kết nối thất bại"
+    }
+  },
+  "jira": {
+    "title": "JIRA",
+    "subtitle": "Tìm kiếm phiếu JIRA theo JQL, mã dự án hoặc mã phiếu chính xác, và quản lý danh sách kiểm tra yêu cầu do AI tạo.",
+    "filters": {
+      "jql": "JQL",
+      "projectKey": "Mã dự án",
+      "ticketKey": "Mã phiếu"
+    },
+    "noTicketsFound": "Không tìm thấy phiếu nào.",
+    "table": {
+      "key": "Mã phiếu",
+      "summary": "Tóm tắt"
+    },
+    "detail": {
+      "openInJira": "Mở trong JIRA",
+      "checklistHeading": "Danh sách kiểm tra yêu cầu",
+      "stale": "Đã cũ",
+      "checklistContentLabel": "Nội dung danh sách kiểm tra",
+      "noChecklist": "Chưa có danh sách kiểm tra nào được tạo.",
+      "generate": "Tạo",
+      "regenerate": "Tạo lại"
+    },
+    "errors": {
+      "searchFailed": "Không thể tìm kiếm phiếu",
+      "loadFailed": "Không thể tải phiếu",
+      "generateFailed": "Không thể tạo danh sách kiểm tra",
+      "saveFailed": "Không thể lưu danh sách kiểm tra",
+      "deleteFailed": "Không thể xóa danh sách kiểm tra"
+    }
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "subtitle": "Tổng quan trực tiếp về các kho lưu trữ và đánh giá bạn đang theo dõi.",
+    "cards": {
+      "watchedRepos": "Kho đang theo dõi",
+      "openPrs": "PR đang mở",
+      "newToday": "Mới hôm nay",
+      "pendingReviews": "Đánh giá đang chờ"
+    }
+  },
+  "pullRequests": {
+    "title": "Pull Request",
+    "subtitle": "Các pull request được theo dõi trên tất cả kho lưu trữ đang theo dõi.",
+    "filters": {
+      "state": {
+        "label": "Trạng thái",
+        "all": "Tất cả",
+        "open": "Đang mở",
+        "draft": "Bản nháp",
+        "merged": "Đã hợp nhất",
+        "closed": "Đã đóng"
+      },
+      "reviewStatus": {
+        "label": "Trạng thái đánh giá",
+        "all": "Tất cả",
+        "pending": "Đang chờ",
+        "queued": "Trong hàng đợi",
+        "inProgress": "Đang xử lý",
+        "reviewed": "Đã đánh giá",
+        "updated": "Đã cập nhật",
+        "failed": "Thất bại"
+      },
+      "author": {
+        "label": "Tác giả"
+      }
+    },
+    "empty": "Không tìm thấy pull request nào.",
+    "table": {
+      "title": "Tiêu đề",
+      "author": "Tác giả",
+      "state": "Trạng thái",
+      "review": "Đánh giá",
+      "updated": "Cập nhật",
+      "score": "Điểm"
+    },
+    "draftBadge": "NHÁP"
+  },
+  "report": {
+    "title": "Báo cáo Sprint",
+    "subtitle": "Mức độ bao phủ bình luận đánh giá AI cho các pull request đã hợp nhất, nhóm theo sprint.",
+    "filters": {
+      "sprint": {
+        "label": "Sprint"
+      }
+    },
+    "empty": "Không có pull request nào đã hợp nhất trong sprint này.",
+    "summary": {
+      "mergedPrs": "PR đã hợp nhất",
+      "totalComments": "Tổng số bình luận",
+      "open": "Đang mở",
+      "fixed": "Đã sửa",
+      "noReply": "Chưa phản hồi"
+    },
+    "noComments": "Không có phát hiện nào được đăng trên PR này.",
+    "table": {
+      "finding": "Phát hiện",
+      "category": "Danh mục",
+      "status": "Trạng thái",
+      "lastReply": "Phản hồi gần nhất"
+    },
+    "openOfTotal": "{{open}} đang mở / {{total}} tổng số"
+  },
+  "repositories": {
+    "page": {
+      "title": "Kho mã nguồn",
+      "subtitle": "Các kho mã nguồn đang được theo dõi để lấy pull request và đánh giá AI.",
+      "browseAndWatch": "Duyệt & Theo dõi",
+      "empty": "Chưa có kho mã nguồn nào được theo dõi.",
+      "columns": {
+        "repository": "Kho mã nguồn",
+        "interval": "Chu kỳ (giây)",
+        "lastPolled": "Lần quét gần nhất",
+        "openPrs": "PR đang mở"
+      },
+      "pollNow": "Quét ngay",
+      "configure": "Cấu hình",
+      "unwatch": "Bỏ theo dõi",
+      "pollQueued": "Đã xếp hàng quét",
+      "dismiss": "Bỏ qua"
+    },
+    "configDialog": {
+      "pollingInterval": "Chu kỳ quét (giây)",
+      "active": "Đang hoạt động",
+      "promptOverridesTitle": "Ghi đè Prompt Đánh giá AI",
+      "promptOverridesHint": "Ghi đè mẫu prompt chung (Cài đặt → Mẫu Prompt) chỉ cho kho mã nguồn này.",
+      "customPrompt": "Prompt đánh giá tùy chỉnh cho kho mã nguồn này",
+      "customSystemPrompt": "Prompt hệ thống tùy chỉnh cho kho mã nguồn này",
+      "updateFailed": "Cập nhật kho mã nguồn thất bại"
+    },
+    "browserDialog": {
+      "title": "Duyệt Kho Mã Nguồn",
+      "connection": "Kết nối",
+      "empty": "Không tìm thấy kho mã nguồn nào.",
+      "watch": "Theo dõi",
+      "browseFailed": "Duyệt kho mã nguồn thất bại",
+      "watchFailed": "Theo dõi kho mã nguồn thất bại"
+    }
+  },
+  "prDetail": {
+    "page": {
+      "viewOnGithub": "Xem trên GitHub",
+      "rerunReview": "Chạy lại đánh giá",
+      "runAiReview": "Chạy đánh giá AI",
+      "ticketKey": "Mã ticket",
+      "linkedJiraTicket": "Ticket JIRA đã liên kết:",
+      "noJiraLink": "Chưa liên kết JIRA thủ công — sẽ tự động phát hiện từ tiêu đề/nhánh (hoặc không có) khi đánh giá.",
+      "changeTicket": "Đổi ticket",
+      "comparison": {
+        "new": "Mới:",
+        "carriedOver": "Chuyển tiếp:",
+        "resolved": "Đã xử lý:",
+        "openCommentsResolved": "Bình luận đang mở đã xử lý:",
+        "stillOpen": "Vẫn còn mở:"
+      },
+      "submitSelected": "Gửi mục đã chọn",
+      "syncThreadStatus": "Đồng bộ trạng thái luồng",
+      "syncReplies": "Đồng bộ phản hồi",
+      "reviewFailed": "Đánh giá thất bại:",
+      "noReviewYet": "Chưa có đánh giá nào. Hãy chạy một lượt để bắt đầu.",
+      "reviewHistory": "Lịch sử đánh giá",
+      "dismiss": "Bỏ qua",
+      "errors": {
+        "postComment": "Không thể đăng bình luận",
+        "resolveFinding": "Không thể xử lý phát hiện",
+        "submitReview": "Không thể gửi đánh giá",
+        "syncThreadStatus": "Không thể đồng bộ trạng thái luồng",
+        "syncReplies": "Không thể đồng bộ phản hồi",
+        "updateJiraTicket": "Không thể cập nhật ticket liên kết",
+        "clearJiraTicket": "Không thể xóa ticket liên kết"
+      }
+    },
+    "aiReview": {
+      "stats": {
+        "critical": "Nghiêm trọng",
+        "high": "Cao",
+        "medium": "Trung bình",
+        "low": "Thấp",
+        "info": "Thông tin"
+      }
+    },
+    "terminal": {
+      "thinking": "Đang suy nghĩ…",
+      "writing": "Đang viết…",
+      "tokens": "Số token",
+      "cost": "Chi phí",
+      "phase": {
+        "cloning": "ĐANG SAO CHÉP",
+        "reviewing": "ĐANG ĐÁNH GIÁ",
+        "complete": "HOÀN TẤT",
+        "cancelled": "ĐÃ HỦY",
+        "failed": "THẤT BẠI"
+      }
+    },
+    "diffViewer": {
+      "findingsSuffix": "phát hiện",
+      "resolved": "Đã xử lý",
+      "wontFix": "Sẽ không sửa",
+      "viewOnGithub": "Xem trên GitHub",
+      "postToGithub": "Đăng lên GitHub",
+      "resolve": "Xử lý",
+      "severity": {
+        "critical": "Nghiêm trọng",
+        "high": "Cao",
+        "medium": "Trung bình",
+        "low": "Thấp",
+        "info": "Thông tin",
+        "mismatch_requirement": "Không khớp yêu cầu",
+        "checklist_required": "Cần checklist"
+      }
+    },
+    "history": {
+      "score": "Điểm:"
+    }
+  },
+  "admin": {
+    "common": {
+      "systemBadge": "hệ thống"
+    },
+    "groups": {
+      "title": "Nhóm",
+      "subtitle": "Sắp xếp người dùng và gán vai trò.",
+      "createButton": "Tạo nhóm",
+      "empty": "Chưa có nhóm nào.",
+      "table": {
+        "members": "Thành viên",
+        "roles": "Vai trò"
+      },
+      "editDisabledTooltip": "Không thể đổi tên nhóm hệ thống",
+      "manageRolesTooltip": "Quản lý vai trò",
+      "deleteDisabledTooltip": "Không thể xóa nhóm hệ thống",
+      "confirmDelete": "Xóa nhóm \"{{name}}\"?",
+      "confirmDeleteAnyway": "{{message}}\n\nVẫn xóa?",
+      "deleteFailed": "Không thể xóa nhóm",
+      "form": {
+        "editTitle": "Chỉnh sửa nhóm",
+        "createTitle": "Tạo nhóm",
+        "saveFailed": "Không thể lưu nhóm"
+      },
+      "roles": {
+        "title": "Vai trò cho \"{{name}}\"",
+        "empty": "Chưa có vai trò nào.",
+        "saveFailed": "Không thể cập nhật vai trò"
+      }
+    },
+    "permissions": {
+      "title": "Quyền",
+      "subtitle": "Danh mục đầy đủ, chỉ đọc của các quyền Tài nguyên × Hành động có thể gán cho vai trò.",
+      "table": {
+        "resource": "Tài nguyên",
+        "action": "Hành động"
+      }
+    },
+    "roles": {
+      "title": "Vai trò",
+      "subtitle": "Định nghĩa tập hợp quyền và gán cho các nhóm.",
+      "createButton": "Tạo vai trò",
+      "empty": "Chưa có vai trò nào.",
+      "table": {
+        "permissions": "Quyền",
+        "groups": "Nhóm"
+      },
+      "editDisabledTooltip": "Không thể đổi tên vai trò hệ thống",
+      "managePermissionsTooltip": "Quản lý quyền",
+      "deleteDisabledTooltip": "Không thể xóa vai trò hệ thống",
+      "confirmDelete": "Xóa vai trò \"{{name}}\"?",
+      "confirmDeleteAnyway": "{{message}}\n\nVẫn xóa?",
+      "deleteFailed": "Không thể xóa vai trò",
+      "form": {
+        "editTitle": "Chỉnh sửa vai trò",
+        "createTitle": "Tạo vai trò",
+        "saveFailed": "Không thể lưu vai trò"
+      },
+      "permissionsDialog": {
+        "title": "Quyền cho \"{{name}}\"",
+        "adminBanner": "Không thể sửa đổi quyền của vai trò Admin — vai trò này luôn phải có toàn quyền truy cập.",
+        "saveFailed": "Không thể cập nhật quyền"
+      }
+    },
+    "users": {
+      "title": "Người dùng",
+      "subtitle": "Quản lý tài khoản người dùng và thành viên nhóm.",
+      "createButton": "Tạo người dùng",
+      "empty": "Chưa có người dùng nào.",
+      "table": {
+        "role": "Vai trò",
+        "groups": "Nhóm"
+      },
+      "status": {
+        "banned": "đã chặn",
+        "active": "hoạt động"
+      },
+      "banTooltip": "Chặn",
+      "unbanTooltip": "Bỏ chặn",
+      "deleteSelfTooltip": "Không thể xóa tài khoản của chính bạn",
+      "banReasonPrompt": "Lý do chặn (tùy chọn):",
+      "confirmDelete": "Xóa người dùng \"{{name}}\"? Hành động này không thể hoàn tác.",
+      "banFailed": "Không thể cập nhật trạng thái chặn",
+      "deleteFailed": "Không thể xóa người dùng",
+      "form": {
+        "editTitle": "Chỉnh sửa người dùng",
+        "createTitle": "Tạo người dùng",
+        "email": "Email",
+        "password": "Mật khẩu",
+        "groupsLabel": "Nhóm",
+        "noGroups": "Chưa có nhóm nào.",
+        "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+        "saveFailed": "Không thể lưu người dùng"
+      }
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Cấu hình hành vi đánh giá AI.",
+    "saveSuccess": "Đã lưu cài đặt",
+    "saveError": "Lưu cài đặt thất bại",
+    "tabs": {
+      "aiReview": "Đánh giá AI",
+      "promptTemplate": "Mẫu Prompt",
+      "jira": "JIRA",
+      "checklist": "Danh sách kiểm tra",
+      "googleChat": "Google Chat & Nhắc nhở",
+      "sprintReport": "Báo cáo Sprint"
+    },
+    "aiReview": {
+      "idleTimeout": "Thời gian chờ tối đa (giây)",
+      "maxFiles": "Số tệp tối đa mỗi PR",
+      "maxDiffSize": "Kích thước diff tối đa (byte)",
+      "model": "Model",
+      "agentName": "Agent đánh giá AI (không bắt buộc)",
+      "agentNameHint": "Tên của agent tùy chỉnh được định nghĩa trong <code>.claude/agents/&lt;name&gt;.md</code> (để trống để chạy Claude Code thông thường).",
+      "autoReview": "Tự động đánh giá PR mới",
+      "autoReviewStatuses": "Trạng thái tự động đánh giá (CSV)",
+      "autoReviewAuthors": "Danh sách tác giả được phép tự động đánh giá (CSV, để trống = tất cả)",
+      "autoRerunReview": "Tự động chạy lại khi có commit mới",
+      "autoRerunReviewStatuses": "Trạng thái tự động chạy lại (CSV)",
+      "autoPostToGithub": "Tự động đăng phát hiện lên GitHub",
+      "autoPostToGithubHint": "Sau khi đánh giá hoàn tất, tự động đăng các phát hiện phù hợp dưới dạng bình luận PR trên GitHub.",
+      "autoPostSeverities": "Mức độ nghiêm trọng tự động đăng (CSV)"
+    },
+    "promptTemplate": {
+      "hint": "Prompt được gửi đến AI đánh giá cho mỗi PR. Sẽ dùng mặc định này khi chưa thiết lập.",
+      "reviewPromptLabel": "Prompt đánh giá",
+      "systemPromptLabel": "Prompt hệ thống",
+      "systemPromptHint": "Được nối thêm sau prompt đánh giá — định nghĩa hợp đồng đầu ra JSON có cấu trúc, công thức tính điểm, và quy tắc xử lý bình luận mở/danh sách kiểm tra JIRA."
+    },
+    "jira": {
+      "enable": "Bật tích hợp danh sách kiểm tra JIRA",
+      "enableHint": "Khi bật, các đánh giá sẽ chèn danh sách kiểm tra đã lưu cho phiếu JIRA liên kết với PR và có thể đánh dấu các yêu cầu chưa đáp ứng.",
+      "ticketPattern": "Mẫu mã phiếu (regex)"
+    },
+    "checklist": {
+      "promptHint": "Prompt dùng để tạo danh sách kiểm tra yêu cầu của phiếu (Trang JIRA → Tạo). Các biến khả dụng:",
+      "promptTemplateLabel": "Mẫu prompt tạo danh sách kiểm tra"
+    },
+    "googleChat": {
+      "enable": "Bật thông báo Google Chat",
+      "enableHint": "Gửi tóm tắt đánh giá đến webhook Google Chat sau mỗi lần đánh giá AI, và gửi nhắc nhở cho các PR đã hợp nhất còn bình luận chưa xử lý.",
+      "webhookUrl": "Webhook URL",
+      "reviewSummaryTemplate": "Mẫu tin nhắn tóm tắt đánh giá",
+      "mergedPrReminderTemplate": "Mẫu tin nhắn nhắc nhở PR đã hợp nhất",
+      "sprintReminderEnable": "Bật nhắc nhở sprint",
+      "sprintReminderHint": "Kiểm tra hàng ngày trong N ngày cuối của sprint JIRA đang hoạt động (mã bảng được thiết lập trên kết nối Atlassian) — nhắc nhở về các phiếu thiếu nhãn \"ai_assisted\".",
+      "sprintReminderTemplate": "Mẫu tin nhắn nhắc nhở sprint",
+      "daysRemainingTrigger": "Số ngày còn lại để kích hoạt",
+      "reminderHour": "Giờ nhắc nhở (0-23)",
+      "reminderMinute": "Phút nhắc nhở (0-59)"
+    },
+    "sprintReport": {
+      "hint": "Xác định ranh giới sprint được dùng bởi trang Báo cáo và nhắc nhở sprint.",
+      "startDate": "Ngày bắt đầu sprint (sprint đầu tiên, YYYY-MM-DD)",
+      "lengthDays": "Độ dài sprint (ngày)"
+    },
+    "editor": {
+      "resetToDefault": "Đặt lại về mặc định",
+      "showPreview": "Xem trước",
+      "hidePreview": "Ẩn xem trước",
+      "previewLabel": "Xem trước (dữ liệu mẫu)",
+      "variablesLabel": "Biến",
+      "exampleTitle": "Ví dụ: {{example}}"
+    }
+  }
+}

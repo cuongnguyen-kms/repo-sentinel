@@ -1,4 +1,4 @@
-<div class="editor-layout">
+<div class="editor-layout" *transloco="let t">
   <div class="editor-main">
     <textarea
       #textareaEl
@@ -11,13 +11,13 @@
     ></textarea>
 
     <div class="editor-actions">
-      <button mat-stroked-button type="button" (click)="resetToDefault()" [disabled]="disabled()">Reset to Default</button>
-      <button mat-stroked-button type="button" (click)="togglePreview()">{{ showPreview() ? 'Hide Preview' : 'Preview' }}</button>
+      <button mat-stroked-button type="button" (click)="resetToDefault()" [disabled]="disabled()">{{ t('settings.editor.resetToDefault') }}</button>
+      <button mat-stroked-button type="button" (click)="togglePreview()">{{ showPreview() ? t('settings.editor.hidePreview') : t('settings.editor.showPreview') }}</button>
     </div>
 
     @if (showPreview()) {
       <div class="preview-box">
-        <p class="preview-label">Preview (sample data)</p>
+        <p class="preview-label">{{ t('settings.editor.previewLabel') }}</p>
         <pre>{{ previewText() }}</pre>
       </div>
     }
@@ -25,12 +25,12 @@
 
   @if (variables().length > 0) {
     <div class="variable-panel">
-      <p class="panel-label">Variables</p>
+      <p class="panel-label">{{ t('settings.editor.variablesLabel') }}</p>
       @for (v of variables(); track v.name) {
         <button
           type="button"
           class="variable-item"
-          [title]="'Example: ' + v.example"
+          [title]="t('settings.editor.exampleTitle', { example: v.example })"
           [disabled]="disabled()"
           (click)="insertVariable(v.name)"
         >

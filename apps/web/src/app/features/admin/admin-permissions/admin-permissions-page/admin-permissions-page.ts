@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
+import { TranslocoModule } from '@jsverse/transloco';
 import type { PermissionDto } from '../../../../core/models/dto';
 import { AdminPermissionsService } from '../admin-permissions.service';
 
 @Component({
   selector: 'app-admin-permissions-page',
   standalone: true,
-  imports: [MatProgressSpinnerModule, MatTableModule],
+  imports: [MatProgressSpinnerModule, MatTableModule, TranslocoModule],
   templateUrl: './admin-permissions-page.html',
   styleUrl: './admin-permissions-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

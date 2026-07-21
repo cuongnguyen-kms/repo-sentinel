@@ -1,7 +1,8 @@
-<h2 mat-dialog-title>Permissions for "{{ role.name }}"</h2>
+<ng-container *transloco="let t">
+<h2 mat-dialog-title>{{ t('admin.roles.permissionsDialog.title', { name: role.name }) }}</h2>
 <mat-dialog-content>
   @if (isAdminRole()) {
-    <p class="banner">The Admin role's permissions cannot be modified — it must always resolve to full access.</p>
+    <p class="banner">{{ t('admin.roles.permissionsDialog.adminBanner') }}</p>
   }
 
   @if (loading()) {
@@ -42,12 +43,13 @@
   }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="cancel()">{{ t('common.cancel') }}</button>
   <button mat-flat-button color="primary" (click)="save()" [disabled]="saving() || loading() || isAdminRole()">
     @if (saving()) {
       <mat-spinner diameter="18"></mat-spinner>
     } @else {
-      Save
+      {{ t('common.save') }}
     }
   </button>
 </mat-dialog-actions>
+</ng-container>

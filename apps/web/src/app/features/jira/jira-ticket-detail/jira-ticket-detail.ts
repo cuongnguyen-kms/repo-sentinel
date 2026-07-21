@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../core/utils/http-error';
@@ -22,6 +23,7 @@ import { JiraService } from '../jira.service';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './jira-ticket-detail.html',
   styleUrl: './jira-ticket-detail.scss',
@@ -32,6 +34,7 @@ export class JiraTicketDetail {
   private readonly dialogRef = inject(MatDialogRef<JiraTicketDetail>);
   private readonly permissions = inject(PermissionsService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly transloco = inject(TranslocoService);
   readonly ticketKey: string = inject(MAT_DIALOG_DATA);
 
   readonly canGenerate = this.permissions.can(Resource.Atlassian, Action.Create);
@@ -60,7 +63,11 @@ export class JiraTicketDetail {
       this.ticket.set(ticket);
       this.checklist.set(checklist);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to load ticket'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('jira.errors.loadFailed')),
+        'Dismiss',
+        { duration: 5000 },
+      );
     } finally {
       this.loading.set(false);
     }
@@ -77,7 +84,11 @@ export class JiraTicketDetail {
       this.checklist.set(checklist);
       this.editing.set(false);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to generate checklist'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('jira.errors.generateFailed')),
+        'Dismiss',
+        { duration: 5000 },
+      );
     } finally {
       this.busy.set(false);
     }
@@ -99,7 +110,11 @@ export class JiraTicketDetail {
       this.checklist.set(checklist);
       this.editing.set(false);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to save checklist'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('jira.errors.saveFailed')),
+        'Dismiss',
+        { duration: 5000 },
+      );
     } finally {
       this.busy.set(false);
     }
@@ -112,7 +127,11 @@ export class JiraTicketDetail {
       this.checklist.set(null);
       this.editing.set(false);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to delete checklist'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('jira.errors.deleteFailed')),
+        'Dismiss',
+        { duration: 5000 },
+      );
     } finally {
       this.busy.set(false);
     }

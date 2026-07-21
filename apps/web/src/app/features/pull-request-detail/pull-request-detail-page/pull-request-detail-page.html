@@ -1,3 +1,4 @@
+<ng-container *transloco="let t">
 @if (loading()) {
   <mat-spinner diameter="32"></mat-spinner>
 } @else if (pr(); as prVal) {
@@ -6,7 +7,7 @@
       <h1>#{{ prVal.ghePrId }} {{ prVal.title }}</h1>
       <p class="meta">
         {{ prVal.authorLogin }} · {{ prVal.headRef }} → {{ prVal.baseRef }} ·
-        <a [href]="prVal.htmlUrl" target="_blank" rel="noopener">View on GitHub</a>
+        <a [href]="prVal.htmlUrl" target="_blank" rel="noopener">{{ t('prDetail.page.viewOnGithub') }}</a>
       </p>
     </div>
     <div class="actions">
@@ -17,7 +18,7 @@
         <app-ai-review-trigger-button
           [prId]="prVal.id"
           [isActive]="isActive()"
-          [label]="latestReview() ? 'Re-run Review' : 'Run AI Review'"
+          [label]="latestReview() ? t('prDetail.page.rerunReview') : t('prDetail.page.runAiReview')"
           (triggered)="onTriggered($event)"
         />
       }
@@ -30,21 +31,21 @@
         <mat-icon>assignment</mat-icon>
         @if (editingJiraTicket()) {
           <mat-form-field appearance="outline" class="jira-ticket-input">
-            <mat-label>Ticket key</mat-label>
+            <mat-label>{{ t('prDetail.page.ticketKey') }}</mat-label>
             <input matInput placeholder="PROJ-123" [ngModel]="jiraTicketDraft()" (ngModelChange)="jiraTicketDraft.set($event)" />
           </mat-form-field>
-          <button mat-button (click)="onSaveJiraTicket()" [disabled]="actionBusy()">Save</button>
-          <button mat-button (click)="cancelEditJiraTicket()" [disabled]="actionBusy()">Cancel</button>
+          <button mat-button (click)="onSaveJiraTicket()" [disabled]="actionBusy()">{{ t('common.save') }}</button>
+          <button mat-button (click)="cancelEditJiraTicket()" [disabled]="actionBusy()">{{ t('common.cancel') }}</button>
         } @else {
           @if (prVal.jiraTicketKeyOverride) {
-            <span>Linked JIRA ticket: <a [routerLink]="['/jira']" [queryParams]="{ key: prVal.jiraTicketKeyOverride }">{{ prVal.jiraTicketKeyOverride }}</a></span>
+            <span>{{ t('prDetail.page.linkedJiraTicket') }} <a [routerLink]="['/jira']" [queryParams]="{ key: prVal.jiraTicketKeyOverride }">{{ prVal.jiraTicketKeyOverride }}</a></span>
           } @else {
-            <span class="meta">No manual JIRA link — auto-detected from title/branch (or none found) at review time.</span>
+            <span class="meta">{{ t('prDetail.page.noJiraLink') }}</span>
           }
           @if (canUpdateJiraTicket) {
-            <button mat-button (click)="startEditJiraTicket()">Change ticket</button>
+            <button mat-button (click)="startEditJiraTicket()">{{ t('prDetail.page.changeTicket') }}</button>
             @if (prVal.jiraTicketKeyOverride) {
-              <button mat-button (click)="onClearJiraTicket()" [disabled]="actionBusy()">Clear</button>
+              <button mat-button (click)="onClearJiraTicket()" [disabled]="actionBusy()">{{ t('common.remove') }}</button>
             }
           }
         }
@@ -60,24 +61,24 @@
     @if (review.status === 'COMPLETED') {
       @if (comparison(); as cmp) {
         <div class="comparison-summary">
-          <span class="chip chip-neutral">New: {{ cmp.newCount }}</span>
-          <span class="chip chip-neutral">Carried over: {{ cmp.carriedOverCount }}</span>
-          <span class="chip chip-success">Resolved: {{ cmp.resolvedCount }}</span>
-          <span class="chip chip-success">Open comments resolved: {{ cmp.openCommentsResolved ?? 0 }}</span>
-          <span class="chip chip-warn">Still open: {{ cmp.openCommentsStillOpen ?? 0 }}</span>
+          <span class="chip chip-neutral">{{ t('prDetail.page.comparison.new') }} {{ cmp.newCount }}</span>
+          <span class="chip chip-neutral">{{ t('prDetail.page.comparison.carriedOver') }} {{ cmp.carriedOverCount }}</span>
+          <span class="chip chip-success">{{ t('prDetail.page.comparison.resolved') }} {{ cmp.resolvedCount }}</span>
+          <span class="chip chip-success">{{ t('prDetail.page.comparison.openCommentsResolved') }} {{ cmp.openCommentsResolved ?? 0 }}</span>
+          <span class="chip chip-warn">{{ t('prDetail.page.comparison.stillOpen') }} {{ cmp.openCommentsStillOpen ?? 0 }}</span>
         </div>
       }
 
       <div class="review-actions">
         @if (canPostFindings) {
           <button mat-stroked-button [disabled]="selectedFindingIds().size === 0 || actionBusy()" (click)="onSubmitSelected()">
-            Submit Selected ({{ selectedFindingIds().size }})
+            {{ t('prDetail.page.submitSelected') }} ({{ selectedFindingIds().size }})
           </button>
         }
         @if (canUpdateFindings) {
-          <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncThreadStatus()">Sync Thread Status</button>
+          <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncThreadStatus()">{{ t('prDetail.page.syncThreadStatus') }}</button>
         }
-        <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncReplies()">Sync Replies</button>
+        <button mat-stroked-button [disabled]="actionBusy()" (click)="onSyncReplies()">{{ t('prDetail.page.syncReplies') }}</button>
       </div>
 
       <app-ai-review-display
@@ -92,16 +93,17 @@
     } @else if (review.status === 'FAILED') {
       <mat-card>
         <mat-card-content>
-          <p class="error">Review failed: {{ review.errorMessage }}</p>
+          <p class="error">{{ t('prDetail.page.reviewFailed') }} {{ review.errorMessage }}</p>
         </mat-card-content>
       </mat-card>
     }
   } @else {
-    <p class="empty">No review yet. Trigger one to get started.</p>
+    <p class="empty">{{ t('prDetail.page.noReviewYet') }}</p>
   }
 
   @if (history().length > 0) {
-    <h2>Review History</h2>
+    <h2>{{ t('prDetail.page.reviewHistory') }}</h2>
     <app-review-history-list [reviews]="history()" />
   }
 }
+</ng-container>

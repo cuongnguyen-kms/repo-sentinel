@@ -5,6 +5,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import type { AtlassianConnectionDto, GheConnectionDto } from '../../../core/models/dto';
@@ -16,7 +17,14 @@ import { AtlassianConnectionFormDialog } from '../atlassian-connection-form-dial
 @Component({
   selector: 'app-connections-page',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    TranslocoModule,
+  ],
   templateUrl: './connections-page.html',
   styleUrl: './connections-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +35,7 @@ export class ConnectionsPage {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly connections = signal<GheConnectionDto[]>([]);
@@ -77,7 +86,7 @@ export class ConnectionsPage {
     try {
       const result = await this.connectionsService.test(id);
       this.testResults.update((r) => ({ ...r, [id]: result.success ? `✓ ${result.message}` : `✗ ${result.message}` }));
-      this.snackBar.open(result.message, 'Dismiss', { duration: 4000 });
+      this.snackBar.open(result.message, this.transloco.translate('connections.list.dismiss'), { duration: 4000 });
     } finally {
       this.testing.set(null);
     }
@@ -101,7 +110,7 @@ export class ConnectionsPage {
     try {
       const result = await this.atlassianConnectionsService.test();
       this.atlassianTestResult.set(result.success ? `✓ ${result.message}` : `✗ ${result.message}`);
-      this.snackBar.open(result.message, 'Dismiss', { duration: 4000 });
+      this.snackBar.open(result.message, this.transloco.translate('connections.list.dismiss'), { duration: 4000 });
     } finally {
       this.atlassianTesting.set(false);
     }

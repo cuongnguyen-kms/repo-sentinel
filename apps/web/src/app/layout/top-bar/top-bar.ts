@@ -5,14 +5,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { LanguageService, type AppLanguage } from '../../core/services/language.service';
 import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatToolbarModule, MatTooltipModule, NotificationBell],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    TranslocoModule,
+    NotificationBell,
+  ],
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,12 +31,17 @@ export class TopBar {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   readonly themeService = inject(ThemeService);
+  readonly languageService = inject(LanguageService);
 
   readonly user = this.auth.user;
   readonly toggleSidenav = output<void>();
 
   toggleTheme(): void {
     this.themeService.toggle();
+  }
+
+  setLanguage(lang: AppLanguage): void {
+    this.languageService.setLanguage(lang);
   }
 
   async signOut(): Promise<void> {

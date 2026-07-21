@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslocoModule } from '@jsverse/transloco';
 import type { File as DiffFile } from 'parse-diff';
 import type { CodeReviewFinding, PostedFindingCommentDto } from '../../../core/models/dto';
 
@@ -27,7 +28,7 @@ export interface ResolveFindingEvent {
 @Component({
   selector: 'app-diff-file-viewer',
   standalone: true,
-  imports: [MatButtonModule, MatCheckboxModule, MatExpansionModule, MatIconModule, UpperCasePipe],
+  imports: [MatButtonModule, MatCheckboxModule, MatExpansionModule, MatIconModule, TranslocoModule, UpperCasePipe],
   templateUrl: './diff-file-viewer.html',
   styleUrl: './diff-file-viewer.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

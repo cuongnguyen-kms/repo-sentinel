@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, type Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { TranslocoModule } from '@jsverse/transloco';
 import { PrState, ReviewStatus } from '../../../core/models/enums';
 import type { PullRequestDto } from '../../../core/models/dto';
 import { PullRequestsService } from '../pull-requests.service';
@@ -30,6 +31,7 @@ import { AiReviewStatusBadge } from '../../pull-request-detail/ai-review-status-
     MatSelectModule,
     MatSortModule,
     MatTableModule,
+    TranslocoModule,
     AiReviewStatusBadge,
   ],
   templateUrl: './pull-requests-page.html',

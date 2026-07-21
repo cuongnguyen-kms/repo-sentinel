@@ -5,6 +5,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AtlassianConnectionsService } from '../atlassian-connections.service';
 
 @Component({
@@ -17,6 +18,7 @@ import { AtlassianConnectionsService } from '../atlassian-connections.service';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './atlassian-connection-form-dialog.html',
   styleUrl: './atlassian-connection-form-dialog.scss',
@@ -25,6 +27,7 @@ import { AtlassianConnectionsService } from '../atlassian-connections.service';
 export class AtlassianConnectionFormDialog {
   private readonly atlassianConnectionsService = inject(AtlassianConnectionsService);
   private readonly dialogRef = inject(MatDialogRef<AtlassianConnectionFormDialog>);
+  private readonly transloco = inject(TranslocoService);
 
   readonly hostname = signal('');
   readonly email = signal('');
@@ -50,7 +53,7 @@ export class AtlassianConnectionFormDialog {
       });
       this.dialogRef.close(saved);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to save connection');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('connections.atlassianForm.saveError'));
     } finally {
       this.saving.set(false);
     }

@@ -1,37 +1,39 @@
-<h2 mat-dialog-title>Atlassian Connection</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Hostname</mat-label>
-    <input matInput placeholder="mycompany.atlassian.net" [ngModel]="hostname()" (ngModelChange)="hostname.set($event)" />
-  </mat-form-field>
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>{{ t('connections.atlassianForm.title') }}</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('connections.atlassianForm.hostname') }}</mat-label>
+      <input matInput [placeholder]="t('connections.atlassianForm.hostnamePlaceholder')" [ngModel]="hostname()" (ngModelChange)="hostname.set($event)" />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('connections.atlassianForm.email') }}</mat-label>
+      <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>API Token</mat-label>
-    <input matInput type="password" [ngModel]="apiToken()" (ngModelChange)="apiToken.set($event)" autocomplete="new-password" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('connections.atlassianForm.apiToken') }}</mat-label>
+      <input matInput type="password" [ngModel]="apiToken()" (ngModelChange)="apiToken.set($event)" autocomplete="new-password" />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Board ID (optional)</mat-label>
-    <input matInput type="number" placeholder="e.g. 880" [ngModel]="boardId()" (ngModelChange)="boardId.set($event)" />
-    <mat-hint>JIRA Agile board ID — only needed for sprint reminders</mat-hint>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('connections.atlassianForm.boardId') }}</mat-label>
+      <input matInput type="number" [placeholder]="t('connections.atlassianForm.boardIdPlaceholder')" [ngModel]="boardId()" (ngModelChange)="boardId.set($event)" />
+      <mat-hint>{{ t('connections.atlassianForm.boardIdHint') }}</mat-hint>
+    </mat-form-field>
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-flat-button color="primary" (click)="submit()" [disabled]="saving()">
-    @if (saving()) {
-      <mat-spinner diameter="18"></mat-spinner>
-    } @else {
-      Save
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
     }
-  </button>
-</mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">{{ t('common.cancel') }}</button>
+    <button mat-flat-button color="primary" (click)="submit()" [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        {{ t('common.save') }}
+      }
+    </button>
+  </mat-dialog-actions>
+</ng-container>

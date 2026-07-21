@@ -1,21 +1,21 @@
-<div class="header-row">
+<div class="header-row" *transloco="let t">
   <div>
-    <h1>Permissions</h1>
-    <p class="subtitle">Full read-only catalog of Resource &times; Action permissions available to assign to roles.</p>
+    <h1>{{ t('admin.permissions.title') }}</h1>
+    <p class="subtitle">{{ t('admin.permissions.subtitle') }}</p>
   </div>
 </div>
 
 @if (loading()) {
   <mat-spinner diameter="32"></mat-spinner>
 } @else {
-  <table mat-table [dataSource]="permissions()" class="permissions-table">
+  <table mat-table [dataSource]="permissions()" class="permissions-table" *transloco="let t">
     <ng-container matColumnDef="resource">
-      <th mat-header-cell *matHeaderCellDef>Resource</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('admin.permissions.table.resource') }}</th>
       <td mat-cell *matCellDef="let permission">{{ permission.resource }}</td>
     </ng-container>
 
     <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('admin.permissions.table.action') }}</th>
       <td mat-cell *matCellDef="let permission">{{ permission.action }}</td>
     </ng-container>
 

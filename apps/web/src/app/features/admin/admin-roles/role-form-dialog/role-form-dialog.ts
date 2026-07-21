@@ -5,13 +5,22 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { AdminRoleDto } from '../../../../core/models/dto';
 import { AdminRolesService } from '../admin-roles.service';
 
 @Component({
   selector: 'app-role-form-dialog',
   standalone: true,
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    TranslocoModule,
+  ],
   templateUrl: './role-form-dialog.html',
   styleUrl: './role-form-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +28,7 @@ import { AdminRolesService } from '../admin-roles.service';
 export class RoleFormDialog {
   private readonly rolesService = inject(AdminRolesService);
   private readonly dialogRef = inject(MatDialogRef<RoleFormDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly data: AdminRoleDto | null = inject(MAT_DIALOG_DATA, { optional: true }) ?? null;
 
   readonly isEdit = computed(() => this.data !== null);
@@ -45,7 +55,7 @@ export class RoleFormDialog {
       }
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to save role');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('admin.roles.form.saveFailed'));
     } finally {
       this.saving.set(false);
     }

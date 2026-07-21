@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { GheConnectionDto, GheRepoItem } from '../../../core/models/dto';
 import { ConnectionsService } from '../../connections/connections.service';
 import { ReposService } from '../repos.service';
@@ -25,6 +26,7 @@ import { ReposService } from '../repos.service';
     MatListModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    TranslocoModule,
   ],
   templateUrl: './repository-browser-dialog.html',
   styleUrl: './repository-browser-dialog.scss',
@@ -34,6 +36,7 @@ export class RepositoryBrowserDialog {
   private readonly connectionsService = inject(ConnectionsService);
   private readonly reposService = inject(ReposService);
   private readonly dialogRef = inject(MatDialogRef<RepositoryBrowserDialog>);
+  private readonly transloco = inject(TranslocoService);
 
   readonly connections = signal<GheConnectionDto[]>([]);
   readonly selectedConnectionId = signal<string>('');
@@ -72,7 +75,7 @@ export class RepositoryBrowserDialog {
       const result = await this.reposService.browse(connId, 1, this.search() || undefined);
       this.repos.set(result.repos);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to browse repos');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('repositories.browserDialog.browseFailed'));
     } finally {
       this.loading.set(false);
     }
@@ -105,7 +108,7 @@ export class RepositoryBrowserDialog {
       );
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to watch repos');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('repositories.browserDialog.watchFailed'));
     } finally {
       this.watching.set(false);
     }

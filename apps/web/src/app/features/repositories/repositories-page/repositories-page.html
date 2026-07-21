@@ -1,12 +1,13 @@
+<ng-container *transloco="let t">
 <div class="header-row">
   <div>
-    <h1>Repositories</h1>
-    <p class="subtitle">Repos being polled for pull requests and AI review.</p>
+    <h1>{{ t('repositories.page.title') }}</h1>
+    <p class="subtitle">{{ t('repositories.page.subtitle') }}</p>
   </div>
   @if (canCreate) {
     <button mat-flat-button color="primary" (click)="openBrowseDialog()">
       <mat-icon>add</mat-icon>
-      Browse &amp; Watch
+      {{ t('repositories.page.browseAndWatch') }}
     </button>
   }
 </div>
@@ -16,17 +17,17 @@
 } @else if (repos().length === 0) {
   <div class="empty-state">
     <mat-icon>folder_off</mat-icon>
-    <p>No repositories watched yet.</p>
+    <p>{{ t('repositories.page.empty') }}</p>
   </div>
 } @else {
   <table mat-table [dataSource]="repos()" class="repos-table">
     <ng-container matColumnDef="fullName">
-      <th mat-header-cell *matHeaderCellDef>Repository</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('repositories.page.columns.repository') }}</th>
       <td mat-cell *matCellDef="let repo">{{ repo.fullName }}</td>
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('common.status') }}</th>
       <td mat-cell *matCellDef="let repo">
         <span
           class="chip"
@@ -38,17 +39,17 @@
     </ng-container>
 
     <ng-container matColumnDef="pollingInterval">
-      <th mat-header-cell *matHeaderCellDef>Interval (s)</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('repositories.page.columns.interval') }}</th>
       <td mat-cell *matCellDef="let repo">{{ repo.pollingInterval }}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastPolledAt">
-      <th mat-header-cell *matHeaderCellDef>Last Polled</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('repositories.page.columns.lastPolled') }}</th>
       <td mat-cell *matCellDef="let repo">{{ repo.lastPolledAt || '—' }}</td>
     </ng-container>
 
     <ng-container matColumnDef="openPrCount">
-      <th mat-header-cell *matHeaderCellDef>Open PRs</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('repositories.page.columns.openPrs') }}</th>
       <td mat-cell *matCellDef="let repo">{{ repo.openPrCount }}</td>
     </ng-container>
 
@@ -56,15 +57,15 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let repo">
         @if (canUpdate) {
-          <button mat-icon-button (click)="poll(repo.id)" [disabled]="polling() === repo.id" matTooltip="Poll now">
+          <button mat-icon-button (click)="poll(repo.id)" [disabled]="polling() === repo.id" [matTooltip]="t('repositories.page.pollNow')">
             <mat-icon>refresh</mat-icon>
           </button>
-          <button mat-icon-button (click)="openConfigDialog(repo)" matTooltip="Configure">
+          <button mat-icon-button (click)="openConfigDialog(repo)" [matTooltip]="t('repositories.page.configure')">
             <mat-icon>settings</mat-icon>
           </button>
         }
         @if (canDelete) {
-          <button mat-icon-button color="warn" (click)="unwatch(repo.id)" matTooltip="Unwatch">
+          <button mat-icon-button color="warn" (click)="unwatch(repo.id)" [matTooltip]="t('repositories.page.unwatch')">
             <mat-icon>delete</mat-icon>
           </button>
         }
@@ -75,3 +76,4 @@
     <tr mat-row *matRowDef="let row; columns: columns"></tr>
   </table>
 }
+</ng-container>

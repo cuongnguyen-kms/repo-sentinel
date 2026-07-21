@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { AdminRoleDto, PermissionDto } from '../../../../core/models/dto';
 import { AdminPermissionsService } from '../../admin-permissions/admin-permissions.service';
 import { AdminRolesService } from '../admin-roles.service';
@@ -17,7 +18,7 @@ interface PermissionRow {
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
-  imports: [MatButtonModule, MatCheckboxModule, MatDialogModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatCheckboxModule, MatDialogModule, MatProgressSpinnerModule, TranslocoModule],
   templateUrl: './role-permissions-dialog.html',
   styleUrl: './role-permissions-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +27,7 @@ export class RolePermissionsDialog {
   private readonly rolesService = inject(AdminRolesService);
   private readonly permissionsService = inject(AdminPermissionsService);
   private readonly dialogRef = inject(MatDialogRef<RolePermissionsDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly role: AdminRoleDto = inject(MAT_DIALOG_DATA);
 
   readonly isAdminRole = computed(() => this.role.name === 'Admin');
@@ -86,7 +88,7 @@ export class RolePermissionsDialog {
       await this.rolesService.setPermissions(this.role.id, [...this.selectedIds()]);
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to update permissions');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('admin.roles.permissionsDialog.saveFailed'));
     } finally {
       this.saving.set(false);
     }

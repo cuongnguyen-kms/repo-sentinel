@@ -1,9 +1,9 @@
-<mat-expansion-panel [expanded]="expanded()" (opened)="expanded.set(true)" (closed)="expanded.set(false)">
+<mat-expansion-panel *transloco="let t" [expanded]="expanded()" (opened)="expanded.set(true)" (closed)="expanded.set(false)">
   <mat-expansion-panel-header>
     <mat-panel-title>{{ filePath() }}</mat-panel-title>
     <mat-panel-description>
       @if (findingCount() > 0) {
-        <span class="finding-count">{{ findingCount() }} finding(s)</span>
+        <span class="finding-count">{{ findingCount() }} {{ t('prDetail.diffViewer.findingsSuffix') }}</span>
       }
     </mat-panel-description>
   </mat-expansion-panel-header>
@@ -22,29 +22,29 @@
               [disabled]="actionBusy()"
               (change)="onToggleSelect(finding.id)"
             />
-            <div class="finding-title">[{{ finding.severity | uppercase }}] {{ finding.title }}</div>
+            <div class="finding-title">[{{ t('prDetail.diffViewer.severity.' + finding.severity) | uppercase }}] {{ finding.title }}</div>
           </div>
           <div class="finding-comment">{{ finding.comment }}</div>
 
           <div class="finding-actions">
             @if (postedFor(finding.id); as posted) {
               @if (posted.resolutionStatus === 'RESOLVED') {
-                <span class="status-chip status-resolved">Resolved</span>
+                <span class="status-chip status-resolved">{{ t('prDetail.diffViewer.resolved') }}</span>
               } @else if (posted.resolutionStatus === 'WONT_FIX') {
-                <span class="status-chip status-wontfix">Won't Fix</span>
+                <span class="status-chip status-wontfix">{{ t('prDetail.diffViewer.wontFix') }}</span>
               }
               @if (posted.githubHtmlUrl) {
-                <a [href]="posted.githubHtmlUrl" target="_blank" rel="noopener" class="gh-link">View on GitHub</a>
+                <a [href]="posted.githubHtmlUrl" target="_blank" rel="noopener" class="gh-link">{{ t('prDetail.diffViewer.viewOnGithub') }}</a>
               }
             }
             <button mat-stroked-button [disabled]="isPosted(finding.id) || actionBusy()" (click)="onPost(finding)">
-              Post to GitHub
+              {{ t('prDetail.diffViewer.postToGithub') }}
             </button>
             <button mat-stroked-button [disabled]="actionBusy()" (click)="onResolve(finding.id, 'MANUAL')">
-              Resolve
+              {{ t('prDetail.diffViewer.resolve') }}
             </button>
             <button mat-stroked-button [disabled]="actionBusy()" (click)="onResolve(finding.id, 'WONT_FIX')">
-              Won't Fix
+              {{ t('prDetail.diffViewer.wontFix') }}
             </button>
           </div>
         </div>

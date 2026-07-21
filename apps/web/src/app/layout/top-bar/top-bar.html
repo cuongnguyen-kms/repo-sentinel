@@ -1,16 +1,23 @@
-<mat-toolbar class="top-bar">
-  <button mat-icon-button (click)="toggleSidenav.emit()" aria-label="Toggle sidebar">
+<mat-toolbar class="top-bar" *transloco="let t">
+  <button mat-icon-button (click)="toggleSidenav.emit()" [attr.aria-label]="t('topBar.toggleSidebar')">
     <mat-icon>menu</mat-icon>
   </button>
   <span class="spacer"></span>
   <button
     mat-icon-button
     (click)="toggleTheme()"
-    [matTooltip]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-    aria-label="Toggle theme"
+    [matTooltip]="themeService.isDark() ? t('topBar.toggleTheme.toLight') : t('topBar.toggleTheme.toDark')"
+    [attr.aria-label]="t('topBar.toggleTheme.toDark')"
   >
     <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
   </button>
+  <button mat-icon-button [matMenuTriggerFor]="langMenu" [matTooltip]="t('topBar.language')" aria-label="Language">
+    <mat-icon>translate</mat-icon>
+  </button>
+  <mat-menu #langMenu="matMenu">
+    <button mat-menu-item (click)="setLanguage('en')">English</button>
+    <button mat-menu-item (click)="setLanguage('vi')">Tiếng Việt</button>
+  </mat-menu>
   <app-notification-bell />
   @if (user(); as u) {
     <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
@@ -20,7 +27,7 @@
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="signOut()">
         <mat-icon>logout</mat-icon>
-        <span>Sign out</span>
+        <span>{{ t('topBar.signOut') }}</span>
       </button>
     </mat-menu>
   }

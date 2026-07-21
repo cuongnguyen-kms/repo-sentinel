@@ -1,0 +1,468 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading…",
+    "create": "Create",
+    "add": "Add",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "search": "Search",
+    "actions": "Actions",
+    "name": "Name",
+    "description": "Description",
+    "status": "Status",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "topBar": {
+    "toggleTheme": {
+      "toLight": "Switch to light mode",
+      "toDark": "Switch to dark mode"
+    },
+    "toggleSidebar": "Toggle sidebar",
+    "language": "Language",
+    "signOut": "Sign out"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "connections": "Connections",
+    "repositories": "Repositories",
+    "pullRequests": "Pull Requests",
+    "jira": "JIRA",
+    "report": "Report",
+    "settings": "Settings",
+    "admin": "Admin",
+    "users": "Users",
+    "groups": "Groups",
+    "roles": "Roles",
+    "permissions": "Permissions"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "none": "No notifications"
+  },
+  "auth": {
+    "signInToContinue": "Sign in to continue",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signInFailed": "Sign in failed"
+  },
+  "connections": {
+    "list": {
+      "title": "Connections",
+      "subtitle": "GitHub Enterprise connections used to watch and review repositories.",
+      "addConnection": "Add Connection",
+      "empty": "No connections yet.",
+      "test": "Test",
+      "atlassianSection": "Atlassian Connection",
+      "notConnected": "Not connected",
+      "dismiss": "Dismiss"
+    },
+    "form": {
+      "title": "Add GitHub Connection",
+      "hostname": "Hostname",
+      "hostnamePlaceholder": "github.com",
+      "username": "Username",
+      "token": "Personal Access Token",
+      "createError": "Failed to create connection"
+    },
+    "atlassianForm": {
+      "title": "Atlassian Connection",
+      "hostname": "Hostname",
+      "hostnamePlaceholder": "mycompany.atlassian.net",
+      "email": "Email",
+      "apiToken": "API Token",
+      "boardId": "Board ID (optional)",
+      "boardIdPlaceholder": "e.g. 880",
+      "boardIdHint": "JIRA Agile board ID — only needed for sprint reminders",
+      "saveError": "Failed to save connection"
+    }
+  },
+  "jira": {
+    "title": "JIRA",
+    "subtitle": "Search JIRA tickets by JQL, project key, or exact key, and manage their AI-generated requirement checklists.",
+    "filters": {
+      "jql": "JQL",
+      "projectKey": "Project key",
+      "ticketKey": "Ticket key"
+    },
+    "noTicketsFound": "No tickets found.",
+    "table": {
+      "key": "Key",
+      "summary": "Summary"
+    },
+    "detail": {
+      "openInJira": "Open in JIRA",
+      "checklistHeading": "Requirement Checklist",
+      "stale": "Stale",
+      "checklistContentLabel": "Checklist content",
+      "noChecklist": "No checklist generated yet.",
+      "generate": "Generate",
+      "regenerate": "Regenerate"
+    },
+    "errors": {
+      "searchFailed": "Failed to search tickets",
+      "loadFailed": "Failed to load ticket",
+      "generateFailed": "Failed to generate checklist",
+      "saveFailed": "Failed to save checklist",
+      "deleteFailed": "Failed to delete checklist"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Live overview of your watched repositories and reviews.",
+    "cards": {
+      "watchedRepos": "Watched Repos",
+      "openPrs": "Open PRs",
+      "newToday": "New Today",
+      "pendingReviews": "Pending Reviews"
+    }
+  },
+  "pullRequests": {
+    "title": "Pull Requests",
+    "subtitle": "Tracked pull requests across all watched repositories.",
+    "filters": {
+      "state": {
+        "label": "State",
+        "all": "All",
+        "open": "Open",
+        "draft": "Draft",
+        "merged": "Merged",
+        "closed": "Closed"
+      },
+      "reviewStatus": {
+        "label": "Review status",
+        "all": "All",
+        "pending": "Pending",
+        "queued": "Queued",
+        "inProgress": "In progress",
+        "reviewed": "Reviewed",
+        "updated": "Updated",
+        "failed": "Failed"
+      },
+      "author": {
+        "label": "Author"
+      }
+    },
+    "empty": "No pull requests found.",
+    "table": {
+      "title": "Title",
+      "author": "Author",
+      "state": "State",
+      "review": "Review",
+      "updated": "Updated",
+      "score": "Score"
+    },
+    "draftBadge": "DRAFT"
+  },
+  "report": {
+    "title": "Sprint Report",
+    "subtitle": "AI review comment coverage for merged pull requests, grouped by sprint.",
+    "filters": {
+      "sprint": {
+        "label": "Sprint"
+      }
+    },
+    "empty": "No merged pull requests in this sprint.",
+    "summary": {
+      "mergedPrs": "Merged PRs",
+      "totalComments": "Total comments",
+      "open": "Open",
+      "fixed": "Fixed",
+      "noReply": "No reply"
+    },
+    "noComments": "No posted findings on this PR.",
+    "table": {
+      "finding": "Finding",
+      "category": "Category",
+      "status": "Status",
+      "lastReply": "Last reply"
+    },
+    "openOfTotal": "{{open}} open / {{total}} total"
+  },
+  "repositories": {
+    "page": {
+      "title": "Repositories",
+      "subtitle": "Repos being polled for pull requests and AI review.",
+      "browseAndWatch": "Browse & Watch",
+      "empty": "No repositories watched yet.",
+      "columns": {
+        "repository": "Repository",
+        "interval": "Interval (s)",
+        "lastPolled": "Last Polled",
+        "openPrs": "Open PRs"
+      },
+      "pollNow": "Poll now",
+      "configure": "Configure",
+      "unwatch": "Unwatch",
+      "pollQueued": "Poll queued",
+      "dismiss": "Dismiss"
+    },
+    "configDialog": {
+      "pollingInterval": "Polling interval (seconds)",
+      "active": "Active",
+      "promptOverridesTitle": "AI Review Prompt Overrides",
+      "promptOverridesHint": "Overrides the global prompt template (Settings → Prompt Template) for this repo only.",
+      "customPrompt": "Custom review prompt for this repo",
+      "customSystemPrompt": "Custom system prompt for this repo",
+      "updateFailed": "Failed to update repo"
+    },
+    "browserDialog": {
+      "title": "Browse Repositories",
+      "connection": "Connection",
+      "empty": "No repositories found.",
+      "watch": "Watch",
+      "browseFailed": "Failed to browse repos",
+      "watchFailed": "Failed to watch repos"
+    }
+  },
+  "prDetail": {
+    "page": {
+      "viewOnGithub": "View on GitHub",
+      "rerunReview": "Re-run Review",
+      "runAiReview": "Run AI Review",
+      "ticketKey": "Ticket key",
+      "linkedJiraTicket": "Linked JIRA ticket:",
+      "noJiraLink": "No manual JIRA link — auto-detected from title/branch (or none found) at review time.",
+      "changeTicket": "Change ticket",
+      "comparison": {
+        "new": "New:",
+        "carriedOver": "Carried over:",
+        "resolved": "Resolved:",
+        "openCommentsResolved": "Open comments resolved:",
+        "stillOpen": "Still open:"
+      },
+      "submitSelected": "Submit Selected",
+      "syncThreadStatus": "Sync Thread Status",
+      "syncReplies": "Sync Replies",
+      "reviewFailed": "Review failed:",
+      "noReviewYet": "No review yet. Trigger one to get started.",
+      "reviewHistory": "Review History",
+      "dismiss": "Dismiss",
+      "errors": {
+        "postComment": "Failed to post comment",
+        "resolveFinding": "Failed to resolve finding",
+        "submitReview": "Failed to submit review",
+        "syncThreadStatus": "Failed to sync thread status",
+        "syncReplies": "Failed to sync replies",
+        "updateJiraTicket": "Failed to update linked ticket",
+        "clearJiraTicket": "Failed to clear linked ticket"
+      }
+    },
+    "aiReview": {
+      "stats": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "info": "Info"
+      }
+    },
+    "terminal": {
+      "thinking": "Thinking…",
+      "writing": "Writing…",
+      "tokens": "Tokens",
+      "cost": "Cost",
+      "phase": {
+        "cloning": "CLONING",
+        "reviewing": "REVIEWING",
+        "complete": "COMPLETE",
+        "cancelled": "CANCELLED",
+        "failed": "FAILED"
+      }
+    },
+    "diffViewer": {
+      "findingsSuffix": "finding(s)",
+      "resolved": "Resolved",
+      "wontFix": "Won't Fix",
+      "viewOnGithub": "View on GitHub",
+      "postToGithub": "Post to GitHub",
+      "resolve": "Resolve",
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "info": "Info",
+        "mismatch_requirement": "Mismatch Requirement",
+        "checklist_required": "Checklist Required"
+      }
+    },
+    "history": {
+      "score": "Score:"
+    }
+  },
+  "admin": {
+    "common": {
+      "systemBadge": "system"
+    },
+    "groups": {
+      "title": "Groups",
+      "subtitle": "Organize users and assign roles.",
+      "createButton": "Create Group",
+      "empty": "No groups yet.",
+      "table": {
+        "members": "Members",
+        "roles": "Roles"
+      },
+      "editDisabledTooltip": "System groups cannot be renamed",
+      "manageRolesTooltip": "Manage roles",
+      "deleteDisabledTooltip": "System groups cannot be deleted",
+      "confirmDelete": "Delete group \"{{name}}\"?",
+      "confirmDeleteAnyway": "{{message}}\n\nDelete anyway?",
+      "deleteFailed": "Failed to delete group",
+      "form": {
+        "editTitle": "Edit Group",
+        "createTitle": "Create Group",
+        "saveFailed": "Failed to save group"
+      },
+      "roles": {
+        "title": "Roles for \"{{name}}\"",
+        "empty": "No roles exist yet.",
+        "saveFailed": "Failed to update roles"
+      }
+    },
+    "permissions": {
+      "title": "Permissions",
+      "subtitle": "Full read-only catalog of Resource × Action permissions available to assign to roles.",
+      "table": {
+        "resource": "Resource",
+        "action": "Action"
+      }
+    },
+    "roles": {
+      "title": "Roles",
+      "subtitle": "Define permission sets and assign them to groups.",
+      "createButton": "Create Role",
+      "empty": "No roles yet.",
+      "table": {
+        "permissions": "Permissions",
+        "groups": "Groups"
+      },
+      "editDisabledTooltip": "System roles cannot be renamed",
+      "managePermissionsTooltip": "Manage permissions",
+      "deleteDisabledTooltip": "System roles cannot be deleted",
+      "confirmDelete": "Delete role \"{{name}}\"?",
+      "confirmDeleteAnyway": "{{message}}\n\nDelete anyway?",
+      "deleteFailed": "Failed to delete role",
+      "form": {
+        "editTitle": "Edit Role",
+        "createTitle": "Create Role",
+        "saveFailed": "Failed to save role"
+      },
+      "permissionsDialog": {
+        "title": "Permissions for \"{{name}}\"",
+        "adminBanner": "The Admin role's permissions cannot be modified — it must always resolve to full access.",
+        "saveFailed": "Failed to update permissions"
+      }
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Manage user accounts and group memberships.",
+      "createButton": "Create User",
+      "empty": "No users yet.",
+      "table": {
+        "role": "Role",
+        "groups": "Groups"
+      },
+      "status": {
+        "banned": "banned",
+        "active": "active"
+      },
+      "banTooltip": "Ban",
+      "unbanTooltip": "Unban",
+      "deleteSelfTooltip": "Cannot delete your own account",
+      "banReasonPrompt": "Ban reason (optional):",
+      "confirmDelete": "Delete user \"{{name}}\"? This cannot be undone.",
+      "banFailed": "Failed to update ban status",
+      "deleteFailed": "Failed to delete user",
+      "form": {
+        "editTitle": "Edit User",
+        "createTitle": "Create User",
+        "email": "Email",
+        "password": "Password",
+        "groupsLabel": "Groups",
+        "noGroups": "No groups exist yet.",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "saveFailed": "Failed to save user"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure AI review behavior.",
+    "saveSuccess": "Settings saved",
+    "saveError": "Failed to save settings",
+    "tabs": {
+      "aiReview": "AI Review",
+      "promptTemplate": "Prompt Template",
+      "jira": "JIRA",
+      "checklist": "Checklist",
+      "googleChat": "Google Chat & Reminders",
+      "sprintReport": "Sprint Report"
+    },
+    "aiReview": {
+      "idleTimeout": "Idle timeout (seconds)",
+      "maxFiles": "Max files per PR",
+      "maxDiffSize": "Max diff size (bytes)",
+      "model": "Model",
+      "agentName": "AI review agent (optional)",
+      "agentNameHint": "Name of a custom agent defined in <code>.claude/agents/&lt;name&gt;.md</code> (leave empty to run plain Claude Code).",
+      "autoReview": "Auto-review new PRs",
+      "autoReviewStatuses": "Auto-review statuses (CSV)",
+      "autoReviewAuthors": "Auto-review author whitelist (CSV, empty = all)",
+      "autoRerunReview": "Auto re-run on new commits",
+      "autoRerunReviewStatuses": "Auto-rerun statuses (CSV)",
+      "autoPostToGithub": "Auto-post findings to GitHub",
+      "autoPostToGithubHint": "After a review completes, automatically post matching findings as GitHub PR comments.",
+      "autoPostSeverities": "Auto-post severities (CSV)"
+    },
+    "promptTemplate": {
+      "hint": "The prompt sent to the AI reviewer for every PR. Falls back to this default when unset.",
+      "reviewPromptLabel": "Review prompt",
+      "systemPromptLabel": "System prompt",
+      "systemPromptHint": "Appended after the review prompt — defines the structured JSON output contract, scoring formula, and open-comments/JIRA-checklist processing rules."
+    },
+    "jira": {
+      "enable": "Enable JIRA checklist integration",
+      "enableHint": "When enabled, reviews inject any cached checklist for a PR's linked JIRA ticket and can flag unmet requirements.",
+      "ticketPattern": "Ticket key pattern (regex)"
+    },
+    "checklist": {
+      "promptHint": "Prompt used to generate a ticket's requirement checklist (JIRA page → Generate). Available variables:",
+      "promptTemplateLabel": "Checklist generation prompt template"
+    },
+    "googleChat": {
+      "enable": "Enable Google Chat notifications",
+      "enableHint": "Sends a review summary to a Google Chat webhook after each AI review, and reminders for merged PRs with open comments.",
+      "webhookUrl": "Webhook URL",
+      "reviewSummaryTemplate": "Review summary message template",
+      "mergedPrReminderTemplate": "Merged PR reminder message template",
+      "sprintReminderEnable": "Enable sprint reminder",
+      "sprintReminderHint": "Daily check during the last N days of the active JIRA sprint (board ID set on the Atlassian connection) — reminds about tickets missing the \"ai_assisted\" label.",
+      "sprintReminderTemplate": "Sprint reminder message template",
+      "daysRemainingTrigger": "Days remaining trigger",
+      "reminderHour": "Reminder hour (0-23)",
+      "reminderMinute": "Reminder minute (0-59)"
+    },
+    "sprintReport": {
+      "hint": "Defines the sprint boundaries used by the Report page and the sprint reminder.",
+      "startDate": "Sprint start date (first sprint, YYYY-MM-DD)",
+      "lengthDays": "Sprint length (days)"
+    },
+    "editor": {
+      "resetToDefault": "Reset to Default",
+      "showPreview": "Preview",
+      "hidePreview": "Hide Preview",
+      "previewLabel": "Preview (sample data)",
+      "variablesLabel": "Variables",
+      "exampleTitle": "Example: {{example}}"
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../../core/models/enums';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../../core/utils/http-error';
@@ -24,6 +25,7 @@ import { RolePermissionsDialog } from '../role-permissions-dialog/role-permissio
     MatProgressSpinnerModule,
     MatTableModule,
     MatTooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './admin-roles-page.html',
   styleUrl: './admin-roles-page.scss',
@@ -34,6 +36,7 @@ export class AdminRolesPage {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly roles = signal<AdminRoleDto[]>([]);
@@ -80,18 +83,18 @@ export class AdminRolesPage {
   }
 
   async remove(role: AdminRoleDto): Promise<void> {
-    if (!window.confirm(`Delete role "${role.name}"?`)) return;
+    if (!window.confirm(this.transloco.translate('admin.roles.confirmDelete', { name: role.name }))) return;
 
     this.busyId.set(role.id);
     try {
       await this.rolesService.remove(role.id);
     } catch (err) {
-      const message = extractErrorMessage(err, 'Failed to delete role');
-      if (/group\(s\)/i.test(message) && window.confirm(`${message}\n\nDelete anyway?`)) {
+      const message = extractErrorMessage(err, this.transloco.translate('admin.roles.deleteFailed'));
+      if (/group\(s\)/i.test(message) && window.confirm(this.transloco.translate('admin.roles.confirmDeleteAnyway', { message }))) {
         try {
           await this.rolesService.remove(role.id, true);
         } catch (retryErr) {
-          this.snackBar.open(extractErrorMessage(retryErr, 'Failed to delete role'), 'Dismiss', { duration: 5000 });
+          this.snackBar.open(extractErrorMessage(retryErr, this.transloco.translate('admin.roles.deleteFailed')), 'Dismiss', { duration: 5000 });
         }
       } else {
         this.snackBar.open(message, 'Dismiss', { duration: 5000 });

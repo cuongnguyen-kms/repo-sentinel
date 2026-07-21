@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -18,6 +19,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
@@ -26,6 +28,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class LoginPage {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly transloco = inject(TranslocoService);
 
   readonly email = signal('');
   readonly password = signal('');
@@ -40,7 +43,7 @@ export class LoginPage {
       await this.auth.signIn(this.email(), this.password());
       await this.router.navigateByUrl('/');
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Sign in failed');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('auth.signInFailed'));
     } finally {
       this.loading.set(false);
     }

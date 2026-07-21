@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../../core/models/enums';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PermissionsService } from '../../../../core/services/permissions.service';
@@ -24,6 +25,7 @@ import { UserFormDialog } from '../user-form-dialog/user-form-dialog';
     MatProgressSpinnerModule,
     MatTableModule,
     MatTooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './admin-users-page.html',
   styleUrl: './admin-users-page.scss',
@@ -35,6 +37,7 @@ export class AdminUsersPage {
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
   private readonly auth = inject(AuthService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly users = signal<AdminUserDto[]>([]);
@@ -83,12 +86,12 @@ export class AdminUsersPage {
       if (user.banned) {
         await this.usersService.update(user.id, { banned: false });
       } else {
-        const reason = window.prompt('Ban reason (optional):') ?? undefined;
+        const reason = window.prompt(this.transloco.translate('admin.users.banReasonPrompt')) ?? undefined;
         await this.usersService.update(user.id, { banned: true, banReason: reason || undefined });
       }
       await this.load();
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to update ban status'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(extractErrorMessage(err, this.transloco.translate('admin.users.banFailed')), 'Dismiss', { duration: 5000 });
     } finally {
       this.busyId.set(null);
     }
@@ -96,14 +99,14 @@ export class AdminUsersPage {
 
   async remove(user: AdminUserDto): Promise<void> {
     if (this.isSelf(user)) return;
-    if (!window.confirm(`Delete user "${user.name}"? This cannot be undone.`)) return;
+    if (!window.confirm(this.transloco.translate('admin.users.confirmDelete', { name: user.name }))) return;
 
     this.busyId.set(user.id);
     try {
       await this.usersService.remove(user.id);
       await this.load();
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to delete user'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(extractErrorMessage(err, this.transloco.translate('admin.users.deleteFailed')), 'Dismiss', { duration: 5000 });
     } finally {
       this.busyId.set(null);
     }

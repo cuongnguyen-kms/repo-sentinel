@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { AdminGroupDto, AdminUserDto } from '../../../../core/models/dto';
 import { AdminGroupsService } from '../../admin-groups/admin-groups.service';
 import { AdminUsersService } from '../admin-users.service';
@@ -23,6 +24,7 @@ import { AdminUsersService } from '../admin-users.service';
     MatInputModule,
     MatListModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './user-form-dialog.html',
   styleUrl: './user-form-dialog.scss',
@@ -32,6 +34,7 @@ export class UserFormDialog {
   private readonly usersService = inject(AdminUsersService);
   private readonly groupsService = inject(AdminGroupsService);
   private readonly dialogRef = inject(MatDialogRef<UserFormDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly data: AdminUserDto | null = inject(MAT_DIALOG_DATA, { optional: true }) ?? null;
 
   readonly isEdit = computed(() => this.data !== null);
@@ -70,7 +73,7 @@ export class UserFormDialog {
   async save(): Promise<void> {
     if (!this.name() || !this.email()) return;
     if (!this.isEdit() && this.password().length < 8) {
-      this.error.set('Password must be at least 8 characters');
+      this.error.set(this.transloco.translate('admin.users.form.passwordTooShort'));
       return;
     }
 
@@ -87,7 +90,7 @@ export class UserFormDialog {
       }
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to save user');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('admin.users.form.saveFailed'));
     } finally {
       this.saving.set(false);
     }

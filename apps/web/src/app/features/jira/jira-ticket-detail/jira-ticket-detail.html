@@ -1,59 +1,61 @@
-<h2 mat-dialog-title>{{ ticketKey }}</h2>
-<mat-dialog-content>
-  @if (loading()) {
-    <mat-spinner diameter="32"></mat-spinner>
-  } @else if (ticket(); as t) {
-    <div class="ticket-summary">
-      <h3>{{ t.summary }}</h3>
-      <span class="chip chip-info">{{ t.status }}</span>
-      <a [href]="t.url" target="_blank" rel="noopener">Open in JIRA</a>
-    </div>
-    <p class="description">{{ t.description }}</p>
-
-    <h3 class="checklist-heading">
-      Requirement Checklist
-      @if (checklist()?.stale) {
-        <span class="chip chip-warn">Stale</span>
-      }
-    </h3>
-
-    @if (editing()) {
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Checklist content</mat-label>
-        <textarea matInput rows="10" [ngModel]="draftContent()" (ngModelChange)="draftContent.set($event)"></textarea>
-      </mat-form-field>
-      <div class="edit-actions">
-        <button mat-button (click)="cancelEdit()" [disabled]="busy()">Cancel</button>
-        <button mat-flat-button color="primary" (click)="saveEdit()" [disabled]="busy()">
-          @if (busy()) {
-            <mat-spinner diameter="16"></mat-spinner>
-          } @else {
-            Save
-          }
-        </button>
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>{{ ticketKey }}</h2>
+  <mat-dialog-content>
+    @if (loading()) {
+      <mat-spinner diameter="32"></mat-spinner>
+    } @else if (ticket(); as ticketData) {
+      <div class="ticket-summary">
+        <h3>{{ ticketData.summary }}</h3>
+        <span class="chip chip-info">{{ ticketData.status }}</span>
+        <a [href]="ticketData.url" target="_blank" rel="noopener">{{ t('jira.detail.openInJira') }}</a>
       </div>
-    } @else if (checklist(); as cl) {
-      <pre class="checklist-content">{{ cl.content }}</pre>
-    } @else {
-      <p class="empty">No checklist generated yet.</p>
-    }
-  }
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  @if (!editing() && checklist() && canEdit) {
-    <button mat-button (click)="startEdit()">Edit</button>
-  }
-  @if (!editing() && canGenerate) {
-    <button mat-button [disabled]="busy()" (click)="generate()">
-      @if (busy()) {
-        <mat-spinner diameter="16"></mat-spinner>
+      <p class="description">{{ ticketData.description }}</p>
+
+      <h3 class="checklist-heading">
+        {{ t('jira.detail.checklistHeading') }}
+        @if (checklist()?.stale) {
+          <span class="chip chip-warn">{{ t('jira.detail.stale') }}</span>
+        }
+      </h3>
+
+      @if (editing()) {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ t('jira.detail.checklistContentLabel') }}</mat-label>
+          <textarea matInput rows="10" [ngModel]="draftContent()" (ngModelChange)="draftContent.set($event)"></textarea>
+        </mat-form-field>
+        <div class="edit-actions">
+          <button mat-button (click)="cancelEdit()" [disabled]="busy()">{{ t('common.cancel') }}</button>
+          <button mat-flat-button color="primary" (click)="saveEdit()" [disabled]="busy()">
+            @if (busy()) {
+              <mat-spinner diameter="16"></mat-spinner>
+            } @else {
+              {{ t('common.save') }}
+            }
+          </button>
+        </div>
+      } @else if (checklist(); as cl) {
+        <pre class="checklist-content">{{ cl.content }}</pre>
       } @else {
-        {{ checklist() ? 'Regenerate' : 'Generate' }}
+        <p class="empty">{{ t('jira.detail.noChecklist') }}</p>
       }
-    </button>
-  }
-  @if (!editing() && checklist() && canDelete) {
-    <button mat-button color="warn" [disabled]="busy()" (click)="deleteChecklist()">Delete</button>
-  }
-  <button mat-button (click)="close()">Close</button>
-</mat-dialog-actions>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    @if (!editing() && checklist() && canEdit) {
+      <button mat-button (click)="startEdit()">{{ t('common.edit') }}</button>
+    }
+    @if (!editing() && canGenerate) {
+      <button mat-button [disabled]="busy()" (click)="generate()">
+        @if (busy()) {
+          <mat-spinner diameter="16"></mat-spinner>
+        } @else {
+          {{ checklist() ? t('jira.detail.regenerate') : t('jira.detail.generate') }}
+        }
+      </button>
+    }
+    @if (!editing() && checklist() && canDelete) {
+      <button mat-button color="warn" [disabled]="busy()" (click)="deleteChecklist()">{{ t('common.delete') }}</button>
+    }
+    <button mat-button (click)="close()">{{ t('common.close') }}</button>
+  </mat-dialog-actions>
+</ng-container>

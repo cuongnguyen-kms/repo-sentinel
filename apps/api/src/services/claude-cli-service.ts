@@ -114,7 +114,7 @@ export function clearKillTimer(reviewId: string): void {
 }
 
 /** Resolve CLI path: DB setting > env var > default "claude" */
-async function resolveCliPath(): Promise<string> {
+export async function resolveCliPath(): Promise<string> {
   const setting = await prisma.appSetting.findUnique({
     where: { key: "ai.review.cliPath" },
   });

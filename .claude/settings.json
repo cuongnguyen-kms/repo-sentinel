@@ -12,7 +12,15 @@
       "Bash(sed -i 's/{{repowatch_url}}/{{review_url}}/g' apps/api/src/services/settings-seed-service.ts)",
       "Bash(sed -i 's/repowatch_url:/review_url:/g' apps/api/src/services/google-chat-service.ts)",
       "Bash(PGPASSWORD=secret psql -h localhost -U reposentinel -d reposentinel -c \"SELECT key, value FROM \\\\\"AppSetting\\\\\" WHERE value LIKE '%repowatch%';\")",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(psql -h localhost -p 5432 -U reposentinel -d reposentinel -c \"SELECT key, value FROM \\\\\"AppSetting\\\\\" WHERE key LIKE 'ai.review.%agent%' OR key = 'ai.review.model' OR key = 'ai.review.cliPath';\")",
+      "Bash(mkdir -p \"c:\\\\KMS\\\\Practice\\\\repo-sentinel\\\\.claude\\\\agents\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('en.json','utf8'\\)\\); console.log\\('en.json OK'\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('vi.json','utf8'\\)\\); console.log\\('vi.json OK'\\)\")",
+      "Bash(node -e ' *)"
+    ],
+    "additionalDirectories": [
+      "c:\\KMS\\Practice\\repo-sentinel\\.claude"
     ]
   }
 }

@@ -1,4 +1,4 @@
-<div class="sidebar">
+<div class="sidebar" *transloco="let t">
   <div class="brand">
     <img src="assets/reposentinel-icon.svg" alt="RepoSentinel" class="brand-icon" width="36" height="36" />
     <span class="brand-name">RepoSentinel</span>
@@ -14,18 +14,18 @@
         class="nav-item"
       >
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle>{{ item.label }}</span>
+        <span matListItemTitle>{{ t(item.labelKey) }}</span>
       </a>
     }
   </mat-nav-list>
 
   @if (adminItems().length > 0) {
-    <div class="nav-section-label">Admin</div>
+    <div class="nav-section-label">{{ t('sidebar.admin') }}</div>
     <mat-nav-list class="nav-list">
       @for (item of adminItems(); track item.path) {
         <a mat-list-item [routerLink]="item.path" routerLinkActive="active" class="nav-item">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-          <span matListItemTitle>{{ item.label }}</span>
+          <span matListItemTitle>{{ t(item.labelKey) }}</span>
         </a>
       }
     </mat-nav-list>

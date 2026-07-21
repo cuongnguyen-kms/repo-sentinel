@@ -1,17 +1,18 @@
+<ng-container *transloco="let t">
 <h2 mat-dialog-title>{{ repo.fullName }}</h2>
 <mat-dialog-content>
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Polling interval (seconds)</mat-label>
+    <mat-label>{{ t('repositories.configDialog.pollingInterval') }}</mat-label>
     <input matInput type="number" min="60" max="1800" [ngModel]="pollingInterval()" (ngModelChange)="pollingInterval.set($event)" />
   </mat-form-field>
 
-  <mat-slide-toggle [checked]="isActive()" (change)="isActive.set($event.checked)">Active</mat-slide-toggle>
+  <mat-slide-toggle [checked]="isActive()" (change)="isActive.set($event.checked)">{{ t('repositories.configDialog.active') }}</mat-slide-toggle>
 
-  <h3>AI Review Prompt Overrides</h3>
-  <p class="hint">Overrides the global prompt template (Settings → Prompt Template) for this repo only.</p>
+  <h3>{{ t('repositories.configDialog.promptOverridesTitle') }}</h3>
+  <p class="hint">{{ t('repositories.configDialog.promptOverridesHint') }}</p>
 
   <mat-slide-toggle [checked]="useCustomPrompt()" (change)="useCustomPrompt.set($event.checked)">
-    Custom review prompt for this repo
+    {{ t('repositories.configDialog.customPrompt') }}
   </mat-slide-toggle>
   @if (useCustomPrompt()) {
     <div class="editor-wrap">
@@ -25,7 +26,7 @@
   }
 
   <mat-slide-toggle [checked]="useCustomSystemPrompt()" (change)="useCustomSystemPrompt.set($event.checked)">
-    Custom system prompt for this repo
+    {{ t('repositories.configDialog.customSystemPrompt') }}
   </mat-slide-toggle>
   @if (useCustomSystemPrompt()) {
     <div class="editor-wrap">
@@ -43,12 +44,13 @@
   }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="cancel()">{{ t('common.cancel') }}</button>
   <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
     @if (saving()) {
       <mat-spinner diameter="18"></mat-spinner>
     } @else {
-      Save
+      {{ t('common.save') }}
     }
   </button>
 </mat-dialog-actions>
+</ng-container>

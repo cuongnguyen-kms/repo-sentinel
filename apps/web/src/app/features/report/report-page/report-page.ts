@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { TranslocoModule } from '@jsverse/transloco';
 import type { MergedPrCommentsReport, MergedPrReportRow, SprintDto } from '../../../core/models/dto';
 import { ReportService } from '../report.service';
 
@@ -36,6 +37,7 @@ const CATEGORY_CHIP_CLASS: Record<string, string> = {
     MatProgressSpinnerModule,
     MatSelectModule,
     MatTableModule,
+    TranslocoModule,
   ],
   templateUrl: './report-page.html',
   styleUrl: './report-page.scss',

@@ -4,6 +4,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { AdminGroupDto, AdminRoleDto } from '../../../../core/models/dto';
 import { AdminGroupsService } from '../admin-groups.service';
 import { AdminRolesService } from '../../admin-roles/admin-roles.service';
@@ -11,7 +12,14 @@ import { AdminRolesService } from '../../admin-roles/admin-roles.service';
 @Component({
   selector: 'app-group-roles-dialog',
   standalone: true,
-  imports: [MatButtonModule, MatCheckboxModule, MatDialogModule, MatListModule, MatProgressSpinnerModule],
+  imports: [
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDialogModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+    TranslocoModule,
+  ],
   templateUrl: './group-roles-dialog.html',
   styleUrl: './group-roles-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +28,7 @@ export class GroupRolesDialog {
   private readonly groupsService = inject(AdminGroupsService);
   private readonly rolesService = inject(AdminRolesService);
   private readonly dialogRef = inject(MatDialogRef<GroupRolesDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly group: AdminGroupDto = inject(MAT_DIALOG_DATA);
 
   readonly allRoles = signal<AdminRoleDto[]>([]);
@@ -61,7 +70,7 @@ export class GroupRolesDialog {
       await this.groupsService.setRoles(this.group.id, [...this.selectedRoleIds()]);
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to update roles');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('admin.groups.roles.saveFailed'));
     } finally {
       this.saving.set(false);
     }

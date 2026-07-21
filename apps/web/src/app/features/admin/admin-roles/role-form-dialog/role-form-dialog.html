@@ -1,26 +1,28 @@
-<h2 mat-dialog-title>{{ isEdit() ? 'Edit Role' : 'Create Role' }}</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" />
-  </mat-form-field>
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>{{ isEdit() ? t('admin.roles.form.editTitle') : t('admin.roles.form.createTitle') }}</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('common.name') }}</mat-label>
+      <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Description</mat-label>
-    <input matInput [ngModel]="description()" (ngModelChange)="description.set($event)" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('common.description') }}</mat-label>
+      <input matInput [ngModel]="description()" (ngModelChange)="description.set($event)" />
+    </mat-form-field>
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
-    @if (saving()) {
-      <mat-spinner diameter="18"></mat-spinner>
-    } @else {
-      {{ isEdit() ? 'Save' : 'Create' }}
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
     }
-  </button>
-</mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">{{ t('common.cancel') }}</button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        {{ isEdit() ? t('common.save') : t('common.create') }}
+      }
+    </button>
+  </mat-dialog-actions>
+</ng-container>

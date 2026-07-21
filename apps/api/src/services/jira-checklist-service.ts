@@ -12,6 +12,7 @@ import { getDecryptedConnection } from "./atlassian-connection-service.js";
 import { fetchJiraTicket } from "./jira-ticket-service.js";
 import { getSetting } from "./settings-service.js";
 import { interpolateTemplate } from "./command-template-service.js";
+import { resolveCliPath } from "./claude-cli-service.js";
 
 function toDto(row: { ticketKey: string; content: string; generatedAt: Date; updatedAt: Date }, stale: boolean): JiraChecklistDto {
   return {
@@ -69,7 +70,7 @@ export async function generateChecklist(
   if (!conn) throw new Error("JIRA connection not configured");
 
   const ticket = await fetchJiraTicket(conn.hostname, conn.email, conn.apiToken, key);
-  const cliPath = (await getSetting("ai.review.agent", "")) || "claude";
+  const cliPath = await resolveCliPath();
   const model = await getSetting("ai.review.model", "sonnet");
 
   log?.info({ ticketKey: key }, "[jira-checklist] generating");

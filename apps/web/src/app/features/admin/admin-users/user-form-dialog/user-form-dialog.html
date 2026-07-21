@@ -1,48 +1,50 @@
-<h2 mat-dialog-title>{{ isEdit() ? 'Edit User' : 'Create User' }}</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" />
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" />
-  </mat-form-field>
-
-  @if (!isEdit()) {
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>{{ isEdit() ? t('admin.users.form.editTitle') : t('admin.users.form.createTitle') }}</h2>
+  <mat-dialog-content>
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" autocomplete="new-password" />
+      <mat-label>{{ t('common.name') }}</mat-label>
+      <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" />
     </mat-form-field>
-  }
 
-  <p class="section-label">Groups</p>
-  @if (allGroups().length === 0) {
-    <p class="empty">No groups exist yet.</p>
-  } @else {
-    <mat-selection-list>
-      @for (group of allGroups(); track group.id) {
-        <mat-list-item>
-          <mat-checkbox [checked]="selectedGroupIds().has(group.id)" (change)="toggleGroup(group.id)">
-            {{ group.name }}
-          </mat-checkbox>
-        </mat-list-item>
-      }
-    </mat-selection-list>
-  }
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ t('admin.users.form.email') }}</mat-label>
+      <input matInput type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" />
+    </mat-form-field>
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
-    @if (saving()) {
-      <mat-spinner diameter="18"></mat-spinner>
-    } @else {
-      {{ isEdit() ? 'Save' : 'Create' }}
+    @if (!isEdit()) {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ t('admin.users.form.password') }}</mat-label>
+        <input matInput type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" autocomplete="new-password" />
+      </mat-form-field>
     }
-  </button>
-</mat-dialog-actions>
+
+    <p class="section-label">{{ t('admin.users.form.groupsLabel') }}</p>
+    @if (allGroups().length === 0) {
+      <p class="empty">{{ t('admin.users.form.noGroups') }}</p>
+    } @else {
+      <mat-selection-list>
+        @for (group of allGroups(); track group.id) {
+          <mat-list-item>
+            <mat-checkbox [checked]="selectedGroupIds().has(group.id)" (change)="toggleGroup(group.id)">
+              {{ group.name }}
+            </mat-checkbox>
+          </mat-list-item>
+        }
+      </mat-selection-list>
+    }
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">{{ t('common.cancel') }}</button>
+    <button mat-flat-button color="primary" (click)="save()" [disabled]="saving()">
+      @if (saving()) {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        {{ isEdit() ? t('common.save') : t('common.create') }}
+      }
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, input, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoModule } from '@jsverse/transloco';
 import type { TemplateVariable } from '../prompt-template-defaults';
 
 /** Replace {{key}}/{key} placeholders with sample values, for the preview panel only. */
@@ -16,7 +17,7 @@ function interpolateSample(template: string, variables: TemplateVariable[]): str
 @Component({
   selector: 'app-command-template-editor',
   standalone: true,
-  imports: [FormsModule, MatButtonModule],
+  imports: [FormsModule, MatButtonModule, TranslocoModule],
   templateUrl: './command-template-editor.html',
   styleUrl: './command-template-editor.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

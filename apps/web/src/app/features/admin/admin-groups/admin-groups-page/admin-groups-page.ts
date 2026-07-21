@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../../core/models/enums';
 import { PermissionsService } from '../../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../../core/utils/http-error';
@@ -24,6 +25,7 @@ import { GroupRolesDialog } from '../group-roles-dialog/group-roles-dialog';
     MatProgressSpinnerModule,
     MatTableModule,
     MatTooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './admin-groups-page.html',
   styleUrl: './admin-groups-page.scss',
@@ -34,6 +36,7 @@ export class AdminGroupsPage {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly groups = signal<AdminGroupDto[]>([]);
@@ -80,18 +83,18 @@ export class AdminGroupsPage {
   }
 
   async remove(group: AdminGroupDto): Promise<void> {
-    if (!window.confirm(`Delete group "${group.name}"?`)) return;
+    if (!window.confirm(this.transloco.translate('admin.groups.confirmDelete', { name: group.name }))) return;
 
     this.busyId.set(group.id);
     try {
       await this.groupsService.remove(group.id);
     } catch (err) {
-      const message = extractErrorMessage(err, 'Failed to delete group');
-      if (/member\(s\)/i.test(message) && window.confirm(`${message}\n\nDelete anyway?`)) {
+      const message = extractErrorMessage(err, this.transloco.translate('admin.groups.deleteFailed'));
+      if (/member\(s\)/i.test(message) && window.confirm(this.transloco.translate('admin.groups.confirmDeleteAnyway', { message }))) {
         try {
           await this.groupsService.remove(group.id, true);
         } catch (retryErr) {
-          this.snackBar.open(extractErrorMessage(retryErr, 'Failed to delete group'), 'Dismiss', { duration: 5000 });
+          this.snackBar.open(extractErrorMessage(retryErr, this.transloco.translate('admin.groups.deleteFailed')), 'Dismiss', { duration: 5000 });
         }
       } else {
         this.snackBar.open(message, 'Dismiss', { duration: 5000 });

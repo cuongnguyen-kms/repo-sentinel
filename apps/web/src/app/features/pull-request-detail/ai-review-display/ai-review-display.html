@@ -1,3 +1,4 @@
+<ng-container *transloco="let t">
 <div class="review-header">
   <div class="score" [class]="'score-' + scoreColor()">{{ review().score ?? '—' }}</div>
   <div class="summary">{{ review().summary }}</div>
@@ -5,11 +6,11 @@
 
 @if (codeReview(); as cr) {
   <div class="stats">
-    <span>Critical: {{ cr.stats.critical }}</span>
-    <span>High: {{ cr.stats.high }}</span>
-    <span>Medium: {{ cr.stats.medium }}</span>
-    <span>Low: {{ cr.stats.low }}</span>
-    <span>Info: {{ cr.stats.info }}</span>
+    <span>{{ t('prDetail.aiReview.stats.critical') }}: {{ cr.stats.critical }}</span>
+    <span>{{ t('prDetail.aiReview.stats.high') }}: {{ cr.stats.high }}</span>
+    <span>{{ t('prDetail.aiReview.stats.medium') }}: {{ cr.stats.medium }}</span>
+    <span>{{ t('prDetail.aiReview.stats.low') }}: {{ cr.stats.low }}</span>
+    <span>{{ t('prDetail.aiReview.stats.info') }}: {{ cr.stats.info }}</span>
   </div>
 }
 
@@ -35,3 +36,4 @@
     </mat-card-content>
   </mat-card>
 }
+</ng-container>

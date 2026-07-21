@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, afterNextRender, computed, effect, inject, input, output, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
 import { SocketService } from '../../../core/services/socket.service';
@@ -17,7 +18,7 @@ type ClaudeStreamEvent =
 @Component({
   selector: 'app-ai-review-terminal-panel',
   standalone: true,
-  imports: [DecimalPipe, MatButtonModule, MatIconModule],
+  imports: [DecimalPipe, MatButtonModule, MatIconModule, TranslocoModule],
   templateUrl: './ai-review-terminal-panel.html',
   styleUrl: './ai-review-terminal-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,7 @@ type ClaudeStreamEvent =
 export class AiReviewTerminalPanel implements OnDestroy {
   private readonly socketService = inject(SocketService);
   private readonly reviewsService = inject(ReviewsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly reviewId = input.required<string>();
   readonly prId = input.required<string>();
@@ -42,7 +44,9 @@ export class AiReviewTerminalPanel implements OnDestroy {
   /** "Thinking…"/"Writing…" while the review is actively streaming, else null. */
   readonly thinkingLabel = computed(() => {
     if (this.phase() !== 'REVIEWING') return null;
-    return this.isThinking() ? 'Thinking…' : 'Writing…';
+    return this.isThinking()
+      ? this.transloco.translate('prDetail.terminal.thinking')
+      : this.transloco.translate('prDetail.terminal.writing');
   });
 
   private readonly containerEl = viewChild<ElementRef<HTMLDivElement>>('terminalContainer');

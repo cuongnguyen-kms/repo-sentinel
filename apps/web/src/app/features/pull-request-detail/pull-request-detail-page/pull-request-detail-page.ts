@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../core/utils/http-error';
@@ -41,6 +42,7 @@ const POLL_INTERVAL_MS = 5000;
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
     AiReviewStatusBadge,
     AiReviewTriggerButton,
     AiReviewTerminalPanel,
@@ -57,6 +59,7 @@ export class PullRequestDetailPage {
   private readonly reviewsService = inject(ReviewsService);
   private readonly permissions = inject(PermissionsService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly transloco = inject(TranslocoService);
 
   readonly canTrigger = this.permissions.can(Resource.Reviews, Action.Create);
   readonly canDelete = this.permissions.can(Resource.Reviews, Action.Delete);
@@ -163,7 +166,11 @@ export class PullRequestDetailPage {
       });
       await this.refreshReviewMetadata(review);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to post comment'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.postComment')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -180,7 +187,11 @@ export class PullRequestDetailPage {
       });
       await this.refreshReviewMetadata(review);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to resolve finding'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.resolveFinding')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -216,7 +227,11 @@ export class PullRequestDetailPage {
       this.selectedFindingIds.set(new Set());
       await this.refreshReviewMetadata(review);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to submit review'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.submitReview')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -230,7 +245,11 @@ export class PullRequestDetailPage {
       await this.reviewsService.syncGithubThreadStatus(this.prId, review.id);
       await this.refreshReviewMetadata(review);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to sync thread status'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.syncThreadStatus')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -244,7 +263,11 @@ export class PullRequestDetailPage {
       await this.reviewsService.syncReplies(this.prId);
       await this.refreshReviewMetadata(review);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to sync replies'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.syncReplies')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -268,7 +291,11 @@ export class PullRequestDetailPage {
       this.pr.set(pr);
       this.editingJiraTicket.set(false);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to update linked ticket'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.updateJiraTicket')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }
@@ -282,7 +309,11 @@ export class PullRequestDetailPage {
       this.pr.set(pr);
       this.editingJiraTicket.set(false);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to clear linked ticket'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('prDetail.page.errors.clearJiraTicket')),
+        this.transloco.translate('prDetail.page.dismiss'),
+        { duration: 5000 },
+      );
     } finally {
       this.actionBusy.set(false);
     }

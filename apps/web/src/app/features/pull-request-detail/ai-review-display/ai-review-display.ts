@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { TranslocoModule } from '@jsverse/transloco';
 import parseDiff from 'parse-diff';
 import type { AiReviewDto, CodeReviewFinding, CodeReviewResult, PostedFindingCommentDto } from '../../../core/models/dto';
 import { DiffFileViewer, type PostFindingEvent, type ResolveFindingEvent } from '../diff-file-viewer/diff-file-viewer';
@@ -9,7 +10,7 @@ export type { PostFindingEvent, ResolveFindingEvent };
 @Component({
   selector: 'app-ai-review-display',
   standalone: true,
-  imports: [MatCardModule, DiffFileViewer],
+  imports: [MatCardModule, TranslocoModule, DiffFileViewer],
   templateUrl: './ai-review-display.html',
   styleUrl: './ai-review-display.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

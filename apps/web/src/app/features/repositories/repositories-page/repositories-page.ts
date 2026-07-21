@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import type { WatchedRepoDto } from '../../../core/models/dto';
@@ -23,6 +24,7 @@ import { RepoConfigDialog } from '../repo-config-dialog/repo-config-dialog';
     MatProgressSpinnerModule,
     MatTableModule,
     MatTooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './repositories-page.html',
   styleUrl: './repositories-page.scss',
@@ -33,6 +35,7 @@ export class RepositoriesPage {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly loading = signal(true);
   readonly repos = signal<WatchedRepoDto[]>([]);
@@ -80,7 +83,11 @@ export class RepositoriesPage {
     this.polling.set(id);
     try {
       await this.reposService.poll(id, true);
-      this.snackBar.open('Poll queued', 'Dismiss', { duration: 3000 });
+      this.snackBar.open(
+        this.transloco.translate('repositories.page.pollQueued'),
+        this.transloco.translate('repositories.page.dismiss'),
+        { duration: 3000 }
+      );
       setTimeout(() => void this.load(), 3000);
     } finally {
       this.polling.set(null);

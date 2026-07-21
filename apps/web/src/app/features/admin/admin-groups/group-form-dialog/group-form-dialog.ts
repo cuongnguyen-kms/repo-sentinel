@@ -5,13 +5,22 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { AdminGroupDto } from '../../../../core/models/dto';
 import { AdminGroupsService } from '../admin-groups.service';
 
 @Component({
   selector: 'app-group-form-dialog',
   standalone: true,
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatProgressSpinnerModule],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    TranslocoModule,
+  ],
   templateUrl: './group-form-dialog.html',
   styleUrl: './group-form-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +28,7 @@ import { AdminGroupsService } from '../admin-groups.service';
 export class GroupFormDialog {
   private readonly groupsService = inject(AdminGroupsService);
   private readonly dialogRef = inject(MatDialogRef<GroupFormDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly data: AdminGroupDto | null = inject(MAT_DIALOG_DATA, { optional: true }) ?? null;
 
   readonly isEdit = computed(() => this.data !== null);
@@ -45,7 +55,7 @@ export class GroupFormDialog {
       }
       this.dialogRef.close(true);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to save group');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('admin.groups.form.saveFailed'));
     } finally {
       this.saving.set(false);
     }

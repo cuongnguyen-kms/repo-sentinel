@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import type { WatchedRepoDto } from '../../../core/models/dto';
 import { CommandTemplateEditor } from '../../settings/command-template-editor/command-template-editor';
 import { DEFAULT_SYSTEM_TEMPLATE, DEFAULT_USER_TEMPLATE, TEMPLATE_VARIABLES } from '../../settings/prompt-template-defaults';
@@ -23,6 +24,7 @@ import { ReposService } from '../repos.service';
     MatInputModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
+    TranslocoModule,
   ],
   templateUrl: './repo-config-dialog.html',
   styleUrl: './repo-config-dialog.scss',
@@ -31,6 +33,7 @@ import { ReposService } from '../repos.service';
 export class RepoConfigDialog {
   private readonly reposService = inject(ReposService);
   private readonly dialogRef = inject(MatDialogRef<RepoConfigDialog>);
+  private readonly transloco = inject(TranslocoService);
   readonly repo: WatchedRepoDto = inject(MAT_DIALOG_DATA);
 
   readonly templateVariables = TEMPLATE_VARIABLES;
@@ -64,7 +67,7 @@ export class RepoConfigDialog {
       });
       this.dialogRef.close(updated);
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Failed to update repo');
+      this.error.set(err instanceof Error ? err.message : this.transloco.translate('repositories.configDialog.updateFailed'));
     } finally {
       this.saving.set(false);
     }

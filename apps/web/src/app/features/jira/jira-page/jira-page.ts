@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { extractErrorMessage } from '../../../core/utils/http-error';
 import type { JiraTicketDto } from '../../../core/models/dto';
 import { JiraService } from '../jira.service';
@@ -25,6 +26,7 @@ import { JiraTicketDetail } from '../jira-ticket-detail/jira-ticket-detail';
     MatInputModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    TranslocoModule,
   ],
   templateUrl: './jira-page.html',
   styleUrl: './jira-page.scss',
@@ -34,6 +36,7 @@ export class JiraPage {
   private readonly jiraService = inject(JiraService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly transloco = inject(TranslocoService);
 
   readonly jql = signal('');
   readonly projectKey = signal('');
@@ -56,7 +59,11 @@ export class JiraPage {
       this.tickets.set(results);
       this.searched.set(true);
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to search tickets'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('jira.errors.searchFailed')),
+        'Dismiss',
+        { duration: 5000 },
+      );
     } finally {
       this.loading.set(false);
     }

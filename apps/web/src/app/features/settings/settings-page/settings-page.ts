@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Action, Resource } from '../../../core/models/enums';
 import { PermissionsService } from '../../../core/services/permissions.service';
 import { extractErrorMessage } from '../../../core/utils/http-error';
@@ -28,6 +29,7 @@ import { SettingsService } from '../settings.service';
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     MatTabsModule,
+    TranslocoModule,
   ],
   templateUrl: './settings-page.html',
   styleUrl: './settings-page.scss',
@@ -37,6 +39,7 @@ export class SettingsPage {
   private readonly settingsService = inject(SettingsService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly permissions = inject(PermissionsService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly canEdit = this.permissions.can(Resource.Settings, Action.Update);
 
@@ -51,6 +54,7 @@ export class SettingsPage {
   readonly maxFiles = signal('300');
   readonly maxDiffSize = signal('500000');
   readonly model = signal('sonnet');
+  readonly agentName = signal('');
   readonly autoReview = signal(false);
   readonly autoReviewStatuses = signal('OPEN');
   readonly autoReviewAuthors = signal('');
@@ -88,6 +92,7 @@ export class SettingsPage {
       this.maxFiles.set(settings['ai.review.maxFiles'] ?? '300');
       this.maxDiffSize.set(settings['ai.review.maxDiffSize'] ?? '500000');
       this.model.set(settings['ai.review.model'] ?? 'sonnet');
+      this.agentName.set(settings['ai.review.agent'] ?? '');
       this.autoReview.set(settings['ai.review.autoReview'] === '1');
       this.autoReviewStatuses.set(settings['ai.review.autoReviewStatuses'] ?? 'OPEN');
       this.autoReviewAuthors.set(settings['ai.review.autoReviewAuthors'] ?? '');
@@ -126,6 +131,7 @@ export class SettingsPage {
         'ai.review.maxFiles': this.maxFiles(),
         'ai.review.maxDiffSize': this.maxDiffSize(),
         'ai.review.model': this.model(),
+        'ai.review.agent': this.agentName(),
         'ai.review.autoReview': this.autoReview() ? '1' : '0',
         'ai.review.autoReviewStatuses': this.autoReviewStatuses(),
         'ai.review.autoReviewAuthors': this.autoReviewAuthors(),
@@ -154,9 +160,13 @@ export class SettingsPage {
         if (values[key] === '') delete values[key];
       }
       await this.settingsService.update(values);
-      this.snackBar.open('Settings saved', 'Dismiss', { duration: 3000 });
+      this.snackBar.open(this.transloco.translate('settings.saveSuccess'), this.transloco.translate('common.close'), { duration: 3000 });
     } catch (err) {
-      this.snackBar.open(extractErrorMessage(err, 'Failed to save settings'), 'Dismiss', { duration: 5000 });
+      this.snackBar.open(
+        extractErrorMessage(err, this.transloco.translate('settings.saveError')),
+        this.transloco.translate('common.close'),
+        { duration: 5000 },
+      );
     } finally {
       this.saving.set(false);
     }
